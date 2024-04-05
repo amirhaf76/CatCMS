@@ -1,0 +1,20 @@
+A content management system (CMS) is an application that is used to manage content, allowing multiple contributors to create, edit and publish. Content in a CMS is typically stored in a database and displayed in a presentation layer based on a set of templates like a website.
+
+The following are common functions of a CMS:
+
+Content creation allows users to easily create and format content
+
+Content storage stores content in one place, in a consistent fashion
+
+Workflows assigns permissions for managing content based on roles such as authors, editors and admins
+
+Publishing tells the software when and where the content should go live
+
+Optimization helps you improve digital experience and learn from your content
+
+TL;DR a website is a collection of web pages you can browse and a CMS is the software that the website runs on.
+
+Wikipedia probably describes it best—“a website is a collection of web pages and related content that is identified by a common domain name and published on at least one web server.“
+In contrast, a CMS or Content Management System, is a piece of software that allows you to store, manage and publish said web pages.
+
+

@@ -1,0 +1,29 @@
+User story:
+
+A web app that runs and brings up a single-page application (SPA). Users can manage pages and create, delete, or edit pages based on their permissions. On the pages, users can use some prepared UI components which have style and logic. Their style depends on the main theme. Each component has its logic. Users can create a pre-created page or a pre-created UI component and configure their logic. All the components will be saved, and each time the user can manage the website content. Ultimately, the user generates its website and the output is some linked pages with logic.
+
+
+
+
+
+- A Single Page Application (SPA) that manages content.
+
+- There must be a page where users can manage their pages.
+
+- Managing pages includes adding, deleting, and editing pages.
+
+- Actions managing pages depend on users' permissions.
+
+- There must be a sysadmin.
+
+- There are some prepared UI components.
+
+- Prepared components have their configurable logic.
+
+- Some parts of the style of prepared components depend on the main theme.
+
+- There must be a main theme.
+
+- It's better to have a concept like a "Site" that contains the settings, pages, and all the information. This information must be stored.
+
+- The main output is generated on the site based on the configuration and the user's design.

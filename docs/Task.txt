@@ -1,0 +1,11 @@
+1- A Single Page Application (SPA) that manages content.
+2- It's better to have a concept like a "Site" that contains the settings, pages, and all the information. This information must be stored.
+3- The main output is generated on the site based on the configuration and the user's design.
+4- There must be a page where users can manage their pages.
+5- Managing pages includes adding, deleting, and editing pages.
+6- There are some prepared UI components.
+7- Prepared components have their configurable logic.
+8- There must be a sysadmin.
+9- Actions managing pages depend on users' permissions.
+10- There must be a main theme.
+11- Some parts of the style of prepared components depend on the main theme.
