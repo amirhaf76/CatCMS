@@ -4,6 +4,6 @@
     {
         ISiteBuilder CreateSite();
 
-        IGenerator CreateGenerator();
+        ISiteGenerator CreateGenerator();
     }
 }

@@ -1,8 +1,9 @@
-﻿using System.Text.Json;
+﻿using System.Reflection.Metadata;
+using System.Text.Json;
 using Core.Abstraction;
 using Core.Enums;
 
-namespace Core
+namespace Core.Implementation.Component
 {
     public abstract class BaseCatComponent : ICatCMSComponent
     {
@@ -11,7 +12,7 @@ namespace Core
 
         public abstract CatCMSComponentType Type { get; }
 
-        public abstract string Generate();
+        public abstract string GenerateCode();
 
         public JsonElement Store()
         {

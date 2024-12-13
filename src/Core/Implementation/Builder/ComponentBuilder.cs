@@ -1,7 +1,8 @@
 ﻿using Core.Abstraction;
 using Core.Enums;
+using Core.Implementation.Component;
 
-namespace Core
+namespace Core.Implementation.Builder
 {
     internal class ComponentBuilder : IComponentBuilder
     {

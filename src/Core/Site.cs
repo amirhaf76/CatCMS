@@ -1,10 +1,9 @@
 ﻿using Core.Abstraction;
 using Core.Exceptions;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Core
 {
-
-
     public class Site 
     {
         private readonly List<Page> _pages;
@@ -37,11 +36,6 @@ namespace Core
         }
 
 
-        public IEnumerable<Page> GetPages()
-        {
-            throw new NotImplementedException();
-        }
-
         public Site EditTitle(string newTitle)
         {
             Title = newTitle ?? throw new NullTitleException();
@@ -56,20 +50,9 @@ namespace Core
             return this;
         }
 
-        public Page CreatePage(string title)
+        public void AddPage(Page page)
         {
-            var aPage = new Page(title);
-
-            _pages.Add(aPage);
-
-            return aPage;
-        }
-
-        public IEnumerable<(string name, string code)> GeneratePages()
-        {
-            var generator = new PageGenerator();
-
-            return _pages.Select(page => (page.Title,  generator.Generate(page)));
+            _pages.Add(page);
         }
     }
 }

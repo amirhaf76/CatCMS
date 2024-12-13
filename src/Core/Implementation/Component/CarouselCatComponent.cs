@@ -1,11 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Core.Enums;
 
-namespace Core
+namespace Core.Implementation.Component
 {
     public class CarouselCatComponent : BaseCatComponent
     {
         private List<object> Images { get; set; } = new List<object>();
+
+        public string Title => "ddddd";
 
         public object AddImage(object image)
         {
@@ -21,9 +24,10 @@ namespace Core
             return this;
         }
 
-        public override string Generate()
+        public override string GenerateCode()
         {
-            return "<p>CarouselCatComponent</p>";
+            return "Hello {{ Title }}";
+            //return "<p>CarouselCatComponent</p>";
         }
 
         public override CatCMSComponentType Type => CatCMSComponentType.CarouselCatComponent;

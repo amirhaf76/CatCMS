@@ -2,7 +2,7 @@
 using Core.Enums;
 using System.Text;
 
-namespace Core
+namespace Core.Implementation.Builder
 {
     public class PageBuilder : IPageBuilder
     {

@@ -1,10 +1,8 @@
-using Core;
 using Core.Abstraction;
 using Core.Enums;
 using Core.Exceptions;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using System.Diagnostics;
-using System.Net.WebSockets;
+using Core.Implementation.Builder;
+using Core.Implementation.Component;
 using System.Reflection;
 using Xunit.Abstractions;
 
@@ -83,7 +81,7 @@ namespace UnitTest
                 {
                     Name = "Link"
                 });
-                
+
         }
 
         [Fact]
@@ -125,7 +123,7 @@ namespace UnitTest
             var rootDirectory = "Published_site";
             var projectDirectory = "Generated.files";
 
-            
+
             var sourceFilePath = "Generated.files\\Page_1";
             var destinationFileDirectory = "Published_site";
             var dir = Path.GetDirectoryName(sourceFilePath);
@@ -144,8 +142,8 @@ namespace UnitTest
                 }
             }
 
-            
-            
+
+
             _testOutput.WriteLine(string.Join(", ", Directory.GetFiles(destinationFileDirectory)));
         }
 
