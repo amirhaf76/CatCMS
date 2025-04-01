@@ -1,8 +1,7 @@
-using Core.Abstraction;
-using Core.Enums;
-using Core.Exceptions;
-using Core.Implementation.Builder;
-using Core.Implementation.Component;
+using CMSCore;
+using CMSCore.Abstraction;
+using CMSCore.Builder;
+using CMSCore.Component;
 using System.Reflection;
 using Xunit.Abstractions;
 
@@ -15,35 +14,6 @@ namespace UnitTest
         public UnitTest1(ITestOutputHelper testOutput)
         {
             _testOutput = testOutput;
-        }
-        [Fact]
-        public void ANormalSite_GiveNullValueToTitleProperty_RaisingException()
-        {
-            var aSite = new Core.Site();
-
-            var editSiteTitle = () =>
-            {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                aSite = aSite.EditTitle(null);
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-            };
-
-            editSiteTitle.Should().Throw<NullTitleException>();
-        }
-
-        [Fact]
-        public void ANormalSite_GiveNullValueToConfigProperty_RaisingException()
-        {
-            var aSite = new Core.Site();
-
-            var editSiteTitle = () =>
-            {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                aSite = aSite.SetSiteConfiguration(null);
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-            };
-
-            editSiteTitle.Should().Throw<NullSiteConfigurationException>();
         }
 
         [Fact]
@@ -87,22 +57,25 @@ namespace UnitTest
         [Fact]
         public void Defining_Behavior_GeneratedFile()
         {
-            var cmsBuilder = CreateCMSBuilder();
+            var cms = CreateCMSBuilder().Build();
 
-            var siteBuilder = cmsBuilder.CreateSite();
 
-            siteBuilder
-                .AddPage("Page_1")
-                .AddComponent(CatCMSComponentType.CarouselCatComponent)
-                .AddComponent(CatCMSComponentType.CarouselCatComponent)
-                .AddComponent(CatCMSComponentType.CarouselCatComponent)
-                .AddLayout(new StackLayout());
+            var aPage = new Page
+            {
+                Title = "Page_1",
+                Id = Guid.NewGuid(),
+                Layout = new StackLayout(),
+                Components = new List<ICatCMSComponent>()
+                {
+                    
+                }
+            };
 
-            var site = siteBuilder.Build();
+            var host = new Host();
 
-            var files = cmsBuilder
-                .CreateGenerator()
-                .GenerateSite(site)
+            var files = cms
+                .CreateHostGenerator()
+                .GenerateHostAsFiles(host)
                 .ToList();
 
             files.Should().AllSatisfy(file =>
@@ -117,15 +90,16 @@ namespace UnitTest
 
         }
 
+
         [Fact]
         public void Publish_ASampleOfRazorPageWebAppWithGeneratedSitesAndPages_SuccessfulMovingFiles()
         {
-            var rootDirectory = "Published_site";
+            var rootDirectory = "Published_host";
             var projectDirectory = "Generated.files";
 
 
             var sourceFilePath = "Generated.files\\Page_1";
-            var destinationFileDirectory = "Published_site";
+            var destinationFileDirectory = "Published_host";
             var dir = Path.GetDirectoryName(sourceFilePath);
             var fileName = Path.GetFileName(sourceFilePath);
 
@@ -152,7 +126,7 @@ namespace UnitTest
 
         }
 
-        private ICatCMSBuilder CreateCMSBuilder()
+        private ICMSBuilder CreateCMSBuilder()
         {
             return new CatCMSBuilder();
         }

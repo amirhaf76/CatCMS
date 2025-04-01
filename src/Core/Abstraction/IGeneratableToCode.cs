@@ -1,4 +1,4 @@
-﻿namespace Core.Abstraction
+﻿namespace CMSCore.Abstraction
 {
     public interface IGeneratableToCode
     {

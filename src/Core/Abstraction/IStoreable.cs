@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Core.Abstraction
+namespace CMSCore.Abstraction
 {
     public interface IStorable
     {

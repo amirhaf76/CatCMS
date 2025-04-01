@@ -1,4 +1,4 @@
-﻿namespace Core
+﻿namespace CMSCore
 {
     public class CatCMSApp
     {
