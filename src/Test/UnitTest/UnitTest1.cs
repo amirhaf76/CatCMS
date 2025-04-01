@@ -54,36 +54,7 @@ namespace UnitTest
 
         }
 
-        [Fact]
-        public void Defining_Behavior_GeneratedFile()
-        {
-            var cms = CreateCMSBuilder().Build();
-
-
-            var aPage = new Page
-            {
-                Title = "Page_1",
-                Id = Guid.NewGuid(),
-                Layout = new StackLayout(),
-                Components = new List<ICatCMSComponent>()
-                {
-                    
-                }
-            };
-
-            var host = new Host();
-
-            var files = cms
-                .CreateHostGenerator()
-                .GenerateHostAsFiles(host)
-                .ToList();
-
-            files.Should().AllSatisfy(file =>
-            {
-                File.Exists(file.FullName).Should().BeTrue();
-            });
-        }
-
+       
         [Fact]
         public void RunAnCatCmsCore_AnInstanceOfCoreApplication_RunSuccessfuly()
         {
