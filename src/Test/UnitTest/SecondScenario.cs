@@ -1,6 +1,8 @@
 ﻿using CMSCore;
 using CMSCore.Abstraction;
-using CMSCore.Builder;
+using CMSCore.Component;
+using CMSCore.Generator;
+using System.Reflection.Emit;
 using Xunit.Abstractions;
 
 namespace UnitTest
@@ -14,68 +16,60 @@ namespace UnitTest
             _testOutput = testOutput;
         }
 
+        
         [Fact]
-        public void Test1()
+        public void ACmsObject_WorkFlow_GeneratesFiles()
         {
-            var theCmsBuilderType = typeof(CatCMSBuilder);
+            // Arrangement
+            //      First Part: Simple Abstraction
+            var theHostFactory = (IHostFactory) new HostFactory();
+            var thePageFactory = (IPageFactory) new PageFactory();
+            var theComponentFactory = (IComponentFactory) new ComponentFactory();
 
-            theCmsBuilderType.Should().HaveDefaultConstructor();
-            theCmsBuilderType.Should().HaveConstructor(new[] { typeof(CatCMSBuilderConfiguration) });
-        }
+            var theCodePageGenerator = (ICodePageGenerator) new CodePageGenerator();
+            var theFileGenerator = (IFileGenerator) new FileGenerator();
+            var theHostsValidator = (IHostValidator) new HostValidator();
 
-        [Fact]
-        public void Test3()
-        {
-            var theICMSBuilderType = typeof(ICMSBuilder);
+            var theHostRepository = (IHostRepository) new CMSHosts();
 
-            theICMSBuilderType
-                .Should()
-                .HaveMethod("Build", Array.Empty<Type>())
-                .Which
-                .Should()
-                .Return<ICMS>();
-        }
+            //      Second Part: Complexe Abstraction
+            var theHostFileGenerator = (IHostFileGenerator) new HostFileGenerator(theCodePageGenerator, theFileGenerator);
 
-        [Fact]
-        public void Test2()
-        {
-            var cmsBuilder = new CatCMSBuilder() as ICMSBuilder;
+            //      Third Part: Main Abstraction
+            var theCms = (ICMS) new CatCMS(theHostRepository, theHostFileGenerator);
 
-            var cms = cmsBuilder.Build();
+            //      Desiging Part
+            var theHost = theHostFactory.CreateADefaultTemplate();
+            var thePage = thePageFactory.CreateADefaultTemplate();
+
+            theCms.AddHost(theHost);
+
+            theHost.Pages.Add(thePage);
+
+            thePage.Components.Add(theComponentFactory.CreateDefaultComponent());
+            thePage.Components.Add(theComponentFactory.CreateDefaultComponent());
+            thePage.Components.Add(theComponentFactory.CreateDefaultComponent());
 
 
+            // Action
+            var theResult = theCms.BuildHost(theHost.Id);
+            
 
-        }
-
-        [Fact]
-        public void Test4()
-        {
-            var aSite = new Host();
-            var secondSite = new Host();
-
-            aSite.IsDefault().Should().BeTrue();
-            aSite.Should().BeEquivalentTo(new Host
+            // Assertion
+            theResult.Should().AllSatisfy(file =>
             {
-                Title = string.Empty,
-                Configuration = new SiteConfiguration(),
-                Id = Guid.Empty,
-                Pages = new List<Page>(),
+                _testOutput.WriteLine($"file path: {file.FullName ?? "<Unknown File Directory>"}");
+                Directory.Exists(file.FullName ?? "<Unknown File Directory>");
+
+                using (var openedFile = File.OpenText(file.FullName!))
+                {
+                    _testOutput.WriteLine(openedFile.ReadToEnd());
+                }
+
+                File.Delete(file.FullName!);
             });
-
-            secondSite.IsDefault().Should().BeTrue();
         }
 
-        [Fact]
-        public void Test5()
-        {
-            _testOutput.WriteLine(default(string)?.ToString() ?? "null !");
-            _testOutput.WriteLine(default(int).ToString());
-            _testOutput.WriteLine(default(IEnumerable<int>)?.ToString() ?? "null !");
-            _testOutput.WriteLine(default(Guid).ToString());
-            _testOutput.WriteLine(default(bool).ToString());
-        }
-
-
-
+   
     }
 }
