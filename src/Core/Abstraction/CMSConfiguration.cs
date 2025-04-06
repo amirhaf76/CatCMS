@@ -1,7 +1,7 @@
 ﻿namespace CMSCore.Abstraction
 {
-    public interface ISiteBuilder
+    public class CMSConfiguration
     {
-    
+
     }
 }

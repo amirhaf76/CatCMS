@@ -9,7 +9,7 @@ namespace CMSCore.Abstraction
 
         public Guid Id { get; set; }
 
-        public List<ICatCMSComponent> Components { get; set; } = new List<ICatCMSComponent>();
+        public List<ICMSComponent> Components { get; set; } = new List<ICMSComponent>();
 
         public ILayout Layout { get; set; } = new StackLayout();
     }

@@ -3,16 +3,14 @@ using System.Text.Json;
 
 namespace CMSCore.Component
 {
-    public abstract class BaseCatComponent : ICatCMSComponent
+    public abstract class BaseCatComponent : ICMSComponent
     {
-
-        public Guid Id { get; set; }
-
-
+        // Todo: fixing hybrid structure.
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public abstract string GenerateCode();
 
-        public JsonElement Store()
+        public virtual JsonElement Store()
         {
             throw new NotImplementedException();
         }

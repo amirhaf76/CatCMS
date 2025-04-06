@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace CMSCore.Builder
+namespace CMSCore
 {
     [Serializable]
     internal class ValidationOfNullException : Exception

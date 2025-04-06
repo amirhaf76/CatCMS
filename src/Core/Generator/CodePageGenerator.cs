@@ -13,18 +13,6 @@ namespace CMSCore.Generator
             _parser = new FluidParser();
         }
 
-        public string GenerateCodePagev2(Page page)
-        {
-            if (page is not null)
-            {
-                var componentsMarkDowns = page.Components.Select(c => c.GenerateCode());
-
-                return page.Layout.ArrangeComponents(componentsMarkDowns);
-            }
-
-            throw new Exception();
-        }
-
         public string GenerateCodePage(Page page)
         {
             if (page is not null)
@@ -54,6 +42,5 @@ namespace CMSCore.Generator
 
 
     }
-
 
 }

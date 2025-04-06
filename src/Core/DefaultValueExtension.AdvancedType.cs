@@ -23,9 +23,11 @@
                    && page.Components.IsDefault();
         }
 
-        public static bool IsDefault(this SiteConfiguration config)
+        public static bool IsDefault(this HostConfiguration config)
         {
-            return config.Id == Guid.Empty;
+            return config != null
+                   && config.DomainAddress == string.Empty
+                   && config.GeneratedCodesDirectory == string.Empty;
         }
 
     }

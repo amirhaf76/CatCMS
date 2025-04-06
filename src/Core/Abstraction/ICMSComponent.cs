@@ -1,6 +1,6 @@
 ﻿namespace CMSCore.Abstraction
 {
-    public interface ICatCMSComponent : IStorable, IGeneratableToCode
+    public interface ICMSComponent : IStorable, IGeneratableToCode
     {
         public Guid Id { get; set; }
 

@@ -1,8 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
-using CMSCore.Abstraction;
 
-namespace CMSCore.Component
+namespace CMSCore.Abstraction
 {
     public class StackLayout : ILayout, IStorable, IGeneratableToCode
     {

@@ -4,77 +4,47 @@ namespace CMSCore
 {
     public class CatCMS : ICMS
     {
-        private readonly List<Host> _hosts = new List<Host>();
-        private readonly ICMSValidator _validator;
-        private readonly IHostGenerator _generator;
+
+        private readonly IHostRepository _hosts;
+        private readonly IHostFileGenerator _generator;
 
 
-        public CatCMS(IHostGenerator generator, ICMSValidator validator)
+        public CatCMS(IHostRepository hosts, IHostFileGenerator generator)
         {
+            _hosts = hosts;
             _generator = generator;
-            _validator = validator;
         }
 
-
-        public void AddHost(Host s)
+        public void AddHost(Host host)
         {
-            _validator.Validate(s);
-
-            _hosts.Add(s);
+            _hosts.AddHost(host);
         }
-
         public void AddHosts(IEnumerable<Host> hosts)
         {
-            foreach (var host in hosts)
-            {
-                _validator.Validate(host);
-            }
-
-            _hosts.AddRange(hosts);
+            _hosts.AddHosts(hosts);
         }
 
-        public Host BuildHost(Guid hostId)
+        public IEnumerable<FileInfo> BuildHost(Guid hostId)
         {
-            var host = GetSiteById(hostId);
+            var host = _hosts.GetHostById(hostId);
 
-            return BuildHost(host);
+            return _generator.GenerateHostAsFiles(host, host.Configuration);
         }
-
-        public IEnumerable<Host> BuildHosts()
+        public IDictionary<Host, IEnumerable<FileInfo>> BuildHosts()
         {
-            var hosts = new List<Host>();
+            var hostsAndConfigs = _hosts.GetHosts().Select(x => Tuple.Create(x, x.Configuration));
 
-            foreach (var host in _hosts)
-            {
-                hosts.Add(BuildHost(host));
-            }
-
-            return hosts;
+            return _generator.GenerateHostsAsFiles(hostsAndConfigs);
         }
 
         public Host GetSiteById(Guid id)
         {
-            var host = GetSiteByIdOrDefault(id);
-
-            if (host.IsDefault())
-            {
-                throw new SiteNotFoundException();
-            }
-
-            return host;
+            return _hosts.GetHostById(id);
         }
-
         public Host GetSiteByIdOrDefault(Guid id)
         {
-            return _hosts.FirstOrDefault(theSite => theSite.Id == id) ?? new Host();
-        }
-
-
-        private Host BuildHost(Host host)
-        {
-            _generator.GenerateHostAsFiles(host);
-
-            return host;
+            return _hosts.GetHostByIdOrDefault(id);
         }
     }
+
 }

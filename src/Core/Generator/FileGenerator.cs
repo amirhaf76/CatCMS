@@ -1,4 +1,6 @@
-﻿namespace CMSCore.Generator
+﻿using CMSCore.Abstraction;
+
+namespace CMSCore.Generator
 {
     public class FileGenerator : IFileGenerator
     {
@@ -32,12 +34,12 @@
 
         public FileInfo CreateFile(PageFile p)
         {
-            var path = Path.Combine(GeneratedDirectory, p.Name);
+            return CreateFile(p, GeneratedDirectory);
+        }
 
-            if (!Directory.Exists(GeneratedDirectory))
-            {
-                Directory.CreateDirectory(GeneratedDirectory);
-            }
+        public FileInfo CreateFile(PageFile p, string directory)
+        {
+            string path = GetOrCreatePath(p, directory);
 
             using var streamWriter = File.CreateText(path);
 
@@ -47,5 +49,24 @@
 
             return new FileInfo(path);
         }
+
+        public List<FileInfo> CreateFiles(IEnumerable<PageFile> pageFiles, string directory)
+        {
+            return pageFiles.Select(pageFile => CreateFile(pageFile, directory)).ToList();
+        }
+
+
+        private static string GetOrCreatePath(PageFile p, string directory)
+        {
+            var path = Path.Combine(directory, p.Name);
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            return path;
+        }
+
     }
 }

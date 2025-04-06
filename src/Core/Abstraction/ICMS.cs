@@ -5,11 +5,10 @@
         Host GetSiteByIdOrDefault(Guid id);
         Host GetSiteById(Guid id);
 
-        IEnumerable<Host> BuildHosts();
-        Host BuildHost(Guid hostId);
+        IDictionary<Host, IEnumerable<FileInfo>> BuildHosts();
+        IEnumerable<FileInfo> BuildHost(Guid hostId);
 
-        void AddHost(Host s);
+        void AddHost(Host host);
         void AddHosts(IEnumerable<Host> hosts);
-
     }
 }
