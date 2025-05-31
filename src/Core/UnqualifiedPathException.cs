@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace CMSCore.Abstraction
+namespace CMSCore
 {
     [Serializable]
     internal class UnqualifiedPathException : Exception

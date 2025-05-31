@@ -1,36 +1,22 @@
 ﻿using CMSCore.Abstraction;
 
-namespace CMSCore.Generator
+namespace CMSCore.FileManagement
 {
     public class FileGenerator : IFileGenerator
     {
-        public const string DEFAULT_GENERATED_FILE = "Default_generated_files";
-
         public string GeneratedDirectory { get; private set; }
+
 
         public FileGenerator()
         {
-            GeneratedDirectory = GetDefaultDirectory();
+            GeneratedDirectory = string.Empty;
         }
 
         public FileGenerator(string directory)
         {
-            GeneratedDirectory = string.IsNullOrEmpty(directory) ? GetDefaultDirectory() : directory;
+            GeneratedDirectory = string.IsNullOrWhiteSpace(directory) ? string.Empty : directory;
         }
 
-
-        public string SetDirectory(string directory)
-        {
-            GeneratedDirectory = directory ?? throw new NullReferenceException();
-
-            return GeneratedDirectory;
-        }
-
-
-        public static string GetDefaultDirectory()
-        {
-            return Path.Combine(Directory.GetCurrentDirectory(), DEFAULT_GENERATED_FILE);
-        }
 
         public FileInfo CreateFile(PageFile p)
         {
@@ -55,12 +41,25 @@ namespace CMSCore.Generator
             return pageFiles.Select(pageFile => CreateFile(pageFile, directory)).ToList();
         }
 
+        public List<FileInfo> CreateFiles(IEnumerable<PageFile> pageFiles)
+        {
+            return pageFiles.Select(pageFile => CreateFile(pageFile)).ToList();
+        }
+
+        public void ChangeGeneratedDirectory(string newDirectory)
+        {
+            if (string.IsNullOrWhiteSpace(newDirectory))
+                throw new ArgumentException("Directory path cannot be null, empty or whitespace.", nameof(newDirectory));
+
+            GeneratedDirectory = newDirectory;
+        }
+
 
         private static string GetOrCreatePath(PageFile p, string directory)
         {
             var path = Path.Combine(directory, p.Name);
 
-            if (!Directory.Exists(directory))
+            if (!string.IsNullOrWhiteSpace(directory) && !Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }

@@ -1,12 +1,10 @@
-﻿using CMSCore.Abstraction;
-
-namespace CMSCore.Component
+﻿namespace CMSCore.Component
 {
     public class ComponentFactory : IComponentFactory
     {
         public ICMSComponent CreateComponent(CatCMSComponentType type) => type switch
         {
-            CatCMSComponentType.CarouselCatComponent => new CarouselCatComponent(),
+            CatCMSComponentType.CarouselCatComponent => new HeroComponent(),
             _ => throw new Exception($"This \"{type}\" type is not valid"),
         };
 

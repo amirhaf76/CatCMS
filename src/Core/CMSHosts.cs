@@ -24,7 +24,7 @@ namespace CMSCore
         {
             var host = GetHostByIdOrDefault(id);
 
-            if (host.IsDefault())
+            if (host.Id == Guid.Empty)
             {
                 throw new HostNotFoundException();
             }

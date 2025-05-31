@@ -1,4 +1,7 @@
-﻿namespace CMSCore.Abstraction
+﻿using CMSCore.Abstraction;
+using CMSCore.FileManagement;
+
+namespace CMSCore
 {
     public class ValidatedHostFileGenerator : IHostFileGenerator
     {

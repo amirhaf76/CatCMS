@@ -1,4 +1,4 @@
-﻿namespace CMSCore.Abstraction
+﻿namespace CMSCore.Component
 {
     public interface IComponentFactory
     {

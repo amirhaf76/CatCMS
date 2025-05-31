@@ -1,10 +1,6 @@
 ﻿namespace CMSCore.Component
 {
-    public class DefaultComponent : BaseCatComponent
+    public class DefaultComponent : BaseComponent
     {
-        public override string GenerateCode()
-        {
-            return @$"<p id =""{Id}"">{nameof(DefaultComponent)}</p>";
-        }
     }
 }
