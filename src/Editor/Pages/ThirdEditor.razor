@@ -1,0 +1,13 @@
+﻿@page "/thirdEditor"
+
+@using TinyMCE.Blazor
+
+<Editor 
+    ScriptSrc=".\lib\tinymce\tinymce.js"
+    LicenseKey="gpl"
+    JsConfSrc="sample"
+    @bind-Value=content />
+
+@code {
+    private string content = "<p>Hello world</p>";
+}

@@ -2,10 +2,47 @@
 @using static CatCMS.Pages.FetchData;
 @inject HttpClient Http;
 
-<PageTitle>Editing</PageTitle>
+@* <MudMenu Label="Open Menu">
+    <MudMenuItem Label="Item 1" />
+    <MudMenuItem Label="Item 2" />
+    <MudMenuItem Label="Item 3" />
+</MudMenu>
+<MudMenu ActivationEvent="@MouseEvent.RightClick">
+    <ActivatorContent>
+        <MudChip T="string" Icon="@Icons.Material.Filled.Mouse" Color="Color.Primary">Right Click</MudChip>
+    </ActivatorContent>
+    <ChildContent>
+        <MudMenuItem Label="Profile" />
+        <MudMenuItem Label="Theme" />
+        <MudMenuItem Label="Usage" />
+        <MudMenuItem Label="Sign Out" />
+    </ChildContent>
+</MudMenu>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="AddCompoent">Add Paper</MudButton>
+<MudContainer MaxWidth="MaxWidth.Small" @key=@_components>
+
+    @foreach (var c in _components)
+    {
+
+
+            <MudMenu FullWidth="true" ActivationEvent="@MouseEvent.LeftClick">
+                <ActivatorContent>
+                    <MudChip id=@($"id_{_components.IndexOf(c)}") T="string" Icon="@Icons.Material.Filled.Mouse" Color="Color.Primary">Left Click</MudChip>
+                </ActivatorContent>
+                <ChildContent>
+                    <MudMenuItem Label="Profile" />
+                    <MudMenuItem Label="Theme" />
+                    <MudMenuItem Label="Usage" />
+                    <MudMenuItem Label="Sign Out" />
+                </ChildContent>
+            </MudMenu>
+
+    
+    }
+</MudContainer> *@
 
     <iframe src="/sample-data/test2.html" scrolling="auto" style="height: 100vh ; width: 100vw"> </iframe>
-@if (string.IsNullOrEmpty(_error))
+@* @if (string.IsNullOrEmpty(_error))
 {
     
 
@@ -14,35 +51,56 @@ else
 {
     <p>@_error</p>
 }
-
+ *@
 @code {
 
 
     private WeatherForecast[]? forecasts;
 
-    protected override async Task OnInitializedAsync()
-    {
+    // protected override async Task OnInitializedAsync()
+    // {
 
-        try
-        {
+    //     try
+    //     {
 
-            using var htmlFile = await Http.GetAsync("sample-data/test2.html");
-            var t  = await htmlFile.Content.ReadAsStringAsync();
+    //         using var htmlFile = await Http.GetAsync("sample-data/test2.html");
+    //         var t  = await htmlFile.Content.ReadAsStringAsync();
 
-            _markupString1 = t;
-        }
-        catch (Exception e)
-        {
+    //         _markupString1 = t;
+    //     }
+    //     catch (Exception e)
+    //     {
 
-            _error = $"there is a problem in opening file. Error is \n{e}";
-        }
-    }
-    private void AddElement()
-    {
-
-    }
+    //         _error = $"there is a problem in opening file. Error is \n{e}";
+    //     }
+    // }
+    
+    
 
     private string _markupString1 = string.Empty;
     private string _error = string.Empty;
     private string _html = @$"";
+
+
+
+    private class Component
+    {
+        public string Code { get; set; } = string.Empty;
+    }
+
+
+    private List<Component> _components = new();
+
+
+    private void AddCompoent()
+    {
+        _components.Add(new Component { Code = "hhh" });
+    }
+
+    private Dictionary<string, object> _parameters = new Dictionary<string, object>()
+    {
+        {"Class","pa-4 ma-5"},
+        {"Elevation", 6}
+
+    };
 }
