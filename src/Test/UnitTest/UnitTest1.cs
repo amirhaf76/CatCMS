@@ -1,8 +1,7 @@
 using CMSCore;
 using CMSCore.Abstraction;
-using CMSCore.Builder;
 using CMSCore.Component;
-using System.Reflection;
+
 using Xunit.Abstractions;
 
 namespace UnitTest
@@ -17,90 +16,119 @@ namespace UnitTest
         }
 
         [Fact]
-        public void AStorableObject_Store_GettingJsonFormatData()
+        public void Build_SomeDirectoriesAndFiles_MustBeExist()
         {
-            var aStorableObject = new CarouselCatComponent() as IStorable;
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_1");
 
-            aStorableObject.Store().ValueKind.Should().NotBe(null);
+            var appStruct = new AppFileStructureBuilder("Myapp_1", new FileSystem());
+
+			appStruct
+                .AddDirectoryAndChangeWorkingDirectory("txtFolder")
+                .AddFile("hello.World.txt", "Hello World number 1")
+                .AddFile("hello.World.2.txt", "Hello World number 2")
+                .SetWorkingDirectoryToRoot()
+                .AddDirectory("directory_1")
+                .AddDirectory("directory_2")
+                .AddDirectory("directory_3")
+                .AddDirectoryAndChangeWorkingDirectory("directory_level_1")
+                .AddDirectoryAndChangeWorkingDirectory("directory_level_2")
+                .AddDirectoryAndChangeWorkingDirectory("directory_level_3")
+                .SetWorkingDirectoryToRoot();
+
+            // Action
+            _testOutput.WriteLine(appStruct.GetStructureView());
+
+            appStruct.Build(Directory.GetCurrentDirectory());
+
+            // Assertion
+            Directory.EnumerateFileSystemEntries(path).Should()
+                .Contain(x => x.Contains("txtFolder"))
+                .And.Contain(x => x.Contains("directory_1"))
+                .And.Contain(x => x.Contains("directory_2"))
+                .And.Contain(x => x.Contains("directory_3"))
+				.And.Contain(x => x.Contains("directory_level_1"));
+
+
+            Directory.EnumerateFileSystemEntries(Path.Combine(path, "txtFolder")).Should()
+                .Contain(x => x.Contains("hello.World.txt"))
+                .And.Contain(x => x.Contains("hello.World.2.txt"));
+
+
+            Directory.EnumerateFileSystemEntries(Path.Combine(path, "directory_level_1"))
+                .Should().Contain(x => x.Contains("directory_level_2"));
+
+
+			Directory.EnumerateFileSystemEntries(Path.Combine(path, "directory_level_1", "directory_level_2"))
+                .Should().Contain(x => x.Contains("directory_level_3"));
+
+			var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_1");
+			Directory.Delete(targetDirctory, true);
+			_testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
+		}
+
+        [Fact]
+        public void AddFilesLike_SomeDirectoriesAndFiles_MustBeExist()
+        {
+            var appStruct = new AppFileStructureBuilder("Myapp_2", new FileSystem());
+            var path = @"D:\Programing\Work_space\C#\CMS\src\SampleHost";
+
+            appStruct
+                .AddDirectoryAndChangeWorkingDirectory("Properties")
+                .AddFilesLike(Path.Combine(path, "Properties"))
+                .SetWorkingDirectoryToRoot()
+                .AddDirectoryAndChangeWorkingDirectory("wwwroot")
+                .AddFilesLike(Path.Combine(path, "wwwroot"))
+                .SetWorkingDirectoryToRoot()
+                .AddDirectoryAndChangeWorkingDirectory("Pages")
+                .AddFilesLike(Path.Combine(path, "Pages"))
+                .SetWorkingDirectoryToRoot()
+                .AddFilesLike(path);
+
+            _testOutput.WriteLine(appStruct.GetStructureView());
+
+            appStruct.Build(Directory.GetCurrentDirectory());
+
+            var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_2");
+			Directory.Delete(targetDirctory, true);
+            _testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
         }
 
         [Fact]
-        public void Test()
+        public void TestScenario3()
         {
+            var path = @"D:\Programing\Work_space\C#\CMS\src\SampleHost";
+            var directories = Directory
+                .EnumerateDirectories(path, "*", new EnumerationOptions { RecurseSubdirectories = true, MaxRecursionDepth = 10 })
+                .ToList();
+            directories.Add(path);
+            var files = directories.SelectMany(directory => Directory.GetFiles(directory));
+
+            var destiantion = Path.Combine(Directory.GetCurrentDirectory(), "newMyApp");
+
+            Directory.CreateDirectory(destiantion);
 
 
-            //var pageV2 = new PageV2();
-
-            //pageV2.Layout.Should().NotBeNull();
-
-        }
-
-        [Fact]
-        public void GettingTypes_CoreProjectModels_ItMustHaveSomeTypes()
-        {
-            var coreAssembly = Assembly.GetAssembly(typeof(CatCMSBuilder));
-
-            coreAssembly?.GetTypes()
-                .Should()
-                .ContainEquivalentOf(new
-                {
-                    Name = "Post"
-                })
-                .And
-                .ContainEquivalentOf(new
-                {
-                    Name = "Link"
-                });
-
-        }
-
-       
-        [Fact]
-        public void RunAnCatCmsCore_AnInstanceOfCoreApplication_RunSuccessfuly()
-        {
-
-        }
-
-
-        [Fact]
-        public void Publish_ASampleOfRazorPageWebAppWithGeneratedSitesAndPages_SuccessfulMovingFiles()
-        {
-            var rootDirectory = "Published_host";
-            var projectDirectory = "Generated.files";
-
-
-            var sourceFilePath = "Generated.files\\Page_1";
-            var destinationFileDirectory = "Published_host";
-            var dir = Path.GetDirectoryName(sourceFilePath);
-            var fileName = Path.GetFileName(sourceFilePath);
-
-            if (dir is not null)
+            foreach (var d in directories)
             {
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
+                var relativePath = Path.GetRelativePath(path, d);
 
-                if (fileName is not null && fileName != string.Empty)
-                {
-                    File.Copy(sourceFilePath, Path.Combine(destinationFileDirectory, fileName));
-                }
+                var newPath = Path.Combine(Directory.GetCurrentDirectory(), "newMyApp", relativePath);
+
+                Directory.CreateDirectory(newPath);
             }
 
 
+            foreach (var file in files)
+            {
+                var relativePath = Path.GetRelativePath(path, file);
 
-            _testOutput.WriteLine(string.Join(", ", Directory.GetFiles(destinationFileDirectory)));
-        }
+                File.Copy(file, Path.Combine(destiantion, relativePath));
+            }
 
-        private void MoveFileTo(string sourcePath, string destinationPath)
-        {
+			var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "newMyApp");
+			Directory.Delete(targetDirctory, true);
+			_testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
 
-        }
-
-        private ICMSBuilder CreateCMSBuilder()
-        {
-            return new CatCMSBuilder();
-        }
-
+		}
     }
 }
