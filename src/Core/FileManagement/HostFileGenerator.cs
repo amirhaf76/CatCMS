@@ -1,13 +1,13 @@
 ﻿using CMSCore.Abstraction;
 
-namespace CMSCore.Generator
+namespace CMSCore.FileManagement
 {
     public class HostFileGenerator : IHostFileGenerator
     {
         private readonly IFileGenerator _fileGenerator;
-        private readonly ICodePageGenerator _pageGenerator;
+        private readonly IPageGenerator _pageGenerator;
 
-        public HostFileGenerator(ICodePageGenerator pageGenerator, IFileGenerator fileGenerator)
+        public HostFileGenerator(IPageGenerator pageGenerator, IFileGenerator fileGenerator)
         {
             _fileGenerator = fileGenerator;
             _pageGenerator = pageGenerator;
@@ -40,7 +40,7 @@ namespace CMSCore.Generator
         {
             return pages.Select(page =>
             {
-                return new PageFile(page.Title, _pageGenerator.GenerateCodePage(page));
+                return new PageFile(page.Title, _pageGenerator.GenerateCodePage(page.ContentProvider));
             });
         }
     }

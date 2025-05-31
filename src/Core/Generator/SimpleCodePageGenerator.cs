@@ -1,16 +1,21 @@
 ﻿using CMSCore.Abstraction;
+using System.Text;
 
 namespace CMSCore.Generator
 {
-    public class SimpleCodePageGenerator : ICodePageGenerator
+    public class SimpleCodePageGenerator : IPageGenerator
     {
-        public string GenerateCodePage(Page page)
-        {
-            if (page is not null)
+        public string GenerateCodePage(IPageContentProvider contentProvider)
+		{
+            if (contentProvider is not null)
             {
-                var componentsMarkDowns = page.Components.Select(c => c.GenerateCode());
+                var strBuilder = new StringBuilder();
+                foreach (var c in contentProvider.GetComponents())
+                {
+                    strBuilder.AppendLine(c.GenerateCode());
+                }
 
-                return page.Layout.ArrangeComponents(componentsMarkDowns);
+				return strBuilder.ToString();
             }
 
             throw new Exception();

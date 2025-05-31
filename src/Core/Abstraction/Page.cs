@@ -1,17 +1,16 @@
-﻿using CMSCore.Component;
-
-namespace CMSCore.Abstraction
+﻿namespace CMSCore.Abstraction
 {
 
-    public class Page
+	public class Page
     {
         public string Title { get; set; } = string.Empty;
 
+        public string Name { get; set; } = string.Empty;
+
         public Guid Id { get; set; }
 
-        public List<ICMSComponent> Components { get; set; } = new List<ICMSComponent>();
+        public string Content { get; set; } = string.Empty;
 
-        public ILayout Layout { get; set; } = new StackLayout();
-    }
-
+        public IPageContentProvider? ContentProvider { get; set; }
+	}
 }

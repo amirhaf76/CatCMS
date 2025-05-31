@@ -1,4 +1,6 @@
-﻿namespace CMSCore.Abstraction
+﻿using CMSCore.Abstraction;
+
+namespace CMSCore.FileManagement
 {
     public interface IHostFileGenerator
     {

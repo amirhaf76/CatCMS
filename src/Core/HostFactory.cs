@@ -6,11 +6,15 @@ namespace CMSCore
     {
         public Host CreateADefaultTemplate()
         {
-            return new Host
+            var host = new Host
             {
                 Id = Guid.NewGuid(),
-                Title = "Default Template Host",
+                Title = "Default Template Host"
             };
+
+            host.Configuration.GeneratedCodesDirectory = Directory.GetCurrentDirectory();
+
+            return host;
         }
     }
 }
