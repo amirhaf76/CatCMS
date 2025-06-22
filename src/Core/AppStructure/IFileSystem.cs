@@ -2,8 +2,9 @@
 {
 	public interface IFileSystem
 	{
-		IEnumerable<string> GetFiles(string directory);
-		IEnumerable<string> GetFilesByName(string directory, IEnumerable<string> names);
+		IEnumerable<string> GetFiles(string path);
+		IEnumerable<string> GetFilesByName(string path, IEnumerable<string> names);
+		IEnumerable<string> GetDirectories(string path, int maxRecursionDepth);
 		string GetFileName(string path);
 		string CombinePath(params string[] paths);
 	}

@@ -1,6 +1,4 @@
 using CMSCore;
-using CMSCore.Abstraction;
-using CMSCore.Component;
 
 using Xunit.Abstractions;
 
@@ -22,7 +20,7 @@ namespace UnitTest
 
             var appStruct = new AppFileStructureBuilder("Myapp_1", new FileSystem());
 
-			appStruct
+            appStruct
                 .AddDirectoryAndChangeWorkingDirectory("txtFolder")
                 .AddFile("hello.World.txt", "Hello World number 1")
                 .AddFile("hello.World.2.txt", "Hello World number 2")
@@ -46,7 +44,7 @@ namespace UnitTest
                 .And.Contain(x => x.Contains("directory_1"))
                 .And.Contain(x => x.Contains("directory_2"))
                 .And.Contain(x => x.Contains("directory_3"))
-				.And.Contain(x => x.Contains("directory_level_1"));
+                .And.Contain(x => x.Contains("directory_level_1"));
 
 
             Directory.EnumerateFileSystemEntries(Path.Combine(path, "txtFolder")).Should()
@@ -58,13 +56,13 @@ namespace UnitTest
                 .Should().Contain(x => x.Contains("directory_level_2"));
 
 
-			Directory.EnumerateFileSystemEntries(Path.Combine(path, "directory_level_1", "directory_level_2"))
+            Directory.EnumerateFileSystemEntries(Path.Combine(path, "directory_level_1", "directory_level_2"))
                 .Should().Contain(x => x.Contains("directory_level_3"));
 
-			var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_1");
-			Directory.Delete(targetDirctory, true);
-			_testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
-		}
+            var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_1");
+            Directory.Delete(targetDirctory, true);
+            _testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
+        }
 
         [Fact]
         public void AddFilesLike_SomeDirectoriesAndFiles_MustBeExist()
@@ -89,8 +87,71 @@ namespace UnitTest
             appStruct.Build(Directory.GetCurrentDirectory());
 
             var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_2");
-			Directory.Delete(targetDirctory, true);
+            Directory.Delete(targetDirctory, true);
             _testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
+        }
+
+        [Fact]
+        public void AddFilesLike_SomeDirectoriesAndFiles_MustBeExist_v2()
+        {
+            var appStruct = new AppFileStructureBuilder("Myapp_2", new FileSystem());
+            var path = @".\Test_3";
+
+            Directory.CreateDirectory(".\\Test_3\\Directory_1");
+            Directory.CreateDirectory(".\\Test_3\\Directory_2");
+            Directory.CreateDirectory(".\\Test_3\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2");
+
+            File.Create(".\\Test_3\\File_1").Close();
+            File.Create(".\\Test_3\\File_2").Close();
+            File.Create(".\\Test_3\\Directory_1\\File_3").Close();
+            File.Create(".\\Test_3\\Directory_1\\File_4").Close();
+            File.Create(".\\Test_3\\Directory_3_lv0\\File_5").Close();
+            File.Create(".\\Test_3\\Directory_3_lv0\\File_6").Close();
+            File.Create(".\\Test_3\\Directory_3_lv0\\Directory_3_lv1\\File_7").Close();
+            File.Create(".\\Test_3\\Directory_3_lv0\\Directory_3_lv1\\File_8").Close();
+            File.Create(".\\Test_3\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2\\File_9").Close();
+            File.Create(".\\Test_3\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2\\File_10").Close();
+
+            appStruct.AddDirectoriesAndTheirFiles(path, 4);
+
+            _testOutput.WriteLine(appStruct.GetStructureView());
+
+            appStruct.Build(Directory.GetCurrentDirectory());
+
+            // Assertion
+            var option = new EnumerationOptions
+            {
+                MaxRecursionDepth = 10,
+                RecurseSubdirectories = true
+            };
+
+            var systemEntities = Directory.EnumerateFileSystemEntries(".\\Myapp_2","*", option);
+
+            systemEntities.Should()
+                .HaveCount(15)
+                .And.Contain(".\\Myapp_2\\File_1")
+                .And.Contain(".\\Myapp_2\\File_2")
+                .And.Contain(".\\Myapp_2\\Directory_1")
+                .And.Contain(".\\Myapp_2\\Directory_2")
+                .And.Contain(".\\Myapp_2\\Directory_1\\File_3")
+                .And.Contain(".\\Myapp_2\\Directory_1\\File_4")
+                .And.Contain(".\\Myapp_2\\Directory_3_lv0")
+                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\File_5")
+                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\File_6")
+                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1")
+                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1\\File_7")
+                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1\\File_8")
+                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2")
+                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2\\File_9")
+                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2\\File_10");
+
+            var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_2");
+            Directory.Delete(targetDirctory, true);
+            _testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
+
+            var secondTargetDirctory = path;
+            Directory.Delete(secondTargetDirctory, true);
+            _testOutput.WriteLine($"\"{secondTargetDirctory}\" directory is removed.");
         }
 
         [Fact]
@@ -125,10 +186,36 @@ namespace UnitTest
                 File.Copy(file, Path.Combine(destiantion, relativePath));
             }
 
-			var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "newMyApp");
-			Directory.Delete(targetDirctory, true);
-			_testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
+            var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "newMyApp");
+            Directory.Delete(targetDirctory, true);
+            _testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
 
-		}
+        }
+
+        [Fact]
+        public void PlayGround()
+        {
+            // AddDirectory("D:\\Books and PDFs", 1); // 1
+            var path = "c:\\ii\\fsd\\fsd\\fdgdf\\f\\dsfsaaa\\fds";
+            _testOutput.WriteLine(Path.GetPathRoot(path)?.ToString() ?? "<>");
+            _testOutput.WriteLine(Path.IsPathRooted(path).ToString());
+            _testOutput.WriteLine(Path.TrimEndingDirectorySeparator(path));
+            _testOutput.WriteLine(Path.GetFileName(path));
+            _testOutput.WriteLine(Path.GetDirectoryName(path));
+            _testOutput.WriteLine(Path.GetDirectoryName(Path.GetDirectoryName(path)));
+
+            //foreach (var item in path.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            //{
+            //    _testOutput.WriteLine(item);
+            //}
+            //_testOutput.WriteLine("end");
+            //foreach (var item in Path.GetInvalidFileNameChars())
+            //{
+            //    _testOutput.WriteLine(item.ToString());
+            //}
+            //_testOutput.WriteLine(string.Join(',', Directory.GetDirectories("\\")));
+
+        }
+
     }
 }
