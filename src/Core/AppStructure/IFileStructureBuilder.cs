@@ -13,8 +13,10 @@
 
         IFileStructureBuilder AddFileLike(string path);
 
-        IFileStructureBuilder AddFilesLike(string directory);
+        IFileStructureBuilder AddFilesLike(string path);
         IFileStructureBuilder AddFilesLike(IEnumerable<string> paths);
-        IFileStructureBuilder AddFilesByNameFromDirectory(string directory, IEnumerable<string> names);
+        IFileStructureBuilder AddFilesByNameFromPath(string path, IEnumerable<string> names);
+
+        IFileStructureBuilder AddDirectoriesAndTheirFiles(string path, int maxRecursionDepth);
     }
 }

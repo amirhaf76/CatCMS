@@ -1,4 +1,6 @@
-﻿namespace CMSCore
+﻿using System.Xml;
+
+namespace CMSCore
 {
 
 	public class AppFileStructureBuilder : IFileStructureBuilder
@@ -32,7 +34,7 @@
 			return this;
 		}
 
-		public IFileStructureBuilder AddDirectoryAndChangeWorkingDirectory(string name)
+        public IFileStructureBuilder AddDirectoryAndChangeWorkingDirectory(string name)
 		{
 			var aDirectoryStructure = new DirectoryStructure(name, _workingDirectory);
 
@@ -70,18 +72,16 @@
 
 		public IFileStructureBuilder AddFileLike(string path)
 		{
-
 			_workingDirectory.AddChild(new CopyFileStructure(path, _fileSystem.GetFileName(path)));
 
 			return this;
 		}
 
-		public IFileStructureBuilder AddFilesLike(string directory)
+		public IFileStructureBuilder AddFilesLike(string path)
 		{
 			var structures = _fileSystem
-				.GetFiles(directory)
-				.Select(fileName => new CopyFileStructure(_fileSystem.CombinePath(directory, fileName), _fileSystem.GetFileName(fileName)));
-
+				.GetFiles(path)
+				.Select(filePath => new CopyFileStructure(filePath, _fileSystem.GetFileName(filePath)));
 
 			_workingDirectory.AddChildren(structures);
 
@@ -94,17 +94,40 @@
 
 			return this;
 		}
-		public IFileStructureBuilder AddFilesByNameFromDirectory(string directory, IEnumerable<string> names)
+		public IFileStructureBuilder AddFilesByNameFromPath(string path, IEnumerable<string> names)
 		{
-			var structures = _fileSystem.GetFilesByName(directory, names)
-				.Select(fileName => new CopyFileStructure(_fileSystem.CombinePath(directory, fileName), _fileSystem.GetFileName(fileName)));
+			var structures = _fileSystem.GetFilesByName(path, names)
+				.Select(filePath => new CopyFileStructure(filePath, _fileSystem.GetFileName(filePath)));
 
 			_workingDirectory.AddChildren(structures);
 
 			return this;
 		}
 
-		public DirectoryStructureDto GetStructuresDto()
+        public IFileStructureBuilder AddDirectoriesAndTheirFiles(string path, int maxRecursionDepth)
+		{
+			AddFilesLike(path);
+
+			if (maxRecursionDepth > 0)
+			{
+				var subDirectories = _fileSystem.GetDirectories(path, 0);
+				var nextRecursionDepth = maxRecursionDepth - 1;
+				var currentWorkingDirectory = _workingDirectory;
+
+				foreach (var subDirectory in subDirectories)
+				{
+                    AddDirectoryAndChangeWorkingDirectory(_fileSystem.GetFileName(subDirectory));
+
+                    AddDirectoriesAndTheirFiles(subDirectory, nextRecursionDepth);
+
+					_workingDirectory = currentWorkingDirectory;
+				}
+			}
+			
+			return this;
+        }
+
+        public DirectoryStructureDto GetStructuresDto()
 		{
 			return (DirectoryStructureDto)_rootDirectory.ToDto();
 		}

@@ -13,11 +13,7 @@
         {
             var dto = (CopyFileStructureDto)_structure.ToDto();
 
-			using var destination = File.CreateText(Path.Combine(_directory, dto.Name));
-            using var source = File.OpenText(dto.Path);
-
-            destination.Write(source.ReadToEnd());
-            destination.Flush();
+            File.Copy(dto.Path, Path.Combine(_directory, dto.Name), true);
         }
     }
 }
