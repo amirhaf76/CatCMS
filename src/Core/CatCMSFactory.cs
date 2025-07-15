@@ -10,7 +10,7 @@ namespace CMSCore
         {
             var generator = CreateHostGenerator();
 
-            return new CatCMS(new CMSHosts(), generator);
+            return new CatCMS(new CMSHosts(), generator, new HostFactory(), new PageFactory());
         }
 
         private static HostFileGenerator CreateHostGenerator()

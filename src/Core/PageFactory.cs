@@ -6,11 +6,14 @@ namespace CMSCore
     {
         public Page CreateADefaultTemplate()
         {
-            return new Page
+            var aPage = new Page(Guid.NewGuid(), new PageInfoDto
             {
-                Id = Guid.NewGuid(),
+                Name = "Default Page",
                 Title = "Default Template Page",
-            };
+                Path = string.Empty,
+            });
+
+            return aPage;
         }
     }
 }
