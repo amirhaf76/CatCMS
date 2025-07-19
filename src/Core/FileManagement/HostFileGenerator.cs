@@ -2,7 +2,7 @@
 
 namespace CMSCore.FileManagement
 {
-    public class HostFileGenerator : IHostFileGenerator
+    public class HostFileGenerator : IHostGenerator
     {
         private readonly IFileGenerator _fileGenerator;
         private readonly IPageGenerator _pageGenerator;
@@ -16,7 +16,7 @@ namespace CMSCore.FileManagement
 
         public IEnumerable<FileInfo> GenerateHostAsFiles(Host host, HostConfiguration hostConfig)
         {
-            var pageFiles = GeneratePageCodes(host.Pages);
+            var pageFiles = GeneratePageCodes(host.ToDto().Pages);
 
             var files = _fileGenerator.CreateFiles(pageFiles, hostConfig.GeneratedCodesDirectory);
 
@@ -36,12 +36,17 @@ namespace CMSCore.FileManagement
         }
 
 
-        private IEnumerable<PageFile> GeneratePageCodes(IEnumerable<Page> pages)
+        private IEnumerable<PageFile> GeneratePageCodes(IEnumerable<PageDto> pages)
         {
             return pages.Select(page =>
             {
-                return new PageFile(page.Title, _pageGenerator.GenerateCodePage(page.ContentProvider));
+                return new PageFile(GetPageTitle(page), _pageGenerator.GenerateCodePage(new PageContentProvider()));
             });
+        }
+
+        private static string GetPageTitle(PageDto page)
+        {
+            return page.PageInfo.Title;
         }
     }
 }

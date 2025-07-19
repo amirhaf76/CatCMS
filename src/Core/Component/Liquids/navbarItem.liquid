@@ -1,0 +1,16 @@
+{%- if HasDropDown -%}
+    {%- assign drop_down_class = "has-dropdown" -%}
+    {%- assign navbar_type = "navbar-link" -%}
+    {%- assign is_hoverable_class = "is-hoverable" -%}
+{%- else -%}
+    {%- assign navbar_type = "navbar-item" -%}
+{%- endif -%}
+{%- capture class -%}
+{{navbar_type}} {{ drop_down_class }} {{ is_hoverable_class }}
+{%- endcapture -%}
+<a class="{{class}}" asp-page="{{AspPage}}" href="{{HRef}}">{{ Name  }}</a>
+{%- if HasDropDown %}
+<div class="navbar-dropdown"> 
+{{ Children }}
+</div>
+{%- endif -%}

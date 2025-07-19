@@ -9,7 +9,7 @@
         Host GetHostByIdOrDefault(Guid id);
 
         IEnumerable<Host> GetHosts();
-
+        void RemoveHost(Guid hostId);
     }
 
 }

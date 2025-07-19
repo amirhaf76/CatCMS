@@ -1,12 +1,9 @@
 ﻿@page "/thirdEditor"
 
-@using TinyMCE.Blazor
-
-<Editor 
-    ScriptSrc=".\lib\tinymce\tinymce.js"
-    LicenseKey="gpl"
-    JsConfSrc="sample"
-    @bind-Value=content />
+<HTMLContnetEditor @bind-Content=@content ></HTMLContnetEditor>
+<MudPaper Class="pa-4 mud-height-full" Elevation="6">
+    <MudText Color="@Color.Error">@content</MudText>
+</MudPaper>
 
 @code {
     private string content = "<p>Hello world</p>";

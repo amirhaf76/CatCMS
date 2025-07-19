@@ -3,12 +3,12 @@ using CMSCore.FileManagement;
 
 namespace CMSCore
 {
-    public class ValidatedHostFileGenerator : IHostFileGenerator
+    public class ValidatedHostFileGenerator : IHostGenerator
     {
-        private readonly IHostFileGenerator _generator;
+        private readonly IHostGenerator _generator;
         private readonly IHostValidator _validator;
 
-        public ValidatedHostFileGenerator(IHostFileGenerator generator, IHostValidator validator)
+        public ValidatedHostFileGenerator(IHostGenerator generator, IHostValidator validator)
         {
             _generator = generator;
             _validator = validator;

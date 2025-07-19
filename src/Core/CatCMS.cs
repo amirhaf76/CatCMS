@@ -7,13 +7,16 @@ namespace CMSCore
     {
 
         private readonly IHostRepository _hosts;
-        private readonly IHostFileGenerator _generator;
+        private readonly IHostGenerator _hostGenerator;
+        private readonly IHostFactory _hostFactory;
+        private readonly IPageFactory _pageFactory;
 
-
-        public CatCMS(IHostRepository hosts, IHostFileGenerator generator)
+        public CatCMS(IHostRepository hosts, IHostGenerator generator, IHostFactory hostFactory, IPageFactory pageFactory)
         {
             _hosts = hosts;
-            _generator = generator;
+            _hostGenerator = generator;
+            _hostFactory = hostFactory;
+            _pageFactory = pageFactory;
         }
 
         public void AddHost(Host host)
@@ -25,27 +28,88 @@ namespace CMSCore
             _hosts.AddHosts(hosts);
         }
 
-        public IEnumerable<FileInfo> BuildHost(Guid hostId)
+        public HostDto CreateAndAddHost()
         {
-            var host = _hosts.GetHostById(hostId);
+            var aHost = _hostFactory.CreateADefaultTemplate();
 
-            return _generator.GenerateHostAsFiles(host, host.Configuration);
-        }
-        public IDictionary<Host, IEnumerable<FileInfo>> BuildHosts()
-        {
-            var hostsAndConfigs = _hosts.GetHosts().Select(x => Tuple.Create(x, x.Configuration));
+            _hosts.AddHost(aHost);
 
-            return _generator.GenerateHostsAsFiles(hostsAndConfigs);
+            return aHost.ToDto();
         }
 
-        public Host GetSiteById(Guid id)
+        public PageDto CreateAndAddPage(Guid hostId)
+        {
+            var theHost = _hosts.GetHostById(hostId);
+
+            var aPage = _pageFactory.CreateADefaultTemplate();
+
+            theHost.AddPage(aPage);
+
+            return aPage.ToDto();
+        }
+
+        public void DeleteHost(Guid hostId)
+        {
+            _hosts.RemoveHost(hostId);
+        }
+
+        public void DeletePage(Guid pageId, Guid hostId)
+        {
+            var theHost = _hosts.GetHostById(hostId);
+
+            theHost.Remove(pageId);
+        }
+
+        public IEnumerable<FileInfo> GenerateHost(Guid hostId)
+        {
+            var theHost = _hosts.GetHostById(hostId);
+
+            return _hostGenerator.GenerateHostAsFiles(theHost, GetHostConfiguration(theHost.ToDto()));
+        }
+
+        private static HostConfiguration GetHostConfiguration(HostDto dto)
+        {
+            return dto.Configuration;
+        }
+
+        public Task<IEnumerable<FileInfo>> GenerateHostAsync(Guid hostId)
+        {
+            throw new NotImplementedException(); 
+        }
+
+        public Host GetHostById(Guid id)
         {
             return _hosts.GetHostById(id);
         }
-        public Host GetSiteByIdOrDefault(Guid id)
+        public Host GetHostByIdOrDefault(Guid id)
         {
             return _hosts.GetHostByIdOrDefault(id);
         }
-    }
 
+        public IEnumerable<Host> GetHosts()
+        {
+            return _hosts.GetHosts();
+        }
+
+        public void UpdateHostConfig(Guid hostId, HostConfiguration hostConfig)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdatePageContentAsync(PageUpdateDto arg)
+        {
+            var theHost = _hosts.GetHostById(arg.HostId);
+
+            var thePage = theHost.GetPageById(arg.PageId);
+
+            if (thePage is null)
+            {
+                throw new PageNotFoundException();
+            }
+
+            // Todo: update content.
+
+            return Task.CompletedTask;
+        }
+    }
 }

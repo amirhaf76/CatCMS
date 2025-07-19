@@ -24,21 +24,34 @@ namespace CMSCore
         {
             var host = GetHostByIdOrDefault(id);
 
-            if (host.Id == Guid.Empty)
+            if (GetHostId(host.ToDto()) == Guid.Empty)
             {
                 throw new HostNotFoundException();
             }
 
             return host;
         }
+
+        private static Guid GetHostId(HostDto host)
+        {
+            return host.Id;
+        }
+
         public Host GetHostByIdOrDefault(Guid id)
         {
-            return _hosts.FirstOrDefault(theSite => theSite.Id == id) ?? new Host();
+            return _hosts.FirstOrDefault(host => GetHostId(host.ToDto()) == id) ?? Host.Default;
         }
 
         public IEnumerable<Host> GetHosts()
         {
             return _hosts.AsReadOnly();
+        }
+
+        public void RemoveHost(Guid hostId)
+        {
+            var theHost = GetHostById(hostId);
+
+            _hosts.Remove(theHost);
         }
     }
 

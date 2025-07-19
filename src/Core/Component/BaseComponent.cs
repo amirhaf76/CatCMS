@@ -1,13 +1,14 @@
 ﻿
 namespace CMSCore.Component
 {
-	public class BaseComponent : ICMSComponent
+	public abstract class BaseComponent : ICMSComponent
 	{
 		public Guid Id { get; set; }
 
-		public string GenerateCode()
-		{
-			throw new NotImplementedException();
-		}
-	}
+        // public abstract string GenerateCode();
+        public string GenerateCode()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

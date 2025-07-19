@@ -18,20 +18,15 @@ namespace UnitTest
         }
 
         [Fact]
-        public void APageWithAComponet_GenerateCode_ShouldNotBeEmpty()
+        public void APageWithAComponent_GenerateCode_ShouldNotBeEmpty()
         {
             // Arrangement
             var theCodePageGenerator = (IPageGenerator)new CodePageGenerator();
-            var aPage = new Page
-            {
-                Id = Guid.NewGuid(),
-                Title = "Test Page",
-                ContentProvider = new PageContentProvider(),
-		};
+            var aPage = new PageFactory().CreateADefaultTemplate();
 
             var aComponent = new DefaultComponent();
 
-            aPage.ContentProvider.GetComponents().Add(aComponent);
+            aPage.ContentProvider?.GetComponents().Add(aComponent);
 
             // Action
             var generatedCode = theCodePageGenerator.GenerateCodePage(aPage.ContentProvider);
@@ -41,7 +36,7 @@ namespace UnitTest
         }
 
         [Fact]
-        public void PageFilelWithoutSpeacifiedDirectory_CreateFile_FileWithItsContentMustBeCreated()
+        public void PageFileWithoutSpecifiedDirectory_CreateFile_FileWithItsContentMustBeCreated()
         {
             // Arrangement
             var theFileGenerator = (IFileGenerator)new FileGenerator();
@@ -81,7 +76,7 @@ namespace UnitTest
         }
 
         [Fact]
-        public void PageFilelWithSpeacifiedDirectory_CreateFile_FileWithItsContentMustBeCreated()
+        public void PageFileWithSpecifiedDirectory_CreateFile_FileWithItsContentMustBeCreated()
         {
             // Arrangement
             var theFileGenerator = (IFileGenerator)new FileGenerator();
@@ -131,7 +126,7 @@ namespace UnitTest
         }
 
         [Fact]
-        public void PageFileslWithSpeacifiedDirectory_CreateFiles_FilesWithTheirContentMustBeCreated()
+        public void PageFilesWithSpecifiedDirectory_CreateFiles_FilesWithTheirContentMustBeCreated()
         {
             // Arrangement
             var theFileGenerator = (IFileGenerator)new FileGenerator();
@@ -215,10 +210,10 @@ namespace UnitTest
             var theHostRepository = (IHostRepository)new CMSHosts();
 
             //      Second Part: Complexe Abstraction
-            var theHostFileGenerator = (IHostFileGenerator)new HostFileGenerator(theCodePageGenerator, theFileGenerator);
+            var theHostFileGenerator = (IHostGenerator)new HostFileGenerator(theCodePageGenerator, theFileGenerator);
 
             //      Third Part: Main Abstraction
-            var theCms = (ICMS)new CatCMS(theHostRepository, theHostFileGenerator);
+            var theCms = (ICMS)new CatCMS(theHostRepository, theHostFileGenerator, theHostFactory, thePageFactory);
 
             //      Desiging Part
             var theHost = theHostFactory.CreateADefaultTemplate();
@@ -226,15 +221,15 @@ namespace UnitTest
 
             theCms.AddHost(theHost);
 
-            theHost.Pages.Add(thePage);
+            theHost.AddPage(thePage);
 
-            thePage.ContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
-            thePage.ContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
-            thePage.ContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
 
 
             // Action
-            var theResult = theCms.BuildHost(theHost.Id);
+            var theResult = theHostFileGenerator.GenerateHostAsFiles(theHost, theHost.ToDto().Configuration);
 
 
             // Assertion
@@ -262,36 +257,35 @@ namespace UnitTest
             var thePageFactory = (IPageFactory)new PageFactory();
             var theComponentFactory = (IComponentFactory)new ComponentFactory();
 
-            var theCodePageGenerator = (IPageGenerator)new CodePageGenerator();
+            var thePageGenerator = (IPageGenerator)new CodePageGenerator();
             var theFileGenerator = (IFileGenerator)new FileGenerator();
-            var theHostsValidator = (IHostValidator)new HostValidator();
-
             var theHostRepository = (IHostRepository)new CMSHosts();
 
-            //      Second Part: Complexe Abstraction
-            var theHostFileGenerator = (IHostFileGenerator)new HostFileGenerator(theCodePageGenerator, theFileGenerator);
+            var theHostsValidator = (IHostValidator)new HostValidator();
 
-            theHostFileGenerator = new ValidatedHostFileGenerator(theHostFileGenerator, theHostsValidator);
+            //      Second Part: Complexe Abstraction
+            var theHostGenerator = (IHostGenerator)new HostFileGenerator(thePageGenerator, theFileGenerator);
+
+            theHostGenerator = new ValidatedHostFileGenerator(theHostGenerator, theHostsValidator);
 
             //      Third Part: Main Abstraction
-            var theCms = (ICMS)new CatCMS(theHostRepository, theHostFileGenerator);
+            var theCms = (ICMS)new CatCMS(theHostRepository, theHostGenerator, theHostFactory, thePageFactory);
 
-
-            //      Desiging Part
+            //      Forth Part: Designing Part
             var theHost = theHostFactory.CreateADefaultTemplate();
             var thePage = thePageFactory.CreateADefaultTemplate();
 
             theCms.AddHost(theHost);
 
-            theHost.Pages.Add(thePage);
+            theHost.AddPage(thePage);
 
-            thePage.ContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
-            thePage.ContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
-            thePage.ContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
 
 
             // Action
-            var theResult = theCms.BuildHost(theHost.Id);
+            var theResult = theHostGenerator.GenerateHostAsFiles(theHost, theHost.ToDto().Configuration);
 
 
             // Assertion
@@ -311,5 +305,43 @@ namespace UnitTest
         }
 
 
+        [Fact]
+        public async Task ACmsObject_WithBuilder_GeneratesFilesAsync()
+        {
+            // Arrangement
+            //      Builder
+            var theCmsBuilder = new CMSBuilder().DefaultConfig();
+            var theCms = theCmsBuilder.Build();
+
+            //      Designing Part
+            var theHost = theCms.CreateAndAddHost();
+            var thePage = theCms.CreateAndAddPage(theHost.Id);
+
+            await theCms.UpdatePageContentAsync(new PageUpdateDto
+            {
+                HostId = theHost.Id,
+                PageId = thePage.Id,
+                Content = "<Content>",
+            });
+
+            // Action
+            var theResult = theCms.GenerateHost(theHost.Id);
+
+
+            // Assertion
+            theResult.Should().AllSatisfy(file =>
+            {
+                _testOutput.WriteLine($"file path: {file.FullName ?? "<Unknown File Directory>"}");
+
+                File.Exists(file.FullName).Should().BeTrue();
+
+                using (var openedFile = File.OpenText(file.FullName!))
+                {
+                    _testOutput.WriteLine(openedFile.ReadToEnd());
+                }
+
+                File.Delete(file.FullName!);
+            });
+        }
     }
 }

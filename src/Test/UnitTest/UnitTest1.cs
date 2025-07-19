@@ -1,5 +1,8 @@
 using CMSCore;
-
+using CMSCore.Component;
+using HtmlAgilityPack;
+using Moq;
+using System.Xml.Serialization;
 using Xunit.Abstractions;
 
 namespace UnitTest
@@ -217,5 +220,103 @@ namespace UnitTest
 
         }
 
+
+        [Fact]
+        public void Test_TemplateProvider()
+        {
+            var templateProvider = new DefaultTemplateProvider();
+
+            templateProvider
+                .GetFileName(typeof(NavigationComponent))
+                .Should()
+                .Be("navigation.liquid");
+        }
+
+        [Fact]
+        public void Test_ContainerComponent()
+        {
+            var mockTemplateProvider = new Mock<ITemplateProvider>();
+
+            mockTemplateProvider
+                .Setup(x => x.GetFileName(It.IsAny<Type>()))
+                .Returns("navigation.liquid");
+
+            var directory = Path.Combine(Directory.GetCurrentDirectory(), "Component", "Liquids");
+
+            var container = new ComponentContainer(directory, mockTemplateProvider.Object);
+
+            var template = container.GetTemplate<NavigationComponent>();
+
+            _testOutput.WriteLine(template);
+
+            template.Should().NotBeNullOrEmpty();
+
+            mockTemplateProvider.Verify(x => x.GetFileName(It.IsAny<Type>()), Times.Once);
+        }
+
+        [Fact]
+        public void Test_ContainerComponent_2()
+        {
+            var mockTemplateProvider = new Mock<ITemplateProvider>();
+
+            mockTemplateProvider
+                .Setup(x => x.GetFileName(It.IsAny<Type>()))
+                .Returns("navigation.liquid");
+
+
+            var directory = Path.Combine(Directory.GetCurrentDirectory(), "Component", "Liquids");
+
+            var container = new ComponentContainer(directory, mockTemplateProvider.Object);
+
+            var template = container.GetTemplate<NavigationComponent>();
+
+            _testOutput.WriteLine(template);
+
+            template.Should().NotBeNullOrEmpty();
+
+            container.GetTemplate<NavigationComponent>();   
+
+            mockTemplateProvider.Verify(x => x.GetFileName(It.IsAny<Type>()), Times.Once);
+        }
+
+        [Fact]
+        public void PlayGround2()
+        {
+            var numbers = new List<int>() { 1, 2, 3, 4, 5 };
+
+            var iterate = numbers as IEnumerable<int>;
+
+            foreach (var item in iterate)
+            {
+                _testOutput.WriteLine($"num {item}");
+            }
+
+            numbers.Remove(1);
+
+            foreach (var item in iterate)
+            {
+                _testOutput.WriteLine($"num {item}");
+            }
+        }
+
+        [Fact]
+        public void Test()
+        {
+            // From File
+            var doc = new HtmlDocument();
+            doc.Load("filePath");
+            
+
+            // From String
+            doc = new HtmlDocument();
+            doc.LoadHtml("html");
+
+           
+
+            // From Web
+            var url = "http://html-agility-pack.net/";
+            var web = new HtmlWeb();
+            doc = web.Load(url);
+        }
     }
 }
