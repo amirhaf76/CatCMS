@@ -1,4 +1,5 @@
-﻿namespace CMSCore
+﻿
+namespace CMSCore
 {
 	public class DirectoryStructureBuilder : StructureBuilder
     {
@@ -8,19 +9,31 @@
             _structure = structure;
         }
 
-        public override void Build()
-        {
-			var structureDto = (DirectoryStructureDto)_structure.ToDto();
 
-			Directory.CreateDirectory(Path.Combine(_directory, structureDto.Name));
+        public override IEnumerable<FileSystemInfo> BuildV2()
+        {
+            var structureDto = (DirectoryStructureDto)_structure.ToDto();
+
+            var path = Path.Combine(_directory, structureDto.Name);
+
+            var newFileDirectory = Directory.CreateDirectory(path);
+
+            var newChildren = new List<FileSystemInfo>
+            {
+                newFileDirectory
+            };
 
             if (_structure.HasChildren())
             {
                 _structure.ForEachChild(structure =>
                 {
-					CreateStructureBuilder(structure, Path.Combine(_directory, structureDto.Name)).Build();
+                    var fileSystemInfos = structure.CreateStructureBuilder(path).BuildV2();
+
+                    newChildren.AddRange(fileSystemInfos);
                 });
             }
+
+            return newChildren;
         }
     }
 }

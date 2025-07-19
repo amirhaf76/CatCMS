@@ -18,5 +18,8 @@
         IFileStructureBuilder AddFilesByNameFromPath(string path, IEnumerable<string> names);
 
         IFileStructureBuilder AddDirectoriesAndTheirFiles(string path, int maxRecursionDepth);
+
+
+        AppFileStructure Build();
     }
 }

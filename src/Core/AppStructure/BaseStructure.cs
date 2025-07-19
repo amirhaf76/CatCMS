@@ -7,5 +7,7 @@ namespace CMSCore
         public abstract StructureType Type { get; }
 
         public abstract BaseStructureDto ToDto();
+
+        public abstract BaseStructure Copy();
 	}
 }

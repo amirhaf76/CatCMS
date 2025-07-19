@@ -39,7 +39,8 @@ namespace UnitTest
             // Action
             _testOutput.WriteLine(appStruct.GetStructureView());
 
-            appStruct.Build(Directory.GetCurrentDirectory());
+            appStruct.Build().CreateStructure(Directory.GetCurrentDirectory());
+
 
             // Assertion
             Directory.EnumerateFileSystemEntries(path).Should()
@@ -68,6 +69,35 @@ namespace UnitTest
         }
 
         [Fact]
+        public void Copy_SomeDirectoriesAndFiles_MustBeExist()
+        {
+            var theStructure = new DirectoryStructure("Myapp_1");
+
+            var theStructures = new List<BaseStructure>
+            {
+                new DirectoryStructure("Directory_1"),
+                new DirectoryStructure("Directory_2"),
+                new FileStructure("File.txt", "Test content"),
+            };
+
+            theStructure.AddChildren(theStructures);
+
+            // Action
+            var copiedStructure = theStructure.Copy();
+
+            // Assertion
+            copiedStructure.Should()
+                .NotBeNull()
+                .And.BeOfType<DirectoryStructure>()
+                .And.NotBeSameAs(theStructure);
+
+            copiedStructure.As<DirectoryStructure>().ForEachChild(c =>
+            {
+                theStructures.Should().NotContain(c);
+            });
+        }
+
+        [Fact]
         public void AddFilesLike_SomeDirectoriesAndFiles_MustBeExist()
         {
             var appStruct = new AppFileStructureBuilder("Myapp_2", new FileSystem());
@@ -87,7 +117,7 @@ namespace UnitTest
 
             _testOutput.WriteLine(appStruct.GetStructureView());
 
-            appStruct.Build(Directory.GetCurrentDirectory());
+            appStruct.Build().CreateStructure(Directory.GetCurrentDirectory());
 
             var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_2");
             Directory.Delete(targetDirctory, true);
@@ -119,7 +149,7 @@ namespace UnitTest
 
             _testOutput.WriteLine(appStruct.GetStructureView());
 
-            appStruct.Build(Directory.GetCurrentDirectory());
+            appStruct.Build().CreateStructure(Directory.GetCurrentDirectory());
 
             // Assertion
             var option = new EnumerationOptions

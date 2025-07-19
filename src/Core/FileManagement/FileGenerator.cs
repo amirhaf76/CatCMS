@@ -7,6 +7,7 @@ namespace CMSCore.FileManagement
         public string GeneratedDirectory { get; private set; }
 
 
+
         public FileGenerator()
         {
             GeneratedDirectory = string.Empty;
@@ -16,6 +17,7 @@ namespace CMSCore.FileManagement
         {
             GeneratedDirectory = string.IsNullOrWhiteSpace(directory) ? string.Empty : directory;
         }
+
 
 
         public FileInfo CreateFile(PageFile p)
@@ -36,6 +38,7 @@ namespace CMSCore.FileManagement
             return new FileInfo(path);
         }
 
+
         public List<FileInfo> CreateFiles(IEnumerable<PageFile> pageFiles, string directory)
         {
             return pageFiles.Select(pageFile => CreateFile(pageFile, directory)).ToList();
@@ -46,6 +49,7 @@ namespace CMSCore.FileManagement
             return pageFiles.Select(pageFile => CreateFile(pageFile)).ToList();
         }
 
+
         public void ChangeGeneratedDirectory(string newDirectory)
         {
             if (string.IsNullOrWhiteSpace(newDirectory))
@@ -53,6 +57,7 @@ namespace CMSCore.FileManagement
 
             GeneratedDirectory = newDirectory;
         }
+
 
 
         private static string GetOrCreatePath(PageFile p, string directory)

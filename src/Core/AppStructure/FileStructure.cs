@@ -24,5 +24,10 @@
 				Content = _content,
 			};
 		}
+
+        public override BaseStructure Copy()
+        {
+			return new FileStructure(_name, _content);
+        }
 	}
 }

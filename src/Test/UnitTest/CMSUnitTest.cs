@@ -19,27 +19,7 @@ namespace UnitTest
             _testOutput = testOutput;
         }
 
-        [Fact]
-        public void Test()
-        {
-            var cmsBuilder = new CMSBuilder();
-
-            // cmsBuilder.SetConfig("<path>");
-
-
-            var cms = cmsBuilder.Build();
-
-            var host = Host.Default;
-
-            cms = cms.CreateAndAddHost();
-
-            var page = new Page();
-
-            cms = cms.CreateAndAddPage(host.ToDto().Id);
-
-
-
-        }
+   
 
         private ICMS CreateCMS()
         {

@@ -1,4 +1,5 @@
-﻿namespace CMSCore
+﻿
+namespace CMSCore
 {
 	public class CopyFileStructureBuilder : StructureBuilder
     {
@@ -9,11 +10,15 @@
             _structure = structure;
         }
 
-        public override void Build()
+        public override IEnumerable<FileSystemInfo> BuildV2()
         {
             var dto = (CopyFileStructureDto)_structure.ToDto();
 
-            File.Copy(dto.Path, Path.Combine(_directory, dto.Name), true);
+            var path = Path.Combine(_directory, dto.Name);
+
+            File.Copy(dto.Path, path, true);
+
+            return new List<FileSystemInfo> { new FileInfo(path) };
         }
     }
 }

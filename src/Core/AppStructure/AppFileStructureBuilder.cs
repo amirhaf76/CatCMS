@@ -1,141 +1,139 @@
-﻿using System.Xml;
-
-namespace CMSCore
+﻿namespace CMSCore
 {
 
-	public class AppFileStructureBuilder : IFileStructureBuilder
-	{
-		private readonly DirectoryStructure _rootDirectory;
-		private readonly IFileSystem _fileSystem;
-		private DirectoryStructure _workingDirectory;
+    public class AppFileStructureBuilder : IFileStructureBuilder
+    {
+        private readonly DirectoryStructure _rootDirectory;
+        private readonly IFileSystem _fileSystem;
+        private DirectoryStructure _workingDirectory;
 
-		public AppFileStructureBuilder(string directoryName, IFileSystem fileSystem)
-		{
-			_rootDirectory = new DirectoryStructure(directoryName);
-			_workingDirectory = _rootDirectory;
-			_fileSystem = fileSystem;
-		}
+        public AppFileStructureBuilder(string directoryName, IFileSystem fileSystem)
+        {
+            _rootDirectory = new DirectoryStructure(directoryName);
+            _workingDirectory = _rootDirectory;
+            _fileSystem = fileSystem;
+        }
 
-		public AppFileStructureBuilder(string directoryName, IFileSystem fileSystem, AppFileStructureBuilder builder) : this(directoryName, fileSystem)
-		{
-			var children = new List<BaseStructure>();
+        public AppFileStructureBuilder(string directoryName, IFileSystem fileSystem, AppFileStructureBuilder builder) : this(directoryName, fileSystem)
+        {
+            var children = new List<BaseStructure>();
 
-			builder._rootDirectory.ForEachChild(children.Add);
+            builder._rootDirectory.ForEachChild(children.Add);
 
-			_rootDirectory.AddChildren(children);
-		}
+            _rootDirectory.AddChildren(children);
+        }
 
-		public IFileStructureBuilder AddDirectory(string name)
-		{
-			var aDirectoryStructure = new DirectoryStructure(name, _workingDirectory);
+        public IFileStructureBuilder AddDirectory(string name)
+        {
+            var aDirectoryStructure = new DirectoryStructure(name, _workingDirectory);
 
-			_workingDirectory.AddChild(aDirectoryStructure);
+            _workingDirectory.AddChild(aDirectoryStructure);
 
-			return this;
-		}
+            return this;
+        }
 
         public IFileStructureBuilder AddDirectoryAndChangeWorkingDirectory(string name)
-		{
-			var aDirectoryStructure = new DirectoryStructure(name, _workingDirectory);
+        {
+            var aDirectoryStructure = new DirectoryStructure(name, _workingDirectory);
 
-			_workingDirectory.AddChild(aDirectoryStructure);
+            _workingDirectory.AddChild(aDirectoryStructure);
 
-			_workingDirectory = aDirectoryStructure;
+            _workingDirectory = aDirectoryStructure;
 
-			return this;
-		}
+            return this;
+        }
 
-		public IFileStructureBuilder SetWorkingDirectoryToRoot()
-		{
-			_workingDirectory = _rootDirectory;
+        public IFileStructureBuilder SetWorkingDirectoryToRoot()
+        {
+            _workingDirectory = _rootDirectory;
 
-			return this;
-		}
+            return this;
+        }
 
-		public IFileStructureBuilder AddFile(string name, string content)
-		{
-			_workingDirectory.AddChild(new FileStructure(name, content));
+        public IFileStructureBuilder AddFile(string name, string content)
+        {
+            _workingDirectory.AddChild(new FileStructure(name, content));
 
-			return this;
-		}
-		public IFileStructureBuilder AddFile(FileStructureDto info)
-		{
-			return AddFile(info.Name, info.Content);
-		}
+            return this;
+        }
+        public IFileStructureBuilder AddFile(FileStructureDto info)
+        {
+            return AddFile(info.Name, info.Content);
+        }
 
-		public IFileStructureBuilder AddFiles(IEnumerable<FileStructureDto> infos)
-		{
-			_workingDirectory.AddChildren(infos.Select(info => new FileStructure(info.Name, info.Content)));
+        public IFileStructureBuilder AddFiles(IEnumerable<FileStructureDto> infos)
+        {
+            _workingDirectory.AddChildren(infos.Select(info => new FileStructure(info.Name, info.Content)));
 
-			return this;
-		}
+            return this;
+        }
 
-		public IFileStructureBuilder AddFileLike(string path)
-		{
-			_workingDirectory.AddChild(new CopyFileStructure(path, _fileSystem.GetFileName(path)));
+        public IFileStructureBuilder AddFileLike(string path)
+        {
+            _workingDirectory.AddChild(new CopyFileStructure(path, _fileSystem.GetFileName(path)));
 
-			return this;
-		}
+            return this;
+        }
 
-		public IFileStructureBuilder AddFilesLike(string path)
-		{
-			var structures = _fileSystem
-				.GetFiles(path)
-				.Select(filePath => new CopyFileStructure(filePath, _fileSystem.GetFileName(filePath)));
+        public IFileStructureBuilder AddFilesLike(string path)
+        {
+            var structures = _fileSystem
+                .GetFiles(path)
+                .Select(filePath => new CopyFileStructure(filePath, _fileSystem.GetFileName(filePath)));
 
-			_workingDirectory.AddChildren(structures);
+            _workingDirectory.AddChildren(structures);
 
-			return this;
-		}
-		public IFileStructureBuilder AddFilesLike(IEnumerable<string> paths)
-		{
-			_workingDirectory.AddChildren(paths.Select(path => new CopyFileStructure(path, _fileSystem.GetFileName(path))));
+            return this;
+        }
+        public IFileStructureBuilder AddFilesLike(IEnumerable<string> paths)
+        {
+            _workingDirectory.AddChildren(paths.Select(path => new CopyFileStructure(path, _fileSystem.GetFileName(path))));
 
 
-			return this;
-		}
-		public IFileStructureBuilder AddFilesByNameFromPath(string path, IEnumerable<string> names)
-		{
-			var structures = _fileSystem.GetFilesByName(path, names)
-				.Select(filePath => new CopyFileStructure(filePath, _fileSystem.GetFileName(filePath)));
+            return this;
+        }
+        public IFileStructureBuilder AddFilesByNameFromPath(string path, IEnumerable<string> names)
+        {
+            var structures = _fileSystem.GetFilesByName(path, names)
+                .Select(filePath => new CopyFileStructure(filePath, _fileSystem.GetFileName(filePath)));
 
-			_workingDirectory.AddChildren(structures);
+            _workingDirectory.AddChildren(structures);
 
-			return this;
-		}
+            return this;
+        }
 
         public IFileStructureBuilder AddDirectoriesAndTheirFiles(string path, int maxRecursionDepth)
-		{
-			AddFilesLike(path);
+        {
+            AddFilesLike(path);
 
-			if (maxRecursionDepth > 0)
-			{
-				var subDirectories = _fileSystem.GetDirectories(path, 0);
-				var nextRecursionDepth = maxRecursionDepth - 1;
-				var currentWorkingDirectory = _workingDirectory;
+            if (maxRecursionDepth > 0)
+            {
+                var subDirectories = _fileSystem.GetDirectories(path, 0);
+                var nextRecursionDepth = maxRecursionDepth - 1;
+                var currentWorkingDirectory = _workingDirectory;
 
-				foreach (var subDirectory in subDirectories)
-				{
+                foreach (var subDirectory in subDirectories)
+                {
                     AddDirectoryAndChangeWorkingDirectory(_fileSystem.GetFileName(subDirectory));
 
                     AddDirectoriesAndTheirFiles(subDirectory, nextRecursionDepth);
 
-					_workingDirectory = currentWorkingDirectory;
-				}
-			}
-			
-			return this;
+                    _workingDirectory = currentWorkingDirectory;
+                }
+            }
+
+            return this;
         }
 
         public DirectoryStructureDto GetStructuresDto()
-		{
-			return (DirectoryStructureDto)_rootDirectory.ToDto();
-		}
+        {
+            return (DirectoryStructureDto)_rootDirectory.ToDto();
+        }
 
-		public void Build(string path)
-		{
-			new DirectoryStructureBuilder(path, _rootDirectory).Build();
-		}
-	}
+        public AppFileStructure Build()
+        {
+            return new AppFileStructure((DirectoryStructure)_rootDirectory.Copy());
+        }
+    }
 
 }

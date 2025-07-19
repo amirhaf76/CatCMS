@@ -229,7 +229,7 @@ namespace UnitTest
 
 
             // Action
-            var theResult = theHostFileGenerator.GenerateHostAsFiles(theHost, theHost.ToDto().Configuration);
+            var theResult = theHostFileGenerator.GenerateHostAsFiles(theHost);
 
 
             // Assertion
@@ -285,7 +285,7 @@ namespace UnitTest
 
 
             // Action
-            var theResult = theHostGenerator.GenerateHostAsFiles(theHost, theHost.ToDto().Configuration);
+            var theResult = theHostGenerator.GenerateHostAsFiles(theHost);
 
 
             // Assertion

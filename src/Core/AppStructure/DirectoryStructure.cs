@@ -3,8 +3,8 @@
 	public class DirectoryStructure : BaseStructure
 	{
 		private readonly string _name = string.Empty;
-		private readonly DirectoryStructure? _parent;
 		private readonly List<BaseStructure> _children = new List<BaseStructure>();
+		private DirectoryStructure? _parent;
 
 		public DirectoryStructure(string name, DirectoryStructure? parent = null)
 		{
@@ -56,6 +56,27 @@
 		}
 
 		public override StructureType Type => StructureType.Directory;
+
+        public override BaseStructure Copy()
+        {
+			var newStructure = new DirectoryStructure(_name);
+
+			var newChilderen = _children.Select(c =>
+			{
+				var copyInstance = c.Copy();
+
+				if (GetType().IsInstanceOfType(c))
+				{
+					var dirCopyInstance = (DirectoryStructure)copyInstance;
+
+					dirCopyInstance._parent = newStructure;
+				}
+
+				return copyInstance;
+			}).ToList();
+
+			return newStructure.AddChildren(newChilderen); ;
+        }
 
 	}
 

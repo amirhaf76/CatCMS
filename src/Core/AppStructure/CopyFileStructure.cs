@@ -22,5 +22,10 @@
 				Type = Type
 			};
 		}
-	}
+
+        public override BaseStructure Copy()
+        {
+			return new CopyFileStructure(_path, _name);
+        }
+    }
 }

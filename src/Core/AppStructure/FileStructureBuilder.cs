@@ -1,4 +1,5 @@
-﻿namespace CMSCore
+﻿
+namespace CMSCore
 {
 	public class FileStructureBuilder : StructureBuilder
     {
@@ -8,15 +9,19 @@
         {
             _structure = structure;
         }
-
-        public override void Build()
+        public override IEnumerable<FileSystemInfo> BuildV2()
         {
             var dto = (FileStructureDto)_structure.ToDto();
 
-            using var aFile = File.CreateText(Path.Combine(_directory, dto.Name));
+            var path = Path.Combine(_directory, dto.Name);
+
+            using var aFile = File.CreateText(path);
 
             aFile.Write(dto.Content);
+
             aFile.Flush();
+
+            return new List<FileSystemInfo> { new FileInfo(path) };
         }
     }
 }

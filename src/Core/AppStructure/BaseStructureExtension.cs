@@ -1,17 +1,8 @@
 ﻿namespace CMSCore
 {
-	public abstract class StructureBuilder
+    public static class BaseStructureExtension
     {
-        protected readonly string _directory;
-
-        public StructureBuilder(string directory)
-        {
-            _directory = directory;
-        }
-
-        public abstract IEnumerable<FileSystemInfo> BuildV2();
-
-        public static StructureBuilder CreateStructureBuilder(BaseStructure structure, string directory)
+        public static StructureBuilder CreateStructureBuilder(this BaseStructure structure, string directory)
         {
             return structure.Type switch
             {

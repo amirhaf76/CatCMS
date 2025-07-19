@@ -7,6 +7,8 @@ namespace CMSCore.FileManagement
         private readonly IFileGenerator _fileGenerator;
         private readonly IPageGenerator _pageGenerator;
 
+
+
         public HostFileGenerator(IPageGenerator pageGenerator, IFileGenerator fileGenerator)
         {
             _fileGenerator = fileGenerator;
@@ -14,22 +16,25 @@ namespace CMSCore.FileManagement
         }
 
 
-        public IEnumerable<FileInfo> GenerateHostAsFiles(Host host, HostConfiguration hostConfig)
-        {
-            var pageFiles = GeneratePageCodes(host.ToDto().Pages);
 
-            var files = _fileGenerator.CreateFiles(pageFiles, hostConfig.GeneratedCodesDirectory);
+        public IEnumerable<FileSystemInfo> GenerateHostAsFiles(Host host)
+        {
+            var hostDto = host.ToDto();
+
+            var pageFiles = GeneratePageCodes(GetHostPages(hostDto));
+
+            var files = _fileGenerator.CreateFiles(pageFiles, GetHostDirectory(hostDto));
 
             return files;
         }
 
-        public IDictionary<Host, IEnumerable<FileInfo>> GenerateHostsAsFiles(IEnumerable<Tuple<Host, HostConfiguration>> hostsAndConfigs)
+        public IDictionary<Host, IEnumerable<FileSystemInfo>> GenerateHostsAsFiles(IEnumerable<Host> hosts)
         {
-            var hostsAndFiles = new Dictionary<Host, IEnumerable<FileInfo>>(hostsAndConfigs.Count());
+            var hostsAndFiles = new Dictionary<Host, IEnumerable<FileSystemInfo>>(hosts.Count());
 
-            foreach (var (host, config) in hostsAndConfigs)
+            foreach (var host in hosts)
             {
-                hostsAndFiles.Add(host, GenerateHostAsFiles(host, config));
+                hostsAndFiles.Add(host, GenerateHostAsFiles(host));
             }
 
             return hostsAndFiles;
@@ -48,5 +53,16 @@ namespace CMSCore.FileManagement
         {
             return page.PageInfo.Title;
         }
+
+        private static IEnumerable<PageDto> GetHostPages(HostDto hostDto)
+        {
+            return hostDto.Pages;
+        }
+
+        private static string GetHostDirectory(HostDto hostDto)
+        {
+            return hostDto.Configuration.GeneratedCodesDirectory;
+        }
+
     }
 }
