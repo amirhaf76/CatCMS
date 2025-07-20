@@ -4,11 +4,11 @@ namespace CMSCore
 {
 	public class DirectoryStructureDto : BaseStructureDto
 	{
-        
-		public string Name { get; set; } = string.Empty;
 		public string? ParentName { get; set; }
-		public List<BaseStructureDto> Children { get; set; } = new(); // list or enumerable
-	}
+		public IEnumerable<BaseStructureDto> Children { get; set; } = Enumerable.Empty<BaseStructureDto>(); // list or enumerable
+
+        public override StructureType Type => StructureType.Directory;
+    }
 
 
 }

@@ -5,6 +5,8 @@
         IFileStructureBuilder AddDirectoryAndChangeWorkingDirectory(string name);
         IFileStructureBuilder AddDirectory(string name);
         IFileStructureBuilder SetWorkingDirectoryToRoot();
+        IFileStructureBuilder SetWorkingDirectoryToFirstOccurrenceFromRoot(string directoryName);
+        bool TrySetWorkingDirectoryToFirstOccurrenceFromRoot(string directoryName);
 
         IFileStructureBuilder AddFile(string name, string content);
         IFileStructureBuilder AddFile(FileStructureDto info);

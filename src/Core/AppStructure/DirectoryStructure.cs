@@ -2,15 +2,43 @@
 {
 	public class DirectoryStructure : BaseStructure
 	{
-		private readonly string _name = string.Empty;
 		private readonly List<BaseStructure> _children = new List<BaseStructure>();
 		private DirectoryStructure? _parent;
 
-		public DirectoryStructure(string name, DirectoryStructure? parent = null)
+		public DirectoryStructure(string name, DirectoryStructure? parent = null) : base(name)
 		{
-			_name = name;
 			_parent = parent;
 		}
+
+
+		// Todo: clean it.
+        public static BaseStructure FindFirstOccurrenceFrom(BaseStructureDto targetStructureDto, DirectoryStructure theDirectory)
+		{
+            var directoriesInTheDirectory = new List<DirectoryStructure>();
+
+			foreach (var theStructure in theDirectory._children)
+			{
+                if (targetStructureDto.Type == theStructure.Type && targetStructureDto.Name == theStructure.Name)
+                {
+                    return theStructure;
+                }
+
+                if (theStructure.Type == StructureType.Directory)
+                {
+					directoriesInTheDirectory.Add((DirectoryStructure)theStructure);
+                }
+            }
+
+			foreach (var theSubDirectory in directoriesInTheDirectory)
+			{
+				if (FindFirstOccurrenceFrom(targetStructureDto, theSubDirectory) is BaseStructure foundStructure)
+				{
+					return foundStructure;
+				}
+			}
+
+			throw new FileSystemStructureNotFound();
+        }
 
 		public DirectoryStructure AddChild(BaseStructure structure)
 		{
@@ -36,7 +64,9 @@
 			return _children.Any();
 		}
 
-		public void ForEachChild(Action<BaseStructure> action)
+
+
+        public void ForEachChild(Action<BaseStructure> action)
 		{
 			foreach (var child in _children)
 			{
@@ -48,9 +78,8 @@
 		{
 			return new DirectoryStructureDto
 			{
-				Type = Type,
-				Name = _name,
-				ParentName = _parent?._name,
+				Name = Name,
+				ParentName = _parent?.Name,
 				Children = _children.Select(child => child.ToDto()).ToList(),
 			};
 		}
@@ -59,7 +88,7 @@
 
         public override BaseStructure Copy()
         {
-			var newStructure = new DirectoryStructure(_name);
+			var newStructure = new DirectoryStructure(Name);
 
 			var newChilderen = _children.Select(c =>
 			{

@@ -7,6 +7,7 @@
         private readonly IFileSystem _fileSystem;
         private DirectoryStructure _workingDirectory;
 
+
         public AppFileStructureBuilder(string directoryName, IFileSystem fileSystem)
         {
             _rootDirectory = new DirectoryStructure(directoryName);
@@ -22,6 +23,8 @@
 
             _rootDirectory.AddChildren(children);
         }
+
+
 
         public IFileStructureBuilder AddDirectory(string name)
         {
@@ -50,16 +53,43 @@
             return this;
         }
 
+        public IFileStructureBuilder SetWorkingDirectoryToFirstOccurrenceFromRoot(string name)
+        {
+            var foundDirectory = FindFirstOccurrenceFromRoot(name);
+
+            _workingDirectory = foundDirectory;
+
+            return this;
+        }
+
+        public bool TrySetWorkingDirectoryToFirstOccurrenceFromRoot(string directoryName)
+        {
+            try
+            {
+                FindFirstOccurrenceFromRoot(directoryName);
+
+                return true;
+            }
+            catch (FileSystemStructureNotFound)
+            {
+
+                return false;
+            }
+        }
+
+
         public IFileStructureBuilder AddFile(string name, string content)
         {
             _workingDirectory.AddChild(new FileStructure(name, content));
 
             return this;
         }
+
         public IFileStructureBuilder AddFile(FileStructureDto info)
         {
             return AddFile(info.Name, info.Content);
         }
+
 
         public IFileStructureBuilder AddFiles(IEnumerable<FileStructureDto> infos)
         {
@@ -75,6 +105,7 @@
             return this;
         }
 
+
         public IFileStructureBuilder AddFilesLike(string path)
         {
             var structures = _fileSystem
@@ -85,6 +116,7 @@
 
             return this;
         }
+
         public IFileStructureBuilder AddFilesLike(IEnumerable<string> paths)
         {
             _workingDirectory.AddChildren(paths.Select(path => new CopyFileStructure(path, _fileSystem.GetFileName(path))));
@@ -92,6 +124,7 @@
 
             return this;
         }
+
         public IFileStructureBuilder AddFilesByNameFromPath(string path, IEnumerable<string> names)
         {
             var structures = _fileSystem.GetFilesByName(path, names)
@@ -101,6 +134,7 @@
 
             return this;
         }
+
 
         public IFileStructureBuilder AddDirectoriesAndTheirFiles(string path, int maxRecursionDepth)
         {
@@ -125,14 +159,35 @@
             return this;
         }
 
+
         public DirectoryStructureDto GetStructuresDto()
         {
             return (DirectoryStructureDto)_rootDirectory.ToDto();
         }
 
+
         public AppFileStructure Build()
         {
             return new AppFileStructure((DirectoryStructure)_rootDirectory.Copy());
+        }
+
+
+
+        private DirectoryStructure FindFirstOccurrenceFromRoot(string directoryName)
+        {
+            return FindFirstOccurrenceFrom(directoryName, _rootDirectory);
+        }
+
+        private static DirectoryStructure FindFirstOccurrenceFrom(string directoryName, DirectoryStructure theDirectory)
+        {
+            var targetStructure = new DirectoryStructureDto
+            {
+                Name = directoryName,
+            };
+
+            var fileStructure = (DirectoryStructure)DirectoryStructure.FindFirstOccurrenceFrom(targetStructure, theDirectory);
+
+            return fileStructure;
         }
     }
 

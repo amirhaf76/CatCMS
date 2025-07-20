@@ -21,15 +21,15 @@ namespace UnitTest
         public void APageWithAComponent_GenerateCode_ShouldNotBeEmpty()
         {
             // Arrangement
-            var theCodePageGenerator = (IPageGenerator)new CodePageGenerator();
-            var aPage = new PageFactory().CreateADefaultTemplate();
+            var theContentProvider = new PageContentProvider();
+            var aPage = new Page(Guid.NewGuid(), theContentProvider, new PageInfoDto());
 
             var aComponent = new DefaultComponent();
 
-            aPage.ContentProvider?.GetComponents().Add(aComponent);
+            theContentProvider.GetComponents().Add(aComponent);
 
             // Action
-            var generatedCode = theCodePageGenerator.GenerateCodePage(aPage.ContentProvider);
+            var generatedCode = theContentProvider.GetContent();
 
             // Assertion
             generatedCode.Should().NotBeNullOrEmpty();
@@ -96,9 +96,9 @@ namespace UnitTest
 
                 theFile.Name.Should().Be(pageName);
 
-                var theDirctory = Directory.GetParent(theFile.FullName);
-                theDirctory.Should().NotBeNull();
-                theDirctory?.Name.Should().Be(aDirectory);
+                var theDirectory = Directory.GetParent(theFile.FullName);
+                theDirectory.Should().NotBeNull();
+                theDirectory?.Name.Should().Be(aDirectory);
 
                 using (var stream = theFile.OpenText())
                 {
@@ -164,9 +164,9 @@ namespace UnitTest
 
                     file.Name.Should().Be(pageFile.Name);
 
-                    var theDirctory = Directory.GetParent(file.FullName);
-                    theDirctory.Should().NotBeNull();
-                    theDirctory?.Name.Should().Be(aDirectory);
+                    var theDirectory = Directory.GetParent(file.FullName);
+                    theDirectory.Should().NotBeNull();
+                    theDirectory?.Name.Should().Be(aDirectory);
 
                     using (var stream = file.OpenText())
                     {
@@ -200,22 +200,23 @@ namespace UnitTest
         {
             // Arrangement
             //      First Part: Simple Abstraction
+            var theContentProvider = new PageContentProvider();
+
             var theHostFactory = (IHostFactory)new HostFactory();
-            var thePageFactory = (IPageFactory)new PageFactory();
+            var thePageFactory = (IPageFactory)new ComponentBasedPageFactory(theContentProvider);
             var theComponentFactory = (IComponentFactory)new ComponentFactory();
 
-            var theCodePageGenerator = (IPageGenerator)new CodePageGenerator();
             var theFileGenerator = (IFileGenerator)new FileGenerator();
 
             var theHostRepository = (IHostRepository)new CMSHosts();
 
-            //      Second Part: Complexe Abstraction
-            var theHostFileGenerator = (IHostGenerator)new HostFileGenerator(theCodePageGenerator, theFileGenerator);
+            //      Second Part: Complex Abstraction
+            var theHostFileGenerator = (IHostGenerator)new HostFileGenerator(theFileGenerator);
 
             //      Third Part: Main Abstraction
             var theCms = (ICMS)new CatCMS(theHostRepository, theHostFileGenerator, theHostFactory, thePageFactory);
 
-            //      Desiging Part
+            //      Designing Part
             var theHost = theHostFactory.CreateADefaultTemplate();
             var thePage = thePageFactory.CreateADefaultTemplate();
 
@@ -223,9 +224,9 @@ namespace UnitTest
 
             theHost.AddPage(thePage);
 
-            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
-            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
-            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            theContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            theContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            theContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
 
 
             // Action
@@ -253,18 +254,19 @@ namespace UnitTest
         {
             // Arrangement
             //      First Part: Simple Abstraction
+            var theContentProvider = new PageContentProvider();
+
             var theHostFactory = (IHostFactory)new HostFactory();
-            var thePageFactory = (IPageFactory)new PageFactory();
+            var thePageFactory = (IPageFactory)new ComponentBasedPageFactory(theContentProvider);
             var theComponentFactory = (IComponentFactory)new ComponentFactory();
 
-            var thePageGenerator = (IPageGenerator)new CodePageGenerator();
             var theFileGenerator = (IFileGenerator)new FileGenerator();
             var theHostRepository = (IHostRepository)new CMSHosts();
 
             var theHostsValidator = (IHostValidator)new HostValidator();
 
-            //      Second Part: Complexe Abstraction
-            var theHostGenerator = (IHostGenerator)new HostFileGenerator(thePageGenerator, theFileGenerator);
+            //      Second Part: Complex Abstraction
+            var theHostGenerator = (IHostGenerator)new HostFileGenerator(theFileGenerator);
 
             theHostGenerator = new ValidatedHostFileGenerator(theHostGenerator, theHostsValidator);
 
@@ -279,9 +281,9 @@ namespace UnitTest
 
             theHost.AddPage(thePage);
 
-            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
-            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
-            thePage.ContentProvider?.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            theContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            theContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
+            theContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
 
 
             // Action

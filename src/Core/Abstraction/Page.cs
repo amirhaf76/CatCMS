@@ -1,50 +1,40 @@
-﻿using HtmlAgilityPack;
-
-namespace CMSCore.Abstraction
+﻿namespace CMSCore.Abstraction
 {
-
 	public class Page
     {
         private readonly Guid _id;
+        private readonly IPageContentProvider _contentProvider;
         private PageInfoDto _pageInfo;
-        private HtmlDocument? _document;
 
 
-        public Page() : this(Guid.NewGuid(), new PageInfoDto())
+
+        public Page(IPageContentProvider contentProvider) : this(Guid.NewGuid(), contentProvider, new PageInfoDto())
         {
             
         }
-        public Page(PageInfoDto pageInfo) : this(Guid.NewGuid(), pageInfo)
+
+        public Page(IPageContentProvider contentProvider, PageInfoDto pageInfo) : this(Guid.NewGuid(), contentProvider, pageInfo)
         {
 
         }
-        public Page(Guid id, PageInfoDto pageInfo)
+
+        public Page(Guid id, IPageContentProvider contentProvider, PageInfoDto pageInfo)
         {
             _id = id;
             _pageInfo = pageInfo;
+            _contentProvider = contentProvider;
         }
 
 
-        public static Page Default { get; } = new Page(Guid.Empty, new PageInfoDto());
+
+        public static Page Default { get; } = new Page(Guid.Empty, new HtmlContentProvider(), new PageInfoDto());
 
         public static bool IsDefault(Page page)
         {
             return page._id == Guid.Empty;
         }
 
-        public static bool IsPageContentLoadedFromFile(Page page)
-        {
-            return page._document != null;
-        }
 
-        public PageDto ToDto()
-        {
-            return new PageDto
-            {
-                Id = _id,
-                PageInfo = _pageInfo.Copy()
-            };
-        }
 
         public void UpdatePageInfo(PageInfoDto pageInfo)
         {
@@ -56,29 +46,14 @@ namespace CMSCore.Abstraction
             _pageInfo = pageInfo;
         }
 
-        public void ModifyContent(Action<HtmlDocument> modifyHtmlDoc)
+        public PageDto ToDto()
         {
-            if (_document is null)
+            return new PageDto
             {
-                throw new InvalidOperationException("Html page content is not loaded!");
-            }
-
-            if (modifyHtmlDoc is null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            modifyHtmlDoc(_document);
+                Id = _id,
+                PageInfo = _pageInfo.Copy(),
+                ContentProvider = _contentProvider,
+            };
         }
-        public void LoadPageContentFromFile()
-        {
-            var doc = new HtmlDocument();
-            
-            doc.DetectEncodingAndLoad(_pageInfo.Path);
-
-            _document = doc;
-        }
-
-        public IPageContentProvider? ContentProvider { get; set; }
-	}
+    }
 }

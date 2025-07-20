@@ -11,6 +11,8 @@ namespace CMSCore
         private readonly IHostFactory _hostFactory;
         private readonly IPageFactory _pageFactory;
 
+
+
         public CatCMS(IHostRepository hosts, IHostGenerator generator, IHostFactory hostFactory, IPageFactory pageFactory)
         {
             _hosts = hosts;
@@ -19,14 +21,18 @@ namespace CMSCore
             _pageFactory = pageFactory;
         }
 
+
+
         public void AddHost(Host host)
         {
             _hosts.AddHost(host);
         }
+
         public void AddHosts(IEnumerable<Host> hosts)
         {
             _hosts.AddHosts(hosts);
         }
+
 
         public HostDto CreateAndAddHost()
         {
@@ -48,6 +54,7 @@ namespace CMSCore
             return aPage.ToDto();
         }
 
+
         public void DeleteHost(Guid hostId)
         {
             _hosts.RemoveHost(hostId);
@@ -60,41 +67,42 @@ namespace CMSCore
             theHost.Remove(pageId);
         }
 
-        public IEnumerable<FileInfo> GenerateHost(Guid hostId)
+
+        public IEnumerable<FileSystemInfo> GenerateHost(Guid hostId)
         {
             var theHost = _hosts.GetHostById(hostId);
 
-            return _hostGenerator.GenerateHostAsFiles(theHost, GetHostConfiguration(theHost.ToDto()));
+            return _hostGenerator.GenerateHostAsFiles(theHost);
         }
 
-        private static HostConfiguration GetHostConfiguration(HostDto dto)
-        {
-            return dto.Configuration;
-        }
-
-        public Task<IEnumerable<FileInfo>> GenerateHostAsync(Guid hostId)
+        public Task<IEnumerable<FileSystemInfo>> GenerateHostAsync(Guid hostId)
         {
             throw new NotImplementedException(); 
         }
+
 
         public Host GetHostById(Guid id)
         {
             return _hosts.GetHostById(id);
         }
+
         public Host GetHostByIdOrDefault(Guid id)
         {
             return _hosts.GetHostByIdOrDefault(id);
         }
+
 
         public IEnumerable<Host> GetHosts()
         {
             return _hosts.GetHosts();
         }
 
+
         public void UpdateHostConfig(Guid hostId, HostConfiguration hostConfig)
         {
             throw new NotImplementedException();
         }
+
 
         public Task UpdatePageContentAsync(PageUpdateDto arg)
         {
@@ -110,6 +118,13 @@ namespace CMSCore
             // Todo: update content.
 
             return Task.CompletedTask;
+        }
+
+
+
+        private static HostConfiguration GetHostConfiguration(HostDto dto)
+        {
+            return dto.Configuration;
         }
     }
 }

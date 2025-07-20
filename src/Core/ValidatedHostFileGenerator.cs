@@ -14,22 +14,22 @@ namespace CMSCore
             _validator = validator;
         }
 
-        public IEnumerable<FileInfo> GenerateHostAsFiles(Host host, HostConfiguration hostConfig)
+        public IEnumerable<FileSystemInfo> GenerateHostAsFiles(Host host)
         {
             _validator.Validate(host);
 
-            return _generator.GenerateHostAsFiles(host, hostConfig);
+            return _generator.GenerateHostAsFiles(host);
         }
-        public IDictionary<Host, IEnumerable<FileInfo>> GenerateHostsAsFiles(IEnumerable<Tuple<Host, HostConfiguration>> hostsAndConfigs)
+        public IDictionary<Host, IEnumerable<FileSystemInfo>> GenerateHostsAsFiles(IEnumerable<Host> hosts)
         {
-            var validatedHostsAndConfigs = hostsAndConfigs.Select(t =>
+            var validatedHostsAndConfigs = hosts.Select(t =>
             {
-                _validator.Validate(t.Item1);
+                _validator.Validate(t);
 
                 return t;
             });
 
-            return _generator.GenerateHostsAsFiles(validatedHostsAndConfigs);
+            return _generator.GenerateHostsAsFiles(hosts);
         }
     }
 }

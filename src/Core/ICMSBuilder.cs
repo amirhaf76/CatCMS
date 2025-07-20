@@ -9,8 +9,6 @@ namespace CMSCore
         void SetHostRepository(IHostRepository repository);
         void SetHostGenerator(IHostGenerator generator);
         void SetPageFactory(IPageFactory factory);
-        void SetFileGenerator(IFileGenerator generator);
-        void SetPageGenerator(IPageGenerator generator);
 
         public ICMS Build();
     }

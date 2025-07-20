@@ -348,5 +348,38 @@ namespace UnitTest
             var web = new HtmlWeb();
             doc = web.Load(url);
         }
+
+        [Fact]
+        public void Test2()
+        {
+            var destination = new DirectoryInfo("test2");
+
+            destination.Create();
+
+            var path = "D:\\Programing\\Work_space\\C#\\CMS\\src\\SampleHost";
+
+            var source = new DirectoryInfo(path);
+
+            foreach (var file in source.EnumerateFiles())
+            {
+                File.Copy(file.FullName, Path.Combine(destination.FullName, file.Name), true);
+            }
+
+            
+            foreach (var directory in source.EnumerateDirectories("*", new EnumerationOptions { RecurseSubdirectories = true, MaxRecursionDepth = 10}))
+            {
+                Directory.CreateDirectory(Path.Join(destination.FullName, directory.Name));
+            }
+        }
+
+        [Fact]
+        public void Test3()
+        {
+            var url = "http://html-agility-pack.net/";
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
+
+            _testOutput.WriteLine(doc.DocumentNode.InnerHtml);
+        }
     }
 }

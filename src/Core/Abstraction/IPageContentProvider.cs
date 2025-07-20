@@ -1,9 +1,10 @@
-﻿using CMSCore.Component;
+﻿using Parlot.Fluent;
 
 namespace CMSCore.Abstraction
 {
-	public interface IPageContentProvider
+    public interface IPageContentProvider
     {
-        List<ICMSComponent> GetComponents();
-	}
+        string GetContent();
+    }
+
 }

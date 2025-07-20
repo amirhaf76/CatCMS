@@ -6,6 +6,8 @@
 
         public PageInfoDto PageInfo { get; set; } = new PageInfoDto();
 
+        public IPageContentProvider ContentProvider { get; set; } = new DefaultPageContentProvider();
+
     }
 
 }

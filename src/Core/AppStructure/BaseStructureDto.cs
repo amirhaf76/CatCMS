@@ -6,10 +6,11 @@ namespace CMSCore
 	[JsonDerivedType(typeof(FileStructureDto), nameof(StructureType.File))]
 	[JsonDerivedType(typeof(DirectoryStructureDto), nameof(StructureType.Directory))]
 	[JsonDerivedType(typeof(CopyFileStructureDto), nameof(StructureType.CopyFile))]
-	public class BaseStructureDto
+	public abstract class BaseStructureDto
 	{
-		public StructureType Type { get; set; }
-	}
+		// Todo: A big Bug can occur
+		public abstract StructureType Type { get; }
 
-
+        public string Name { get; set; } = string.Empty;
+    }
 }

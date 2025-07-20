@@ -5,14 +5,11 @@ namespace CMSCore.FileManagement
     public class HostFileGenerator : IHostGenerator
     {
         private readonly IFileGenerator _fileGenerator;
-        private readonly IPageGenerator _pageGenerator;
 
 
-
-        public HostFileGenerator(IPageGenerator pageGenerator, IFileGenerator fileGenerator)
+        public HostFileGenerator(IFileGenerator fileGenerator)
         {
             _fileGenerator = fileGenerator;
-            _pageGenerator = pageGenerator;
         }
 
 
@@ -41,12 +38,17 @@ namespace CMSCore.FileManagement
         }
 
 
-        private IEnumerable<PageFile> GeneratePageCodes(IEnumerable<PageDto> pages)
+        private static IEnumerable<PageFile> GeneratePageCodes(IEnumerable<PageDto> pages)
         {
             return pages.Select(page =>
             {
-                return new PageFile(GetPageTitle(page), _pageGenerator.GenerateCodePage(new PageContentProvider()));
+                return new PageFile(GetPageTitle(page), GetPageContent(page));
             });
+        }
+
+        private static string GetPageContent(PageDto page)
+        {
+            return page.ContentProvider.GetContent();
         }
 
         private static string GetPageTitle(PageDto page)
