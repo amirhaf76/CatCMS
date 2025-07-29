@@ -203,7 +203,7 @@ namespace UnitTest
             var theContentProvider = new PageContentProvider();
 
             var theHostFactory = (IHostFactory)new HostFactory();
-            var thePageFactory = (IPageFactory)new ComponentBasedPageFactory(theContentProvider);
+            var thePageFactory = (IPageFactory)new PageFactory(theContentProvider);
             var theComponentFactory = (IComponentFactory)new ComponentFactory();
 
             var theFileGenerator = (IFileGenerator)new FileGenerator();
@@ -257,7 +257,7 @@ namespace UnitTest
             var theContentProvider = new PageContentProvider();
 
             var theHostFactory = (IHostFactory)new HostFactory();
-            var thePageFactory = (IPageFactory)new ComponentBasedPageFactory(theContentProvider);
+            var thePageFactory = (IPageFactory)new PageFactory(theContentProvider);
             var theComponentFactory = (IComponentFactory)new ComponentFactory();
 
             var theFileGenerator = (IFileGenerator)new FileGenerator();
