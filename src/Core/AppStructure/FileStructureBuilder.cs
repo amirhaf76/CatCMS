@@ -1,7 +1,9 @@
 ﻿
+using CMSCore.AppStructure.DTOs;
+
 namespace CMSCore
 {
-	public class FileStructureBuilder : StructureBuilder
+	public class FileStructureBuilder : BaseStructureBuilder
     {
         private readonly FileStructure _structure;
 

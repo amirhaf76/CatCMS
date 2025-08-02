@@ -1,4 +1,6 @@
-﻿namespace CMSCore.Abstraction
+﻿using CMSCore.Abstraction.Models;
+
+namespace CMSCore.Abstraction
 {
     public interface ICMS
     {

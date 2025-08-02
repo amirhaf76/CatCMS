@@ -1,4 +1,5 @@
 ﻿using CMSCore.Abstraction;
+using CMSCore.Abstraction.Models;
 
 namespace CMSCore
 {

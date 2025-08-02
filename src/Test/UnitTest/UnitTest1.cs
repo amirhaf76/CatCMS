@@ -1,7 +1,12 @@
 using CMSCore;
+using CMSCore.AppStructure.Abstraction;
+using CMSCore.AppStructure.Extensions;
 using CMSCore.Component;
+using CMSRepository;
 using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Xunit.Abstractions;
 
@@ -380,6 +385,25 @@ namespace UnitTest
             var doc = web.Load(url);
 
             _testOutput.WriteLine(doc.DocumentNode.InnerHtml);
+        }
+
+        [Fact]
+        public void Test4()
+        {
+            var dbContextMock = new Mock<DbContext>();
+            var dbSetMock = new Mock<DbSet<User>>();
+
+            var list = new List<User>();
+            dbContextMock.Setup(db => db.Set<User>()).Returns(dbSetMock.Object);
+            dbSetMock.Setup(set => set.AsNoTracking()).Returns(list.AsQueryable());
+            var userRepository = new UserAccountRepository(dbContextMock.Object);
+
+            var user = dbSetMock.Object
+                .AsNoTracking()
+                .Include(user => user.Hosts);
+
+            _testOutput.WriteLine(user.ToQueryString());
+
         }
     }
 }

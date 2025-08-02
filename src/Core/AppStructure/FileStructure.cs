@@ -1,4 +1,8 @@
-﻿namespace CMSCore
+﻿using CMSCore.AppStructure.Abstraction;
+using CMSCore.AppStructure.Abstractions;
+using CMSCore.AppStructure.DTOs;
+
+namespace CMSCore
 {
 	public class FileStructure : BaseStructure
 	{

@@ -1,4 +1,7 @@
-﻿namespace CMSCore
+﻿using CMSCore.AppStructure.Abstraction;
+using CMSCore.AppStructure.DTOs;
+
+namespace CMSCore
 {
 
     public class AppFileStructureBuilder : IFileStructureBuilder
@@ -70,7 +73,7 @@
 
                 return true;
             }
-            catch (FileSystemStructureNotFound)
+            catch (FileSystemStructureNotFoundException)
             {
 
                 return false;

@@ -1,4 +1,6 @@
-﻿namespace CMSCore
+﻿using CMSCore.AppStructure.Abstraction;
+
+namespace CMSCore
 {
     public class FileSystem : IFileSystem
     {

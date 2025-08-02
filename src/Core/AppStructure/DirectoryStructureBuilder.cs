@@ -1,7 +1,9 @@
-﻿
+﻿using CMSCore.AppStructure.DTOs;
+using CMSCore.AppStructure.Extensions;
+
 namespace CMSCore
 {
-	public class DirectoryStructureBuilder : StructureBuilder
+	public class DirectoryStructureBuilder : BaseStructureBuilder
     {
         private readonly DirectoryStructure _structure;
         public DirectoryStructureBuilder(string directory, DirectoryStructure structure) : base(directory)

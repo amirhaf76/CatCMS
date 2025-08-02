@@ -1,4 +1,5 @@
-﻿using CMSCore.FileManagement;
+﻿using CMSCore.Abstraction;
+using CMSCore.FileManagement;
 using CMSCore.Generator;
 
 namespace CMSCore
@@ -15,7 +16,7 @@ namespace CMSCore
         {
             var fileGenerator = new FileGenerator();
 
-            _cMSBuilder.SetHostRepository(new CMSHosts());
+            _cMSBuilder.SetHostRepository(new CMSHostRepository());
             _cMSBuilder.SetHostGenerator(new HostFileGenerator(fileGenerator));
             _cMSBuilder.SetPageFactory(new HtmlContentPageFactory());
             _cMSBuilder.SetHostFactory(new HostFactory());

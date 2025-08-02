@@ -1,4 +1,8 @@
-﻿namespace CMSCore
+﻿using CMSCore.AppStructure.Abstraction;
+using CMSCore.AppStructure.Abstractions;
+using CMSCore.AppStructure.DTOs;
+
+namespace CMSCore
 {
 	public class DirectoryStructure : BaseStructure
 	{
@@ -37,7 +41,7 @@
 				}
 			}
 
-			throw new FileSystemStructureNotFound();
+			throw new FileSystemStructureNotFoundException();
         }
 
 		public DirectoryStructure AddChild(BaseStructure structure)

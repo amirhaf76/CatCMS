@@ -1,8 +1,10 @@
 ﻿using CMSCore;
 using CMSCore.Abstraction;
+using CMSCore.Abstraction.Models;
 using CMSCore.Component;
 using CMSCore.FileManagement;
 using CMSCore.Generator;
+using CMSCore.Providers;
 using System.Formats.Tar;
 using Xunit.Abstractions;
 
@@ -208,7 +210,7 @@ namespace UnitTest
 
             var theFileGenerator = (IFileGenerator)new FileGenerator();
 
-            var theHostRepository = (IHostRepository)new CMSHosts();
+            var theHostRepository = (IHostRepository)new CMSHostRepository();
 
             //      Second Part: Complex Abstraction
             var theHostFileGenerator = (IHostGenerator)new HostFileGenerator(theFileGenerator);
@@ -261,7 +263,7 @@ namespace UnitTest
             var theComponentFactory = (IComponentFactory)new ComponentFactory();
 
             var theFileGenerator = (IFileGenerator)new FileGenerator();
-            var theHostRepository = (IHostRepository)new CMSHosts();
+            var theHostRepository = (IHostRepository)new CMSHostRepository();
 
             var theHostsValidator = (IHostValidator)new HostValidator();
 
