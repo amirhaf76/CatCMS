@@ -3,7 +3,7 @@ using CMSCore.AppStructure.DTOs;
 
 namespace CMSCore
 {
-	public class FileStructureBuilder : BaseStructureBuilder
+    public class FileStructureBuilder : BaseStructureBuilder
     {
         private readonly FileStructure _structure;
 

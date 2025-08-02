@@ -1,6 +1,4 @@
-﻿using Parlot.Fluent;
-
-namespace CMSCore.Abstraction
+﻿namespace CMSCore.Abstraction
 {
     public interface IPageContentProvider
     {

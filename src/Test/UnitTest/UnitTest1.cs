@@ -2,12 +2,10 @@ using CMSCore;
 using CMSCore.AppStructure.Abstraction;
 using CMSCore.AppStructure.Extensions;
 using CMSCore.Component;
-using CMSRepository;
+using CMSRepository.Models;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System.Collections.Generic;
-using System.Xml.Serialization;
 using Xunit.Abstractions;
 
 namespace UnitTest
@@ -163,7 +161,7 @@ namespace UnitTest
                 RecurseSubdirectories = true
             };
 
-            var systemEntities = Directory.EnumerateFileSystemEntries(".\\Myapp_2","*", option);
+            var systemEntities = Directory.EnumerateFileSystemEntries(".\\Myapp_2", "*", option);
 
             systemEntities.Should()
                 .HaveCount(15)
@@ -309,7 +307,7 @@ namespace UnitTest
 
             template.Should().NotBeNullOrEmpty();
 
-            container.GetTemplate<NavigationComponent>();   
+            container.GetTemplate<NavigationComponent>();
 
             mockTemplateProvider.Verify(x => x.GetFileName(It.IsAny<Type>()), Times.Once);
         }
@@ -340,13 +338,13 @@ namespace UnitTest
             // From File
             var doc = new HtmlDocument();
             doc.Load("filePath");
-            
+
 
             // From String
             doc = new HtmlDocument();
             doc.LoadHtml("html");
 
-           
+
 
             // From Web
             var url = "http://html-agility-pack.net/";
@@ -370,8 +368,8 @@ namespace UnitTest
                 File.Copy(file.FullName, Path.Combine(destination.FullName, file.Name), true);
             }
 
-            
-            foreach (var directory in source.EnumerateDirectories("*", new EnumerationOptions { RecurseSubdirectories = true, MaxRecursionDepth = 10}))
+
+            foreach (var directory in source.EnumerateDirectories("*", new EnumerationOptions { RecurseSubdirectories = true, MaxRecursionDepth = 10 }))
             {
                 Directory.CreateDirectory(Path.Join(destination.FullName, directory.Name));
             }

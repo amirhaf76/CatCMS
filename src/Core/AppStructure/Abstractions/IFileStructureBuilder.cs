@@ -2,7 +2,7 @@
 
 namespace CMSCore.AppStructure.Abstraction
 {
-	public interface IFileStructureBuilder
+    public interface IFileStructureBuilder
     {
         IFileStructureBuilder AddDirectoryAndChangeWorkingDirectory(string name);
         IFileStructureBuilder AddDirectory(string name);

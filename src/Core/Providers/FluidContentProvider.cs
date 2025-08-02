@@ -9,7 +9,7 @@ namespace CMSCore.Generator
         private readonly FluidParser _parser;
         private string _source;
         private object _model;
-        
+
         public FluidContentProvider()
         {
             _parser = new FluidParser();

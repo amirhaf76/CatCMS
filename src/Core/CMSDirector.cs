@@ -1,6 +1,5 @@
 ﻿using CMSCore.Abstraction;
 using CMSCore.FileManagement;
-using CMSCore.Generator;
 
 namespace CMSCore
 {

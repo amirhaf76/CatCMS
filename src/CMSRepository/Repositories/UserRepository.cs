@@ -17,5 +17,12 @@ namespace CMSRepository.Repositories
                 .Include(user => user.Hosts)
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
+
+        public async Task<User?> GetUserAsync(string username)
+        {
+            return await dbSet
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Username == username);
+        }
     }
 }

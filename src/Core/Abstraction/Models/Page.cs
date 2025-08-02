@@ -2,7 +2,7 @@
 
 namespace CMSCore.Abstraction.Models
 {
-	public class Page
+    public class Page
     {
         private readonly Guid _id;
         private readonly IPageContentProvider _contentProvider;
@@ -12,7 +12,7 @@ namespace CMSCore.Abstraction.Models
 
         public Page(IPageContentProvider contentProvider) : this(Guid.NewGuid(), contentProvider, new PageInfoDto())
         {
-            
+
         }
 
         public Page(IPageContentProvider contentProvider, PageInfoDto pageInfo) : this(Guid.NewGuid(), contentProvider, pageInfo)

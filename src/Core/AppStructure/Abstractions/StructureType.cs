@@ -1,6 +1,6 @@
 ﻿namespace CMSCore.AppStructure.Abstraction
 {
-	public enum StructureType
+    public enum StructureType
     {
         File,
         Directory,

@@ -1,0 +1,11 @@
+﻿namespace CMSApi.Abstraction.Services.DTOs
+{
+    public class TokenDto
+    {
+        public string Username { get; set; } = string.Empty;
+
+        public string Password { get; set; } = string.Empty;
+    }
+
+
+}

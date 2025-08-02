@@ -3,9 +3,7 @@ using CMSCore.Abstraction;
 using CMSCore.Abstraction.Models;
 using CMSCore.Component;
 using CMSCore.FileManagement;
-using CMSCore.Generator;
 using CMSCore.Providers;
-using System.Formats.Tar;
 using Xunit.Abstractions;
 
 namespace UnitTest

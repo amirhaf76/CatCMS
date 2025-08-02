@@ -17,7 +17,7 @@
             return new HostConfiguration
             {
                 DomainAddress = dto.DomainAddress,
-                GeneratedCodesDirectory = dto.GeneratedCodesDirectory ,
+                GeneratedCodesDirectory = dto.GeneratedCodesDirectory,
             };
         }
     }

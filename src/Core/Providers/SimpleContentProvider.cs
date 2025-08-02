@@ -18,7 +18,7 @@ namespace CMSCore.Generator
             strBuilder.AppendLine(_content);
 
             return strBuilder.ToString();
-           
+
         }
     }
 }

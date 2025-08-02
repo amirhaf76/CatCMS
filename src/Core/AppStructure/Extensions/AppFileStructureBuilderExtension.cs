@@ -3,18 +3,18 @@ using System.Text.Json.Serialization;
 
 namespace CMSCore.AppStructure.Extensions
 {
-	public static class AppFileStructureBuilderExtension
+    public static class AppFileStructureBuilderExtension
     {
-        public static string GetStructureView(this AppFileStructureBuilder builder) 
+        public static string GetStructureView(this AppFileStructureBuilder builder)
         {
-			var options = new JsonSerializerOptions
-			{
-				WriteIndented = true,
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
 
-			};
-			options.Converters.Add(new JsonStringEnumConverter());
+            };
+            options.Converters.Add(new JsonStringEnumConverter());
 
-			return JsonSerializer.Serialize(builder.GetStructuresDto(), options);
-		}
+            return JsonSerializer.Serialize(builder.GetStructuresDto(), options);
+        }
     }
 }

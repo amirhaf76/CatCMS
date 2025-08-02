@@ -78,7 +78,7 @@ namespace CMSCore
 
         public Task<IEnumerable<FileSystemInfo>> GenerateHostAsync(Guid hostId)
         {
-            throw new NotImplementedException(); 
+            throw new NotImplementedException();
         }
 
 

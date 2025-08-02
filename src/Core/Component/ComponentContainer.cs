@@ -1,19 +1,12 @@
 ﻿using Fluid;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace CMSCore.Component
 {
-	public class ComponentContainer
-	{
-		private string _liquidDirectory;
-		private IDictionary<Type, string> _templateComponentMap;
+    public class ComponentContainer
+    {
+        private string _liquidDirectory;
+        private IDictionary<Type, string> _templateComponentMap;
         private ITemplateProvider _templateProvider;
 
         public ComponentContainer(string liquidDirectory, ITemplateProvider templateProvider)
@@ -24,31 +17,31 @@ namespace CMSCore.Component
         }
 
         public TemplateOptions GetAllComponentSources()
-		{
-			var componentTypes = Assembly
-				.GetExecutingAssembly()
-				.GetTypes()
-				.Where(type => type.IsAssignableTo(typeof(BaseComponent)));
+        {
+            var componentTypes = Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .Where(type => type.IsAssignableTo(typeof(BaseComponent)));
 
-			var option = new TemplateOptions();
+            var option = new TemplateOptions();
 
-			foreach (var component in componentTypes)
-			{
-				option.MemberAccessStrategy.Register(component);
-			}
+            foreach (var component in componentTypes)
+            {
+                option.MemberAccessStrategy.Register(component);
+            }
 
             return option;
-		}
+        }
 
 
-		public string GetTemplate<T>() where T: BaseComponent
-		{
-			var type = typeof(T);
+        public string GetTemplate<T>() where T : BaseComponent
+        {
+            var type = typeof(T);
 
-			if (_templateComponentMap.TryGetValue(type, out string? template))
-			{
-				return template;
-			}
+            if (_templateComponentMap.TryGetValue(type, out string? template))
+            {
+                return template;
+            }
 
             return ReadTemplateFromFileAndAddToMapping(type);
 
@@ -71,7 +64,7 @@ namespace CMSCore.Component
         {
             try
             {
-				var path = GetTemplatePath(type);
+                var path = GetTemplatePath(type);
 
                 using var templateFile = File.OpenText(path);
 

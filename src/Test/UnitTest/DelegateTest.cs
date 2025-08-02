@@ -1,17 +1,11 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit.Abstractions;
+﻿using Xunit.Abstractions;
 
 namespace UnitTest
 {
     public delegate string SumFunc(int x, string s);
     public delegate void SumFunc2(int x, string s);
 
-    
+
 
     public class DelegateTest
     {

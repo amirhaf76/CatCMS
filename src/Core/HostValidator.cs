@@ -7,7 +7,7 @@ namespace CMSCore
     {
         public void Validate(Host host)
         {
-           
+
 
         }
     }

@@ -3,7 +3,7 @@ using CMSCore.AppStructure.Extensions;
 
 namespace CMSCore
 {
-	public class DirectoryStructureBuilder : BaseStructureBuilder
+    public class DirectoryStructureBuilder : BaseStructureBuilder
     {
         private readonly DirectoryStructure _structure;
         public DirectoryStructureBuilder(string directory, DirectoryStructure structure) : base(directory)

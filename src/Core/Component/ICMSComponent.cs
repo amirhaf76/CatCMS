@@ -1,6 +1,4 @@
-﻿using CMSCore.Abstraction;
-
-namespace CMSCore.Component
+﻿namespace CMSCore.Component
 {
     public interface ICMSComponent : IGeneratableToCode
     {

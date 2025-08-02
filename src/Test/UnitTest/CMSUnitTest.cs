@@ -1,11 +1,4 @@
-﻿using CMSCore;
-using CMSCore.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CMSCore.Abstraction;
 using Xunit.Abstractions;
 
 namespace UnitTest
@@ -19,7 +12,7 @@ namespace UnitTest
             _testOutput = testOutput;
         }
 
-   
+
 
         private ICMS CreateCMS()
         {

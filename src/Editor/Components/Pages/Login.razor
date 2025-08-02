@@ -2,9 +2,12 @@
 @page "/index"
 @using System.Text.RegularExpressions;
 @using System.ComponentModel.DataAnnotations;
-@using static CatCMS.Shared.MainLayout;
+
 
 <MudContainer MaxWidth="MaxWidth.Small">
+    <MudPaper>
+        <SignInComponent />
+    </MudPaper>
     <MudText Class="pa-4 mx-auto " Typo="Typo.h3">Login</MudText>
     <MudGrid>
         <MudItem xs="12" sm="7">

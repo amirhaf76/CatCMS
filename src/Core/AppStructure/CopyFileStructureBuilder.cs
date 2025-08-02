@@ -3,7 +3,7 @@ using CMSCore.AppStructure.DTOs;
 
 namespace CMSCore
 {
-	public class CopyFileStructureBuilder : BaseStructureBuilder
+    public class CopyFileStructureBuilder : BaseStructureBuilder
     {
         private readonly CopyFileStructure _structure;
 

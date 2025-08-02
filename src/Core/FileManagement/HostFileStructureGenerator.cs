@@ -23,9 +23,9 @@ namespace CMSCore.FileManagement
         public IEnumerable<FileSystemInfo> GenerateHostAsFiles(Host host)
         {
             var hostDto = host.ToDto();
-            
+
             var doesDirectoryExist = _structureGenerator.TrySetWorkingDirectoryToFirstOccurrenceFromRoot(_generatedPageFilesPath);
-            
+
             if (!doesDirectoryExist)
             {
                 _structureGenerator

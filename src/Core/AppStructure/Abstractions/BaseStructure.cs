@@ -1,9 +1,8 @@
 ﻿using CMSCore.AppStructure.Abstractions;
-using System.Text;
 
 namespace CMSCore.AppStructure.Abstraction
 {
-	public abstract class BaseStructure
+    public abstract class BaseStructure
     {
         protected BaseStructure(string name)
         {
@@ -12,7 +11,7 @@ namespace CMSCore.AppStructure.Abstraction
 
 
 
-        public string Name { get; private set; } 
+        public string Name { get; private set; }
 
 
 
@@ -23,5 +22,5 @@ namespace CMSCore.AppStructure.Abstraction
         public abstract BaseStructureDto ToDto();
 
         public abstract BaseStructure Copy();
-	}
+    }
 }

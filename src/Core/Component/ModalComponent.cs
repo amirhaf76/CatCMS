@@ -1,10 +1,10 @@
 ﻿namespace CMSCore.Component
 {
-	public class ModalComponent : BaseComponent
-	{
-		public Guid ModalId { get; set; } = Guid.Empty;
+    public class ModalComponent : BaseComponent
+    {
+        public Guid ModalId { get; set; } = Guid.Empty;
 
-		public string Content { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
 
-	}
+    }
 }

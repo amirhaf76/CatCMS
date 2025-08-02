@@ -2,7 +2,7 @@
 {
     public static class ICMSBuilderExtension
     {
-        public static ICMSBuilder Config<T>(this ICMSBuilder cmsBuilder) where T: ICMSDirector
+        public static ICMSBuilder Config<T>(this ICMSBuilder cmsBuilder) where T : ICMSDirector
         {
             var director = Activator.CreateInstance(typeof(T), cmsBuilder);
 

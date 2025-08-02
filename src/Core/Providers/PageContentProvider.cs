@@ -3,14 +3,14 @@ using CMSCore.Component;
 
 namespace CMSCore.Providers
 {
-	public class PageContentProvider : IPageContentProvider
+    public class PageContentProvider : IPageContentProvider
     {
         public List<ICMSComponent> Components { get; set; } = new List<ICMSComponent>();
 
-		public List<ICMSComponent> GetComponents()
-		{
+        public List<ICMSComponent> GetComponents()
+        {
             return Components;
-		}
+        }
 
         public string GetContent()
         {
