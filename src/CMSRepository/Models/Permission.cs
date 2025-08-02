@@ -1,4 +1,4 @@
-﻿namespace CMSRepository
+﻿namespace CMSRepository.Models
 {
     public class Permission
     {
