@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\CMSRepository\CMSRepository.csproj" />
     <ProjectReference Include="..\..\Core\CMSCore.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

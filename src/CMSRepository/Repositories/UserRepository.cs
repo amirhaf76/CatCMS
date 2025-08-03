@@ -24,5 +24,7 @@ namespace CMSRepository.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Username == username);
         }
+
+
     }
 }

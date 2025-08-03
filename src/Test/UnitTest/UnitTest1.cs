@@ -3,10 +3,12 @@ using CMSCore.AppStructure.Abstraction;
 using CMSCore.AppStructure.Extensions;
 using CMSCore.Component;
 using CMSRepository.Models;
+using CMSRepository.Repositories;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit.Abstractions;
+using GeneratedApi = Infrastructure.GenerateApi.CMSApi;
 
 namespace UnitTest
 {
@@ -394,13 +396,29 @@ namespace UnitTest
             var list = new List<User>();
             dbContextMock.Setup(db => db.Set<User>()).Returns(dbSetMock.Object);
             dbSetMock.Setup(set => set.AsNoTracking()).Returns(list.AsQueryable());
-            var userRepository = new UserAccountRepository(dbContextMock.Object);
+            var userRepository = new UserRepository(dbContextMock.Object);
 
             var user = dbSetMock.Object
                 .AsNoTracking()
                 .Include(user => user.Hosts);
 
             _testOutput.WriteLine(user.ToQueryString());
+
+        }
+
+        [Fact]
+        public async Task Test5Async()
+        {
+            var httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://petstore.swagger.io/v2/")
+            };
+            var client = new GeneratedApi.AuthenticationClient(httpClient);
+
+            var inventories = await client.PostLoginAsync(new GeneratedApi.LoginRequest
+            {
+
+            });
 
         }
     }

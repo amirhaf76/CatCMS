@@ -1,20 +1,12 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CMSApi;
-using CMSApi.Abstraction.Services;
-using CMSApi.Services;
 using CMSRepository;
-using CMSRepository.Abstractions;
-using CMSRepository.Models;
-using CMSRepository.Repositories;
-using Infrastructure;
-using Infrastructure.JWTService;
-using Infrastructure.JWTService.Abstractions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Security.Cryptography;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +14,53 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "ToDo API",
+        Description = "An ASP.NET Core Web API for managing ToDo items",
+        TermsOfService = new Uri("https://example.com/terms"),
+        Contact = new OpenApiContact
+        {
+            Name = "Example Contact",
+            Url = new Uri("https://example.com/contact")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Example License",
+            Url = new Uri("https://example.com/license")
+        }
+    });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 // Preparing Configs.
 var connectionString = builder.Configuration.GetConnectionString($"CatCMSDB")
@@ -35,7 +73,6 @@ var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
 
-builder.Services.AddExceptionHandler<DBExceptionHandler>();
 // Adding Logger Service.
 builder.Host.UseSerilog(logger);
 
@@ -44,28 +81,8 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
-    builder.RegisterType<CMSDBContext>().As<DbContext>().SingleInstance();
-    builder.RegisterGeneric(typeof(PasswordHasher<>)).As(typeof(IPasswordHasher<>)).InstancePerLifetimeScope();
-    builder.RegisterType<SymmetricJWTTokenService>().As<IJWTTokenService>().InstancePerLifetimeScope();
-    builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
-    builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
-
-
-
+    builder.RegisterModule<DIModule>();
 });
-//var jwtKeyRepository = new JWTKeyRepository();
-
-//builder.Services.AddSingleton(_ => RSA.Create());
-//builder.Services.AddSingleton(sp =>
-//{
-//    var rsa = sp.GetRequiredService<RSA>();
-
-//    jwtKeyRepository.Purpose = "Auth";
-//    jwtKeyRepository.PublicKey = Convert.ToBase64String(rsa.ExportRSAPublicKey());
-//    jwtKeyRepository.PrivateKey = Convert.ToBase64String(rsa.ExportRSAPrivateKey());
-
-//    return jwtKeyRepository;
-//});
 
 // Setting Authentication.
 builder.Services
@@ -96,9 +113,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options => // UseSwaggerUI is called only in Development.
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        // options.RoutePrefix = "onepart";
+    });
 }
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseExceptionHandler("/error");
 
 app.UseHttpsRedirection();

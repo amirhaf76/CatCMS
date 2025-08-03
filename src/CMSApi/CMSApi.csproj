@@ -28,6 +28,13 @@
 
   <ItemGroup>
     <Folder Include="Abstraction\Exceptions\" />
+	<Folder Include="Dtos" />
+	<Folder Include="Exceptions\Handlers\" />
   </ItemGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
 
 </Project>

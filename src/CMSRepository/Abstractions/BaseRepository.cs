@@ -17,101 +17,101 @@ namespace CMSRepository.Abstractions
 
 
 
-        public void Add(TEntity entity)
+        public virtual void Add(TEntity entity)
         {
             dbSet.Add(entity);
         }
 
 
-        public void AddRange(params TEntity[] entities)
+        public virtual void AddRange(params TEntity[] entities)
         {
             dbSet.AddRange(entities);
         }
 
-        public void AddRange(IEnumerable<TEntity> entities)
+        public virtual void AddRange(IEnumerable<TEntity> entities)
         {
             dbSet.AddRange(entities);
         }
 
 
-        public TEntity? Find(params object?[] keyValues)
+        public virtual TEntity? Find(params object?[] keyValues)
         {
             return dbSet.Find(keyValues);
         }
 
 
-        public void Remove(TEntity entity)
+        public virtual void Remove(TEntity entity)
         {
             dbSet.Remove(entity);
         }
 
-        public void RemoveRange(params TEntity[] entities)
+        public virtual void RemoveRange(params TEntity[] entities)
         {
             dbSet.RemoveRange(entities);
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public virtual void RemoveRange(IEnumerable<TEntity> entities)
         {
             dbSet.RemoveRange(entities);
         }
 
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
             dbSet.Update(entity);
         }
 
-        public void UpdateRange(params TEntity[] entities)
+        public virtual void UpdateRange(params TEntity[] entities)
         {
             dbSet.UpdateRange(entities);
         }
 
-        public void UpdateRange(IEnumerable<TEntity> entities)
+        public virtual void UpdateRange(IEnumerable<TEntity> entities)
         {
             dbSet.UpdateRange(entities);
         }
 
 
 
-        public async Task AddAsync(TEntity entity)
+        public virtual async Task AddAsync(TEntity entity)
         {
             await dbSet.AddAsync(entity);
         }
 
-        public async Task AddAsync(TEntity entity, CancellationToken cs = default)
+        public virtual async Task AddAsync(TEntity entity, CancellationToken cs = default)
         {
             await dbSet.AddAsync(entity, cs);
         }
 
 
-        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
+        public virtual async Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
             await dbSet.AddRangeAsync(entities);
         }
 
-        public async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cs = default)
+        public virtual async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cs = default)
         {
             await dbSet.AddRangeAsync(entities, cs);
         }
 
 
-        public async Task<TEntity?> FindAsync(params object[] keyValues)
+        public virtual async Task<TEntity?> FindAsync(params object[] keyValues)
         {
             return await dbSet.FindAsync(keyValues);
         }
 
-        public async Task<TEntity?> FindAsync(object[] keyValues, CancellationToken cs = default)
+        public virtual async Task<TEntity?> FindAsync(object[] keyValues, CancellationToken cs = default)
         {
             return await dbSet.FindAsync(keyValues, cs);
         }
 
 
-        public async Task<int> SaveChangesAsync(CancellationToken cs = default)
+        public virtual async Task<int> SaveChangesAsync(CancellationToken cs = default)
         {
             return await dbContext.SaveChangesAsync(cs);
         }
 
-        public async Task<int> SaveChangesAsync()
+        public virtual async Task<int> SaveChangesAsync()
         {
             return await dbContext.SaveChangesAsync();
         }

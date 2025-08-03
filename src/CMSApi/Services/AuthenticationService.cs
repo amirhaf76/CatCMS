@@ -1,10 +1,12 @@
 ﻿using CMSApi.Abstraction.Services;
 using CMSApi.Abstraction.Services.DTOs;
 using CMSApi.DTOs;
+using CMSApi.Exceptions;
 using CMSRepository.Abstractions;
 using CMSRepository.Models;
 using Infrastructure.JWTService.Abstractions;
 using Microsoft.AspNetCore.Identity;
+using System.Reflection.Metadata;
 using System.Security.Claims;
 
 namespace CMSApi.Services
@@ -95,6 +97,13 @@ namespace CMSApi.Services
 
         public async Task<RegisterResult> RegisterAsync(RegisterDto dto)
         {
+            var theUser = await _userRepository.GetUserAsync(dto.Username);
+
+            if (theUser is not null)
+            {
+                throw new UserNameExistenceException();
+            }
+
             var newUser = new User()
             {
                 Username = dto.Username,
@@ -102,7 +111,7 @@ namespace CMSApi.Services
 
             newUser.Password = _passwordHasher.HashPassword(newUser, dto.Password);
 
-            _userRepository.Update(newUser);
+            await _userRepository.AddAsync(newUser);
 
             await _userRepository.SaveChangesAsync();
 
