@@ -1,0 +1,3 @@
+[submodule "src/Modules/ApiGenerator"]
+	path = src/Modules/ApiGenerator
+	url = https://github.com/amirhaf76/CerbiSharp.Tools.WebApiGenerator.git
