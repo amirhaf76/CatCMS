@@ -84,6 +84,16 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
     builder.RegisterModule<DIModule>();
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin",
+        builder =>
+        {
+            builder.WithOrigins("https://localhost:7263")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+}); 
 // Setting Authentication.
 builder.Services
     .AddAuthentication()
@@ -124,6 +134,7 @@ app.UseExceptionHandler("/error");
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowOrigin");
 app.UseAuthorization();
 
 app.MapControllers();

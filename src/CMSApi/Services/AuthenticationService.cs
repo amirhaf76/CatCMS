@@ -48,8 +48,7 @@ namespace CMSApi.Services
                 throw new UserNotFoundException();
             }
 
-            var hashedPassword = _passwordHasher.HashPassword(theUser, user.Password);
-            var verificationResult = _passwordHasher.VerifyHashedPassword(theUser, hashedPassword, user.Password);
+            var verificationResult = _passwordHasher.VerifyHashedPassword(theUser, theUser.Password, user.Password);
 
             if (verificationResult == PasswordVerificationResult.Failed)
             {
@@ -58,7 +57,7 @@ namespace CMSApi.Services
 
             if (verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
             {
-                theUser.Password = hashedPassword;
+                theUser.Password = _passwordHasher.HashPassword(theUser, user.Password);
 
                 _userRepository.Update(theUser);
 
