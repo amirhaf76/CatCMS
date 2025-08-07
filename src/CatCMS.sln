@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{EE7E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CerbiSharp.Tools.WebApiGenerator", "Modules\ApiGenerator\CerbiSharp.Tools.WebApiGenerator.csproj", "{1A77AD8F-C990-51F4-78D2-E826585626A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMSClient", "CMSClient\CMSClient.csproj", "{8218C084-A240-4CA0-AAF0-632EEF1DCCDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{1A77AD8F-C990-51F4-78D2-E826585626A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A77AD8F-C990-51F4-78D2-E826585626A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A77AD8F-C990-51F4-78D2-E826585626A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8218C084-A240-4CA0-AAF0-632EEF1DCCDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8218C084-A240-4CA0-AAF0-632EEF1DCCDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8218C084-A240-4CA0-AAF0-632EEF1DCCDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8218C084-A240-4CA0-AAF0-632EEF1DCCDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

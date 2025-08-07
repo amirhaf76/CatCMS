@@ -1,0 +1,19 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+
+
+<AuthorizeView>
+    <Authorized>
+        <PageTitle>Home</PageTitle>
+
+        <MudText Typo="Typo.h1">Hello, world!</MudText>
+        <MudText Typo="Typo.body1"> Welcome to your new app.</MudText>
+
+    </Authorized>
+    <NotAuthorized>
+        <MudText Typo="Typo.body1">Navigating to ...</MudText>
+        @{
+            NavigationManager.NavigateTo("/login2");
+        }
+    </NotAuthorized>
+</AuthorizeView>

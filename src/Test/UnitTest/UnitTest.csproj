@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CMSClient\CMSClient.csproj" />
     <ProjectReference Include="..\..\CMSRepository\CMSRepository.csproj" />
     <ProjectReference Include="..\..\Core\CMSCore.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj" />
