@@ -1,5 +1,8 @@
-﻿@page "/"
+﻿@page "/home"
+@page "/"
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
 @inject NavigationManager NavigationManager
+@inject IWebAssemblyHostEnvironment HostEnvironment 
 
 
 <AuthorizeView>
@@ -11,9 +14,18 @@
 
     </Authorized>
     <NotAuthorized>
-        <MudText Typo="Typo.body1">Navigating to ...</MudText>
-        @{
-            NavigationManager.NavigateTo("/login2");
+        @if(HostEnvironment.IsDevelopment()) 
+        {
+            <MudStack Row=false>
+                <MudText Align="Align.Center" Typo="Typo.h1">Unauthorized</MudText>
+                <MudButton Href="./login" StartIcon="@Icons.Material.Filled.Login" Color="Color.Primary">Login Page</MudButton>
+                <MudButton Href="./development" StartIcon="@Icons.Material.Filled.DeveloperMode" Color="Color.Tertiary">Development</MudButton>
+            </MudStack>
+        }
+        else
+        {
+            <MudText Typo="Typo.body1">Navigating to ...</MudText>
+            NavigationManager.NavigateTo("/login");
         }
     </NotAuthorized>
 </AuthorizeView>

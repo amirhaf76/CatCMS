@@ -1,11 +1,11 @@
-﻿@page "/login2"
+﻿@page "/development"
 @using CMSClient.Components.Logics
 @using CMSClient.Services
 @inject UserStatePublisherService StatePublisher;
 @inject AuthenticationStateProvider AuthStateProvider;
 
 <MudStack>
-    <MudText>Login2</MudText>
+    <MudText>login</MudText>
     <MudText>@("Message: " + authMessage)</MudText>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(LoginAsync)">Login</MudButton>
     <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(GetClaimsPrincipalData)">GetClaims</MudButton>
@@ -22,7 +22,7 @@
             </MudText>
         </NotAuthorized>
     </AuthorizeView>
-   
+
 </MudStack>
 
 
@@ -49,7 +49,7 @@
 
     private async Task LoginAsync()
     {
-        await StatePublisher.LoginAsync(new Services.DTOs.LoginVM() );
+        await StatePublisher.LoginAsync(new Services.DTOs.LoginVM());
     }
 
     private async Task GetClaimsPrincipalData()
@@ -60,7 +60,7 @@
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
             authMessage = $"{user.Identity.Name} is authenticated.";
-            
+
         }
         else
         {

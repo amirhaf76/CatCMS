@@ -25,7 +25,10 @@
         <NotFound>
             <PageTitle>Not found</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+                <MudText Typo="Typo.body1">Redirecting ...</MudText>
+                @{
+                    NavigateToNotFoundPage();
+                }
             </LayoutView>
         </NotFound>
     </Router>
@@ -36,5 +39,10 @@
     bool CheckAuthorization(AuthenticationState state)
     {
         return state.User is not null && (state.User.Identities.FirstOrDefault()?.IsAuthenticated ?? false);
+    }
+
+    void NavigateToNotFoundPage()
+    {
+        NavigationManager.NavigateTo("/NotFound");
     }
 }

@@ -1,10 +1,19 @@
-﻿<MudNavMenu>
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+
+@inject IWebAssemblyHostEnvironment HostEnvironment
+
+<MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
     <MudNavLink Href="/pages" Match="NavLinkMatch.Prefix">Pages</MudNavLink>
-    <MudNavLink Href="/login" Match="NavLinkMatch.Prefix">Login</MudNavLink>
-    <MudNavLink Href="/login2" Match="NavLinkMatch.Prefix">Login2</MudNavLink>
-    <MudNavGroup Title="Settings" Expanded="true">
-        <MudNavLink Href="/thirdEditor" Match="NavLinkMatch.Prefix">Editor</MudNavLink>
-    </MudNavGroup>
+    <MudNavLink Href="/thirdEditor" Match="NavLinkMatch.Prefix">Editor</MudNavLink>
+    <MudNavLink Href="/settings" Match="NavLinkMatch.Prefix">Settings</MudNavLink>
+    @if (HostEnvironment.IsDevelopment())
+    {
+        <MudNavGroup Title="DevelopmentSet" Expanded="true">
+            <MudNavLink Href="/development" Match="NavLinkMatch.Prefix">Development</MudNavLink>
+            <MudNavLink Href="/register" Match="NavLinkMatch.Prefix">Register</MudNavLink>
+            <MudNavLink Href="/login" Match="NavLinkMatch.Prefix">Login</MudNavLink>
+        </MudNavGroup>
+    }
     <MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink>
 </MudNavMenu>
