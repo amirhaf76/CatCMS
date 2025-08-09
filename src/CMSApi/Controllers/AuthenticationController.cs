@@ -24,7 +24,7 @@ namespace CMSApi.Controllers
         }
 
         [HttpPost("/[action]")]
-        public async Task<ActionResult> LoginAsync([FromBody] LoginRequest request)
+        public async Task<ActionResult<string>> LoginAsync([FromBody] LoginRequest request)
         {
             var token = await _authenticationService.GetTokenAsync(request.ToDto());
 

@@ -7,8 +7,10 @@ using CMSRepository.Repositories;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Text;
 using Xunit.Abstractions;
-using GeneratedApi = Infrastructure.GenerateApi.CMSApi;
+using GeneratedApi = Infrastructure.GeneratedAPIs.CMSAPI;
+
 
 namespace UnitTest
 {
@@ -411,14 +413,37 @@ namespace UnitTest
         {
             var httpClient = new HttpClient
             {
-                BaseAddress = new Uri("https://petstore.swagger.io/v2/")
+                BaseAddress = new Uri("https://localhost:7077")
             };
             var client = new GeneratedApi.AuthenticationClient(httpClient);
 
             var inventories = await client.PostLoginAsync(new GeneratedApi.LoginRequest
             {
-
+                Password = "123456",
+                Username = "amin"
             });
+        }
+
+        [Fact]
+        public void Test6()
+        {
+
+            var payload = $"{{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"admin\":true,\"iat\":1516239022}}";
+            _testOutput.WriteLine(payload);
+
+            var base64Payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(payload), Base64FormattingOptions.None);
+           
+            _testOutput.WriteLine(base64Payload);
+
+            payload = Encoding.UTF8.GetString(Convert.FromBase64String(base64Payload));
+
+            _testOutput.WriteLine(payload);
+
+            var jwt = "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0=";
+            payload = Encoding.UTF8.GetString(Convert.FromBase64String(jwt));
+
+            _testOutput.WriteLine(payload);
+
 
         }
     }
