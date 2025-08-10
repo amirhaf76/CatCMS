@@ -42,7 +42,7 @@ namespace CMSCore.Providers
                 throw new ArgumentNullException();
             }
 
-            modifyHtmlDoc(_document);
+            modifyHtmlDoc(_document!);
         }
 
         public void LoadPageContentFromFile(string path)

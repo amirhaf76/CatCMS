@@ -12,7 +12,7 @@ namespace CMSCore
         }
 
 
-        public override IEnumerable<FileSystemInfo> BuildV2()
+        public override IEnumerable<FileSystemInfo> Build()
         {
             var structureDto = (DirectoryStructureDto)_structure.ToDto();
 
@@ -29,7 +29,7 @@ namespace CMSCore
             {
                 _structure.ForEachChild(structure =>
                 {
-                    var fileSystemInfos = structure.CreateStructureBuilder(path).BuildV2();
+                    var fileSystemInfos = structure.CreateStructureBuilder(path).Build();
 
                     newChildren.AddRange(fileSystemInfos);
                 });

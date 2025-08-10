@@ -2,7 +2,7 @@
 
 namespace CMSCore.Abstraction
 {
-    public interface IHostRepository
+    public interface IHostStorage
     {
         void AddHost(Host host);
         void AddHosts(IEnumerable<Host> hosts);

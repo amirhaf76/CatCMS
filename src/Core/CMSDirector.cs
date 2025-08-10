@@ -5,20 +5,21 @@ namespace CMSCore
 {
     public class CMSDirector : ICMSDirector
     {
-        private readonly ICMSBuilder _cMSBuilder;
         public CMSDirector(ICMSBuilder cMSBuilder)
         {
-            _cMSBuilder = cMSBuilder;
+            Builder = cMSBuilder;
         }
 
-        public void PrepareItAsDefault()
+        public void Prepare()
         {
             var fileGenerator = new FileGenerator();
 
-            _cMSBuilder.SetHostRepository(new CMSHostRepository());
-            _cMSBuilder.SetHostGenerator(new HostFileGenerator(fileGenerator));
-            _cMSBuilder.SetPageFactory(new HtmlContentPageFactory());
-            _cMSBuilder.SetHostFactory(new HostFactory());
+            Builder.SetHostRepository(new CMSHostRepository());
+            Builder.SetHostGenerator(new HostFileGenerator(fileGenerator));
+            Builder.SetPageFactory(new HtmlContentPageFactory());
+            Builder.SetHostFactory(new HostFactory());
         }
+
+        public ICMSBuilder Builder { get; private set; }
     }
 }

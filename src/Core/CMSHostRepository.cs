@@ -4,7 +4,7 @@ using CMSCore.Exceptions;
 
 namespace CMSCore
 {
-    public class CMSHostRepository : IHostRepository
+    public class CMSHostRepository : IHostStorage
     {
         private readonly List<Host> _hosts;
 
@@ -26,7 +26,7 @@ namespace CMSCore
         {
             var host = GetHostByIdOrDefault(id);
 
-            if (GetHostId(host.ToDto()) == Guid.Empty)
+            if (host.Id == Guid.Empty)
             {
                 throw new HostNotFoundException();
             }
@@ -34,14 +34,9 @@ namespace CMSCore
             return host;
         }
 
-        private static Guid GetHostId(HostDto host)
-        {
-            return host.Id;
-        }
-
         public Host GetHostByIdOrDefault(Guid id)
         {
-            return _hosts.FirstOrDefault(host => GetHostId(host.ToDto()) == id) ?? Host.Default;
+            return _hosts.FirstOrDefault(host => host.Id == id) ?? new Host();
         }
 
         public IEnumerable<Host> GetHosts()

@@ -1,4 +1,4 @@
-﻿using CMSCore.Abstraction.Models;
+﻿using CMSCore.FileManagement;
 
 namespace CMSCore.Abstraction
 {

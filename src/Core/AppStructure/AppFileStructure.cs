@@ -11,7 +11,7 @@
 
         public IEnumerable<FileSystemInfo> CreateStructure(string path)
         {
-            return new DirectoryStructureBuilder(path, _rootDirectory).BuildV2();
+            return new DirectoryStructureBuilder(path, _rootDirectory).Build();
         }
     }
 

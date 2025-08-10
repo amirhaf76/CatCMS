@@ -8,14 +8,14 @@ namespace CMSCore
     {
         public Page CreateADefaultTemplate()
         {
-            var aPage = new Page(Guid.NewGuid(), new HtmlContentProvider(), new PageInfoDto
+            return new Page()
             {
+                Id = Guid.NewGuid(),
+                ContentProvider = new HtmlContentProvider(),
                 Name = "Default Page",
                 Title = "Default Template Page",
                 Path = string.Empty,
-            });
-
-            return aPage;
+            };
         }
     }
 }

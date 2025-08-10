@@ -1,5 +1,6 @@
 ﻿using CMSCore.Abstraction;
 using CMSCore.Abstraction.Models;
+using CMSCore.Providers;
 
 namespace CMSCore
 {
@@ -14,14 +15,14 @@ namespace CMSCore
 
         public Page CreateADefaultTemplate()
         {
-            var aPage = new Page(Guid.NewGuid(), _pageContentProvider, new PageInfoDto
+            return new Page()
             {
+                Id = Guid.NewGuid(),
+                ContentProvider = _pageContentProvider,
                 Name = "Default Page",
                 Title = "Default Template Page",
                 Path = string.Empty,
-            });
-
-            return aPage;
+            };
         }
     }
 }

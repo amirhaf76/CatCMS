@@ -6,7 +6,7 @@ namespace CMSCore
     {
         private IHostFactory? _hostFactory;
         private IPageFactory? _pageFactory;
-        private IHostRepository? _hostRepository;
+        private IHostStorage? _hostRepository;
         private IHostGenerator? _hostGenerator;
 
 
@@ -39,7 +39,7 @@ namespace CMSCore
                 throw new InvalidOperationException("PageFactory was not configured.");
             }
 
-            return new CatCMS(_hostRepository, _hostGenerator, _hostFactory, _pageFactory);
+            return new CMS(_hostRepository, _hostGenerator, _hostFactory, _pageFactory);
         }
 
 
@@ -53,7 +53,7 @@ namespace CMSCore
             _hostGenerator = generator;
         }
 
-        public void SetHostRepository(IHostRepository repository)
+        public void SetHostRepository(IHostStorage repository)
         {
             _hostRepository = repository;
         }

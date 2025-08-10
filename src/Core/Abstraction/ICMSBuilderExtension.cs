@@ -8,7 +8,7 @@
 
             if (director is not null)
             {
-                ((T)director).PrepareItAsDefault();
+                ((T)director).Prepare();
             }
 
             return cmsBuilder;

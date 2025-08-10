@@ -17,11 +17,9 @@ namespace CMSCore.FileManagement
 
         public IEnumerable<FileSystemInfo> GenerateHostAsFiles(Host host)
         {
-            var hostDto = host.ToDto();
+            var pageFiles = GeneratePageCodes(GetHostPages(host));
 
-            var pageFiles = GeneratePageCodes(GetHostPages(hostDto));
-
-            var files = _fileGenerator.CreateFiles(pageFiles, GetHostDirectory(hostDto));
+            var files = _fileGenerator.CreateFiles(pageFiles, GetHostDirectory(host));
 
             return files;
         }
@@ -39,32 +37,28 @@ namespace CMSCore.FileManagement
         }
 
 
-        private static IEnumerable<PageFile> GeneratePageCodes(IEnumerable<PageDto> pages)
+
+        private static IEnumerable<PageFile> GeneratePageCodes(IEnumerable<Page> pages)
         {
             return pages.Select(page =>
             {
-                return new PageFile(GetPageTitle(page), GetPageContent(page));
+                return new PageFile(page.Title, GetPageContent(page));
             });
         }
 
-        private static string GetPageContent(PageDto page)
+        private static string GetPageContent(Page page)
         {
             return page.ContentProvider.GetContent();
         }
 
-        private static string GetPageTitle(PageDto page)
+        private static IEnumerable<Page> GetHostPages(Host host)
         {
-            return page.PageInfo.Title;
+            return host.Pages;
         }
 
-        private static IEnumerable<PageDto> GetHostPages(HostDto hostDto)
+        private static string GetHostDirectory(Host host)
         {
-            return hostDto.Pages;
-        }
-
-        private static string GetHostDirectory(HostDto hostDto)
-        {
-            return hostDto.Configuration.GeneratedCodesDirectory;
+            return host.Configuration.GeneratedCodesDirectory;
         }
 
     }

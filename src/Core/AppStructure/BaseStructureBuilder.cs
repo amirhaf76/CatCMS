@@ -9,6 +9,6 @@
             _directory = directory;
         }
 
-        public abstract IEnumerable<FileSystemInfo> BuildV2();
+        public abstract IEnumerable<FileSystemInfo> Build();
     }
 }

@@ -12,7 +12,7 @@ namespace CMSCore
             _structure = structure;
         }
 
-        public override IEnumerable<FileSystemInfo> BuildV2()
+        public override IEnumerable<FileSystemInfo> Build()
         {
             var dto = (CopyFileStructureDto)_structure.ToDto();
 

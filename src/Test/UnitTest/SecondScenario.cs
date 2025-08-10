@@ -22,7 +22,11 @@ namespace UnitTest
         {
             // Arrangement
             var theContentProvider = new PageContentProvider();
-            var aPage = new Page(Guid.NewGuid(), theContentProvider, new PageInfoDto());
+            var aPage = new Page()
+            {
+                Id = Guid.NewGuid(),
+                ContentProvider = theContentProvider
+            };
 
             var aComponent = new DefaultComponent();
 
@@ -208,7 +212,7 @@ namespace UnitTest
 
             var theFileGenerator = (IFileGenerator)new FileGenerator();
 
-            var theHostRepository = (IHostRepository)new CMSHostRepository();
+            var theHostRepository = (IHostStorage)new CMSHostRepository();
 
             //      Second Part: Complex Abstraction
             var theHostFileGenerator = (IHostGenerator)new HostFileGenerator(theFileGenerator);
@@ -220,9 +224,9 @@ namespace UnitTest
             var theHost = theHostFactory.CreateADefaultTemplate();
             var thePage = thePageFactory.CreateADefaultTemplate();
 
-            theCms.AddHost(theHost);
+            theCms.Repository.AddHost(theHost);
 
-            theHost.AddPage(thePage);
+            theHost.Pages.Add(thePage);
 
             theContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
             theContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
@@ -261,7 +265,7 @@ namespace UnitTest
             var theComponentFactory = (IComponentFactory)new ComponentFactory();
 
             var theFileGenerator = (IFileGenerator)new FileGenerator();
-            var theHostRepository = (IHostRepository)new CMSHostRepository();
+            var theHostRepository = (IHostStorage)new CMSHostRepository();
 
             var theHostsValidator = (IHostValidator)new HostValidator();
 
@@ -277,9 +281,9 @@ namespace UnitTest
             var theHost = theHostFactory.CreateADefaultTemplate();
             var thePage = thePageFactory.CreateADefaultTemplate();
 
-            theCms.AddHost(theHost);
+            theCms.Repository.AddHost(theHost);
 
-            theHost.AddPage(thePage);
+            theHost.Pages.Add(thePage);
 
             theContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());
             theContentProvider.GetComponents().Add(theComponentFactory.CreateDefaultComponent());

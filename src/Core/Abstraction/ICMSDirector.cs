@@ -2,6 +2,7 @@
 {
     public interface ICMSDirector
     {
-        void PrepareItAsDefault();
+        void Prepare();
+        ICMSBuilder Builder { get; }
     }
 }

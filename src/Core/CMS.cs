@@ -4,17 +4,17 @@ using CMSCore.Exceptions;
 
 namespace CMSCore
 {
-    public class CatCMS : ICMS
+    public class CMS : ICMS
     {
 
-        private readonly IHostRepository _hosts;
+        private readonly IHostStorage _hosts;
         private readonly IHostGenerator _hostGenerator;
         private readonly IHostFactory _hostFactory;
         private readonly IPageFactory _pageFactory;
 
+        public IHostStorage Repository => _hosts;
 
-
-        public CatCMS(IHostRepository hosts, IHostGenerator generator, IHostFactory hostFactory, IPageFactory pageFactory)
+        public CMS(IHostStorage hosts, IHostGenerator generator, IHostFactory hostFactory, IPageFactory pageFactory)
         {
             _hosts = hosts;
             _hostGenerator = generator;
@@ -24,48 +24,24 @@ namespace CMSCore
 
 
 
-        public void AddHost(Host host)
-        {
-            _hosts.AddHost(host);
-        }
-
-        public void AddHosts(IEnumerable<Host> hosts)
-        {
-            _hosts.AddHosts(hosts);
-        }
-
-
-        public HostDto CreateAndAddHost()
+        public Host CreateAndAddHost()
         {
             var aHost = _hostFactory.CreateADefaultTemplate();
 
             _hosts.AddHost(aHost);
 
-            return aHost.ToDto();
+            return aHost;
         }
 
-        public PageDto CreateAndAddPage(Guid hostId)
+        public Page CreateAndAddPage(Guid hostId)
         {
             var theHost = _hosts.GetHostById(hostId);
 
             var aPage = _pageFactory.CreateADefaultTemplate();
 
-            theHost.AddPage(aPage);
+            theHost.Pages.Add(aPage);
 
-            return aPage.ToDto();
-        }
-
-
-        public void DeleteHost(Guid hostId)
-        {
-            _hosts.RemoveHost(hostId);
-        }
-
-        public void DeletePage(Guid pageId, Guid hostId)
-        {
-            var theHost = _hosts.GetHostById(hostId);
-
-            theHost.Remove(pageId);
+            return aPage;
         }
 
 
@@ -82,23 +58,6 @@ namespace CMSCore
         }
 
 
-        public Host GetHostById(Guid id)
-        {
-            return _hosts.GetHostById(id);
-        }
-
-        public Host GetHostByIdOrDefault(Guid id)
-        {
-            return _hosts.GetHostByIdOrDefault(id);
-        }
-
-
-        public IEnumerable<Host> GetHosts()
-        {
-            return _hosts.GetHosts();
-        }
-
-
         public void UpdateHostConfig(Guid hostId, HostConfiguration hostConfig)
         {
             throw new NotImplementedException();
@@ -109,7 +68,7 @@ namespace CMSCore
         {
             var theHost = _hosts.GetHostById(arg.HostId);
 
-            var thePage = theHost.GetPageById(arg.PageId);
+            var thePage = theHost.Pages.FirstOrDefault(p => arg.HostId == p.Id);
 
             if (thePage is null)
             {
@@ -119,13 +78,6 @@ namespace CMSCore
             // Todo: update content.
 
             return Task.CompletedTask;
-        }
-
-
-
-        private static HostConfiguration GetHostConfiguration(HostDto dto)
-        {
-            return dto.Configuration;
         }
     }
 }

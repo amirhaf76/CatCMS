@@ -22,8 +22,6 @@ namespace CMSCore.FileManagement
 
         public IEnumerable<FileSystemInfo> GenerateHostAsFiles(Host host)
         {
-            var hostDto = host.ToDto();
-
             var doesDirectoryExist = _structureGenerator.TrySetWorkingDirectoryToFirstOccurrenceFromRoot(_generatedPageFilesPath);
 
             if (!doesDirectoryExist)
@@ -32,24 +30,14 @@ namespace CMSCore.FileManagement
                     .SetWorkingDirectoryToRoot()
                     .AddDirectoryAndChangeWorkingDirectory(_generatedPageFilesPath);
             }
-            foreach (var thePage in GetHostPages(hostDto))
+            foreach (var thePage in host.Pages)
             {
-                _structureGenerator.AddFile(GetPageName(thePage), GetPageContent(thePage));
+                _structureGenerator.AddFile(thePage.Name, GetPageContent(thePage));
             }
 
-            var fileSystemInfoes = _structureGenerator.Build().CreateStructure(GetHostDirectory(hostDto));
+            var fileSystemInfoes = _structureGenerator.Build().CreateStructure(GetHostDirectory(host));
 
             return fileSystemInfoes;
-        }
-
-        private static string GetPageContent(PageDto p)
-        {
-            return p.ContentProvider.GetContent();
-        }
-
-        private static string GetPageName(PageDto p)
-        {
-            return p.PageInfo.Name;
         }
 
         public IDictionary<Host, IEnumerable<FileSystemInfo>> GenerateHostsAsFiles(IEnumerable<Host> hosts)
@@ -59,20 +47,16 @@ namespace CMSCore.FileManagement
 
 
 
-        private static IEnumerable<PageDto> GetHostPages(HostDto hostDto)
+        private static string GetPageContent(Page p)
         {
-            return hostDto.Pages;
-        }
-
-        private static string GetHostDirectory(HostDto hostDto)
-        {
-            return hostDto.Configuration.GeneratedCodesDirectory;
+            return p.ContentProvider.GetContent();
         }
 
 
-        private static string GetPageTitle(PageDto page)
+
+        private static string GetHostDirectory(Host host)
         {
-            return page.PageInfo.Title;
+            return host.Configuration.GeneratedCodesDirectory;
         }
 
     }
