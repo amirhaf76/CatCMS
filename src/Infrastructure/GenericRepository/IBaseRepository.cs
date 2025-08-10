@@ -1,4 +1,7 @@
-﻿namespace CMSRepository.Abstractions
+﻿using System.Collections.Generic;
+using System.Linq.Expressions;
+
+namespace Infrastructure.GenericRepository
 {
 
     public interface IBaseRepository<TEntity> where TEntity : class
@@ -34,5 +37,11 @@
 
         Task<int> SaveChangesAsync(CancellationToken cs = default);
         Task<int> SaveChangesAsync();
+
+        IEnumerable<TEntity> Get(
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            string includeProperties = "");
+        
     }
 }

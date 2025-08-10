@@ -1,4 +1,5 @@
 ﻿using CMSRepository.Models;
+using Infrastructure.GenericRepository;
 
 namespace CMSRepository.Abstractions
 {

@@ -10,6 +10,20 @@ namespace CMSRepository.Repositories
         {
         }
 
+        public async Task<IEnumerable<Host>> GetHostsWithItsCreatorAsync(int pageNum, int pageSiz)
+        {
+            pageNum = ValidatePaginationAndAmendPageNumber(pageNum, pageSiz);
+
+            var skippedHostCount = (pageNum - 1) * pageSiz;
+
+            return await dbSet
+                .AsNoTracking()
+                .Skip(skippedHostCount)
+                .Take(pageSiz)
+                .Include(h => h.Creator)
+                .ToListAsync();
+        }
+
         public async Task<Host?> GetHostWithItsCreatorAsync(int id)
         {
             return await dbSet
