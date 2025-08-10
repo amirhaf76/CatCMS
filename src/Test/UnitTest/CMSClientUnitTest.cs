@@ -7,11 +7,11 @@ using Xunit.Abstractions;
 
 namespace UnitTest
 {
-    public class CMSUnitTest
+    public class CMSClientUnitTest
     {
         private ITestOutputHelper _testOutput;
 
-        public CMSUnitTest(ITestOutputHelper testOutput)
+        public CMSClientUnitTest(ITestOutputHelper testOutput)
         {
             _testOutput = testOutput;
         }

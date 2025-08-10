@@ -214,7 +214,7 @@ namespace UnitTest
             var theHostFileGenerator = (IHostGenerator)new HostFileGenerator(theFileGenerator);
 
             //      Third Part: Main Abstraction
-            var theCms = (ICMS)new CatCMS(theHostRepository, theHostFileGenerator, theHostFactory, thePageFactory);
+            var theCms = (ICMS)new CMS(theHostRepository, theHostFileGenerator, theHostFactory, thePageFactory);
 
             //      Designing Part
             var theHost = theHostFactory.CreateADefaultTemplate();
@@ -271,7 +271,7 @@ namespace UnitTest
             theHostGenerator = new ValidatedHostFileGenerator(theHostGenerator, theHostsValidator);
 
             //      Third Part: Main Abstraction
-            var theCms = (ICMS)new CatCMS(theHostRepository, theHostGenerator, theHostFactory, thePageFactory);
+            var theCms = (ICMS)new CMS(theHostRepository, theHostGenerator, theHostFactory, thePageFactory);
 
             //      Forth Part: Designing Part
             var theHost = theHostFactory.CreateADefaultTemplate();

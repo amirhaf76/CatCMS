@@ -8,6 +8,7 @@ using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Text;
+using UnitTest.Helpers;
 using Xunit.Abstractions;
 using GeneratedApi = Infrastructure.GeneratedAPIs.CMSAPI;
 
@@ -26,9 +27,10 @@ namespace UnitTest
         [Fact]
         public void Build_SomeDirectoriesAndFiles_MustBeExist()
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_1");
+            var structureDirectoryName = "MyApp1";
+            var theTestResultPath = Path.Combine(TestHelper.GetAbsoluteResultAddress(), structureDirectoryName);
 
-            var appStruct = new AppFileStructureBuilder("Myapp_1", new FileSystem());
+            var appStruct = new AppFileStructureBuilder(structureDirectoryName, new FileSystem());
 
             appStruct
                 .AddDirectoryAndChangeWorkingDirectory("txtFolder")
@@ -46,11 +48,11 @@ namespace UnitTest
             // Action
             _testOutput.WriteLine(appStruct.GetStructureView());
 
-            appStruct.Build().CreateStructure(Directory.GetCurrentDirectory());
+            appStruct.Build().CreateStructure(TestHelper.GetAbsoluteResultAddress());
 
 
             // Assertion
-            Directory.EnumerateFileSystemEntries(path).Should()
+            Directory.EnumerateFileSystemEntries(theTestResultPath).Should()
                 .Contain(x => x.Contains("txtFolder"))
                 .And.Contain(x => x.Contains("directory_1"))
                 .And.Contain(x => x.Contains("directory_2"))
@@ -58,21 +60,24 @@ namespace UnitTest
                 .And.Contain(x => x.Contains("directory_level_1"));
 
 
-            Directory.EnumerateFileSystemEntries(Path.Combine(path, "txtFolder")).Should()
+            Directory.EnumerateFileSystemEntries(Path.Combine(theTestResultPath, "txtFolder")).Should()
                 .Contain(x => x.Contains("hello.World.txt"))
                 .And.Contain(x => x.Contains("hello.World.2.txt"));
 
 
-            Directory.EnumerateFileSystemEntries(Path.Combine(path, "directory_level_1"))
+            Directory.EnumerateFileSystemEntries(Path.Combine(theTestResultPath, "directory_level_1"))
                 .Should().Contain(x => x.Contains("directory_level_2"));
 
 
-            Directory.EnumerateFileSystemEntries(Path.Combine(path, "directory_level_1", "directory_level_2"))
+            Directory.EnumerateFileSystemEntries(Path.Combine(theTestResultPath, "directory_level_1", "directory_level_2"))
                 .Should().Contain(x => x.Contains("directory_level_3"));
 
-            var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_1");
-            Directory.Delete(targetDirctory, true);
-            _testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
+            var results = TestHelper.GetTestResultFilesSystemEntryAndDelete();
+
+            foreach (var file in results)
+            {
+                _testOutput.WriteLine(file);
+            }
         }
 
         [Fact]
