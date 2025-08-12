@@ -1,0 +1,48 @@
+﻿@inject NavigationManager NavigationManager
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    @if (CheckAuthorization(context))
+                    {
+                        NavigationManager.NavigateTo("/unauthorized");
+                    }
+                    <MudIcon Icon="@Icons.Material.Rounded.Warning" Size="Size.Large" Color="Color.Error" />
+                    <MudText Inline=true Typo="Typo.body1">
+                        Unauthorized
+                    </MudText>
+                </NotAuthorized>
+                <Authorizing>
+                    <MudText Typo="Typo.body1">
+                        Authorizing ...
+                    </MudText>
+                </Authorizing>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <MudText Typo="Typo.body1">Redirecting ...</MudText>
+                @{
+                    NavigateToNotFoundPage();
+                }
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+@code {
+
+    bool CheckAuthorization(AuthenticationState state)
+    {
+        return state.User is not null && (state.User.Identities.FirstOrDefault()?.IsAuthenticated ?? false);
+    }
+
+    void NavigateToNotFoundPage()
+    {
+        NavigationManager.NavigateTo("/NotFound");
+    }
+}

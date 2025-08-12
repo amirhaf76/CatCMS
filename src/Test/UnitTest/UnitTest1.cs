@@ -1,9 +1,17 @@
 using CMSCore;
+using CMSCore.AppStructure.Abstraction;
+using CMSCore.AppStructure.Extensions;
 using CMSCore.Component;
+using CMSRepository.Models;
+using CMSRepository.Repositories;
 using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
 using Moq;
-using System.Xml.Serialization;
+using System.Text;
+using UnitTest.Helpers;
 using Xunit.Abstractions;
+using GeneratedApi = Infrastructure.GeneratedAPIs.CMSAPI;
+
 
 namespace UnitTest
 {
@@ -19,9 +27,10 @@ namespace UnitTest
         [Fact]
         public void Build_SomeDirectoriesAndFiles_MustBeExist()
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_1");
+            var structureDirectoryName = "MyApp1";
+            var theTestResultPath = Path.Combine(TestHelper.GetAbsoluteResultAddress(), structureDirectoryName);
 
-            var appStruct = new AppFileStructureBuilder("Myapp_1", new FileSystem());
+            var appStruct = new AppFileStructureBuilder(structureDirectoryName, new FileSystem());
 
             appStruct
                 .AddDirectoryAndChangeWorkingDirectory("txtFolder")
@@ -39,10 +48,11 @@ namespace UnitTest
             // Action
             _testOutput.WriteLine(appStruct.GetStructureView());
 
-            appStruct.Build(Directory.GetCurrentDirectory());
+            appStruct.Build().CreateStructure(TestHelper.GetAbsoluteResultAddress());
+
 
             // Assertion
-            Directory.EnumerateFileSystemEntries(path).Should()
+            Directory.EnumerateFileSystemEntries(theTestResultPath).Should()
                 .Contain(x => x.Contains("txtFolder"))
                 .And.Contain(x => x.Contains("directory_1"))
                 .And.Contain(x => x.Contains("directory_2"))
@@ -50,21 +60,53 @@ namespace UnitTest
                 .And.Contain(x => x.Contains("directory_level_1"));
 
 
-            Directory.EnumerateFileSystemEntries(Path.Combine(path, "txtFolder")).Should()
+            Directory.EnumerateFileSystemEntries(Path.Combine(theTestResultPath, "txtFolder")).Should()
                 .Contain(x => x.Contains("hello.World.txt"))
                 .And.Contain(x => x.Contains("hello.World.2.txt"));
 
 
-            Directory.EnumerateFileSystemEntries(Path.Combine(path, "directory_level_1"))
+            Directory.EnumerateFileSystemEntries(Path.Combine(theTestResultPath, "directory_level_1"))
                 .Should().Contain(x => x.Contains("directory_level_2"));
 
 
-            Directory.EnumerateFileSystemEntries(Path.Combine(path, "directory_level_1", "directory_level_2"))
+            Directory.EnumerateFileSystemEntries(Path.Combine(theTestResultPath, "directory_level_1", "directory_level_2"))
                 .Should().Contain(x => x.Contains("directory_level_3"));
 
-            var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_1");
-            Directory.Delete(targetDirctory, true);
-            _testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
+            var results = TestHelper.GetTestResultFilesSystemEntryAndDelete();
+
+            foreach (var file in results)
+            {
+                _testOutput.WriteLine(file);
+            }
+        }
+
+        [Fact]
+        public void Copy_SomeDirectoriesAndFiles_MustBeExist()
+        {
+            var theStructure = new DirectoryStructure("Myapp_1");
+
+            var theStructures = new List<BaseStructure>
+            {
+                new DirectoryStructure("Directory_1"),
+                new DirectoryStructure("Directory_2"),
+                new FileStructure("File.txt", "Test content"),
+            };
+
+            theStructure.AddChildren(theStructures);
+
+            // Action
+            var copiedStructure = theStructure.Copy();
+
+            // Assertion
+            copiedStructure.Should()
+                .NotBeNull()
+                .And.BeOfType<DirectoryStructure>()
+                .And.NotBeSameAs(theStructure);
+
+            copiedStructure.As<DirectoryStructure>().ForEachChild(c =>
+            {
+                theStructures.Should().NotContain(c);
+            });
         }
 
         [Fact]
@@ -87,7 +129,7 @@ namespace UnitTest
 
             _testOutput.WriteLine(appStruct.GetStructureView());
 
-            appStruct.Build(Directory.GetCurrentDirectory());
+            appStruct.Build().CreateStructure(Directory.GetCurrentDirectory());
 
             var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_2");
             Directory.Delete(targetDirctory, true);
@@ -119,7 +161,7 @@ namespace UnitTest
 
             _testOutput.WriteLine(appStruct.GetStructureView());
 
-            appStruct.Build(Directory.GetCurrentDirectory());
+            appStruct.Build().CreateStructure(Directory.GetCurrentDirectory());
 
             // Assertion
             var option = new EnumerationOptions
@@ -128,7 +170,7 @@ namespace UnitTest
                 RecurseSubdirectories = true
             };
 
-            var systemEntities = Directory.EnumerateFileSystemEntries(".\\Myapp_2","*", option);
+            var systemEntities = Directory.EnumerateFileSystemEntries(".\\Myapp_2", "*", option);
 
             systemEntities.Should()
                 .HaveCount(15)
@@ -274,7 +316,7 @@ namespace UnitTest
 
             template.Should().NotBeNullOrEmpty();
 
-            container.GetTemplate<NavigationComponent>();   
+            container.GetTemplate<NavigationComponent>();
 
             mockTemplateProvider.Verify(x => x.GetFileName(It.IsAny<Type>()), Times.Once);
         }
@@ -305,18 +347,109 @@ namespace UnitTest
             // From File
             var doc = new HtmlDocument();
             doc.Load("filePath");
-            
+
 
             // From String
             doc = new HtmlDocument();
             doc.LoadHtml("html");
 
-           
+
 
             // From Web
             var url = "http://html-agility-pack.net/";
             var web = new HtmlWeb();
             doc = web.Load(url);
+        }
+
+        [Fact]
+        public void Test2()
+        {
+            var destination = new DirectoryInfo("test2");
+
+            destination.Create();
+
+            var path = "D:\\Programing\\Work_space\\C#\\CMS\\src\\SampleHost";
+
+            var source = new DirectoryInfo(path);
+
+            foreach (var file in source.EnumerateFiles())
+            {
+                File.Copy(file.FullName, Path.Combine(destination.FullName, file.Name), true);
+            }
+
+
+            foreach (var directory in source.EnumerateDirectories("*", new EnumerationOptions { RecurseSubdirectories = true, MaxRecursionDepth = 10 }))
+            {
+                Directory.CreateDirectory(Path.Join(destination.FullName, directory.Name));
+            }
+        }
+
+        [Fact]
+        public void Test3()
+        {
+            var url = "http://html-agility-pack.net/";
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
+
+            _testOutput.WriteLine(doc.DocumentNode.InnerHtml);
+        }
+
+        [Fact]
+        public void Test4()
+        {
+            var dbContextMock = new Mock<DbContext>();
+            var dbSetMock = new Mock<DbSet<User>>();
+
+            var list = new List<User>();
+            dbContextMock.Setup(db => db.Set<User>()).Returns(dbSetMock.Object);
+            dbSetMock.Setup(set => set.AsNoTracking()).Returns(list.AsQueryable());
+            var userRepository = new UserRepository(dbContextMock.Object);
+
+            var user = dbSetMock.Object
+                .AsNoTracking()
+                .Include(user => user.Hosts);
+
+            _testOutput.WriteLine(user.ToQueryString());
+
+        }
+
+        [Fact]
+        public async Task Test5Async()
+        {
+            var httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:7077")
+            };
+            var client = new GeneratedApi.AuthenticationClient(httpClient);
+
+            var inventories = await client.PostLoginAsync(new GeneratedApi.LoginRequest
+            {
+                Password = "123456",
+                Username = "amin"
+            });
+        }
+
+        [Fact]
+        public void Test6()
+        {
+
+            var payload = $"{{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"admin\":true,\"iat\":1516239022}}";
+            _testOutput.WriteLine(payload);
+
+            var base64Payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(payload), Base64FormattingOptions.None);
+           
+            _testOutput.WriteLine(base64Payload);
+
+            payload = Encoding.UTF8.GetString(Convert.FromBase64String(base64Payload));
+
+            _testOutput.WriteLine(payload);
+
+            var jwt = "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0=";
+            payload = Encoding.UTF8.GetString(Convert.FromBase64String(jwt));
+
+            _testOutput.WriteLine(payload);
+
+
         }
     }
 }

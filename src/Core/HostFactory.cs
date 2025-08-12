@@ -1,4 +1,5 @@
 ﻿using CMSCore.Abstraction;
+using CMSCore.Abstraction.Models;
 
 namespace CMSCore
 {
@@ -6,10 +7,14 @@ namespace CMSCore
     {
         public Host CreateADefaultTemplate()
         {
-            var host = new Host("Default Host", new HostConfiguration()
+            var host = new Host()
             {
-                GeneratedCodesDirectory = Directory.GetCurrentDirectory(),
-            });
+                Title = "Default Host",
+                Configuration = new HostConfiguration
+                {
+                    GeneratedCodesDirectory = Directory.GetCurrentDirectory(),
+                }
+            };
 
             return host;
         }

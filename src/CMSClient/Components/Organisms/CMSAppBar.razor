@@ -1,0 +1,41 @@
+﻿@inject NavigationManager NavigationManager
+
+<MudAppBar Elevation="1">
+    <AuthorizeView>
+        <Authorized>
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        </Authorized>
+    </AuthorizeView>
+    <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+    <MudSpacer />
+    <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+    <AuthorizeView>
+        <Authorized>
+            <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Edge="Edge.End" OnClick="@(LogoutAsync)" />
+        </Authorized>
+        <NotAuthorized>
+            <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" Edge="Edge.End" OnClick="@(LoginAsync)" />
+        </NotAuthorized>
+    </AuthorizeView>
+</MudAppBar>
+
+@code {
+    [Parameter]
+    public EventCallback IsToggledChanged { get; set; }
+
+    async Task DrawerToggle()
+    {
+        await IsToggledChanged.InvokeAsync();
+    }
+
+    Task LoginAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    Task LogoutAsync()
+    {
+        throw new NotImplementedException();
+    }
+}
+}

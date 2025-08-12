@@ -1,52 +1,70 @@
 ﻿using CMSCore.Abstraction;
+using CMSCore.Abstraction.Models;
 
 namespace CMSCore.FileManagement
 {
     public class HostFileGenerator : IHostGenerator
     {
         private readonly IFileGenerator _fileGenerator;
-        private readonly IPageGenerator _pageGenerator;
 
-        public HostFileGenerator(IPageGenerator pageGenerator, IFileGenerator fileGenerator)
+
+
+        public HostFileGenerator(IFileGenerator fileGenerator)
         {
             _fileGenerator = fileGenerator;
-            _pageGenerator = pageGenerator;
         }
 
 
-        public IEnumerable<FileInfo> GenerateHostAsFiles(Host host, HostConfiguration hostConfig)
-        {
-            var pageFiles = GeneratePageCodes(host.ToDto().Pages);
 
-            var files = _fileGenerator.CreateFiles(pageFiles, hostConfig.GeneratedCodesDirectory);
+        public string GeneratedFilesPath { get => _fileGenerator.GeneratedDirectory; set => _fileGenerator.GeneratedDirectory = value; }
+
+
+
+        public IEnumerable<FileSystemInfo> GenerateHostAsFiles(Host host)
+        {
+            var pageFiles = GeneratePageCodes(GetHostPages(host));
+
+            var files = _fileGenerator.CreateFiles(pageFiles, GetHostDirectory(host));
 
             return files;
         }
 
-        public IDictionary<Host, IEnumerable<FileInfo>> GenerateHostsAsFiles(IEnumerable<Tuple<Host, HostConfiguration>> hostsAndConfigs)
+        public IDictionary<Host, IEnumerable<FileSystemInfo>> GenerateHostsAsFiles(IEnumerable<Host> hosts)
         {
-            var hostsAndFiles = new Dictionary<Host, IEnumerable<FileInfo>>(hostsAndConfigs.Count());
+            var hostsAndFiles = new Dictionary<Host, IEnumerable<FileSystemInfo>>(hosts.Count());
 
-            foreach (var (host, config) in hostsAndConfigs)
+            foreach (var host in hosts)
             {
-                hostsAndFiles.Add(host, GenerateHostAsFiles(host, config));
+                hostsAndFiles.Add(host, GenerateHostAsFiles(host));
             }
 
             return hostsAndFiles;
         }
 
 
-        private IEnumerable<PageFile> GeneratePageCodes(IEnumerable<PageDto> pages)
+
+        private static IEnumerable<PageFile> GeneratePageCodes(IEnumerable<Page> pages)
         {
             return pages.Select(page =>
             {
-                return new PageFile(GetPageTitle(page), _pageGenerator.GenerateCodePage(new PageContentProvider()));
+                return new PageFile(page.Title, GetPageContent(page));
             });
         }
 
-        private static string GetPageTitle(PageDto page)
+        private static string GetPageContent(Page page)
         {
-            return page.PageInfo.Title;
+            return page.ContentProvider.GetContent();
         }
+
+        private static IEnumerable<Page> GetHostPages(Host host)
+        {
+            return host.Pages;
+        }
+
+        private static string GetHostDirectory(Host host)
+        {
+            return host.Configuration.GeneratedCodesDirectory;
+        }
+
     }
 }

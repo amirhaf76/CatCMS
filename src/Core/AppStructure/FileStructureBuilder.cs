@@ -1,6 +1,9 @@
-﻿namespace CMSCore
+﻿
+using CMSCore.AppStructure.DTOs;
+
+namespace CMSCore
 {
-	public class FileStructureBuilder : StructureBuilder
+    public class FileStructureBuilder : BaseStructureBuilder
     {
         private readonly FileStructure _structure;
 
@@ -8,15 +11,19 @@
         {
             _structure = structure;
         }
-
-        public override void Build()
+        public override IEnumerable<FileSystemInfo> Build()
         {
             var dto = (FileStructureDto)_structure.ToDto();
 
-            using var aFile = File.CreateText(Path.Combine(_directory, dto.Name));
+            var path = Path.Combine(_directory, dto.Name);
+
+            using var aFile = File.CreateText(path);
 
             aFile.Write(dto.Content);
+
             aFile.Flush();
+
+            return new List<FileSystemInfo> { new FileInfo(path) };
         }
     }
 }

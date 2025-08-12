@@ -1,0 +1,32 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider />
+@* <MudPopoverProvider /> *@
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <CMSAppBar IsToggledChanged="@ChangeDrawer" />
+    <AuthorizeView>
+        <Authorized>
+            <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+                <NavMenu />
+            </MudDrawer>
+        </Authorized>
+    </AuthorizeView>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Medium">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+
+    bool _drawerOpen = false;
+
+    void ChangeDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}
