@@ -9,13 +9,4 @@
         public string Key { get; set; } = string.Empty;
     }
 
-    public static class AppSettingsSections
-    {
-        public const string JWT = "JWT";
-    }
-    public static class CustomizedUserClaimTypes
-    {
-        public const string Status = "user_status";
-    }
-
 }

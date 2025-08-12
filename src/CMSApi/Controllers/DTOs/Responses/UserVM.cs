@@ -1,8 +1,6 @@
-﻿using CMSRepository.Models;
-
-namespace CMSApi.Controllers
+﻿namespace CMSApi
 {
-    public class RegisterResponse
+    public class UserVM
     {
         public int Id { get; set; }
 
@@ -10,6 +8,6 @@ namespace CMSApi.Controllers
 
         public string Password { get; set; } = string.Empty;
 
-        public UserStatus Status { get; set; }
+        public UserStatusVM Status { get; set; }
     }
 }

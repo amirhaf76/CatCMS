@@ -1,4 +1,4 @@
-﻿namespace CMSApi.Controllers
+﻿namespace CMSApi.Controllers.DTOs.Requests
 {
     public class RegisterRequest
     {

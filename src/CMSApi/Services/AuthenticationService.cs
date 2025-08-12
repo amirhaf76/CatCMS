@@ -2,11 +2,11 @@
 using CMSApi.Abstraction.Services.DTOs;
 using CMSApi.DTOs;
 using CMSApi.Exceptions;
+using CMSApi.Services.Exceptions;
 using CMSRepository.Abstractions;
 using CMSRepository.Models;
 using Infrastructure.JWTService.Abstractions;
 using Microsoft.AspNetCore.Identity;
-using System.Reflection.Metadata;
 using System.Security.Claims;
 
 namespace CMSApi.Services
@@ -82,7 +82,7 @@ namespace CMSApi.Services
             {
                 new Claim(ClaimTypes.Name, theUser.Username),
                 new Claim(ClaimTypes.NameIdentifier, theUser.Id.ToString()),
-                new Claim(CustomizedUserClaimTypes.Status, theUser.Status.ToString()),
+                new Claim(CustomizedUserClaimTypes.STATUS, theUser.Status.ToString()),
             };
 
             var token = _jwtTokenService.GenerateToken(

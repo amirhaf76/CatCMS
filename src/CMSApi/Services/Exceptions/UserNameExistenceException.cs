@@ -1,4 +1,4 @@
-﻿namespace CMSApi.Exceptions
+﻿namespace CMSApi.Services.Exceptions
 {
     [Serializable]
     internal class UserNameExistenceException : Exception

@@ -1,7 +1,8 @@
 ﻿using CMSApi.Abstraction.Services;
 using CMSApi.Abstraction.Services.DTOs;
 using CMSApi.Controllers.DTOs.Requests;
-using CMSApi.Extensions;
+using CMSApi.Controllers.DTOs.Responses;
+using CMSApi.Controllers.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

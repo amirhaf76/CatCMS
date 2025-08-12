@@ -1,8 +1,10 @@
 ﻿using CMSApi.Abstraction.Services.DTOs;
-using CMSApi.Controllers;
 using CMSApi.Controllers.DTOs.Requests;
+using CMSApi.Controllers.DTOs.Responses;
+using CMSCore.Abstraction.Models;
+using Infrastructure.GenericRepository;
 
-namespace CMSApi.Extensions
+namespace CMSApi.Controllers.Extensions
 {
     public static class ControllerDTOsExtension
     {
@@ -35,7 +37,24 @@ namespace CMSApi.Extensions
             };
         }
 
+        public static Pagination ToEntryFilter(this PaginationDto dto)
+        {
+            return new Pagination
+            {
+                Number = dto.PageNum,
+                Size = dto.PageSiz,
+            };
+        }
 
+
+        public static CMSCore.Abstraction.Models.Host ToCoreModel(this CMSRepository.Models.Host host)
+        {
+            return new CMSCore.Abstraction.Models.Host
+            {
+                Id = host.Id,
+                Title = host.Title,
+            };
+        }
 
     }
 }
