@@ -26,9 +26,23 @@ namespace CMSRepository
             HostModelCreation(modelBuilder);
 
             UserModelCreation(modelBuilder);
+
+            HostConfigurationModelCreation(modelBuilder);
         }
 
+        private void HostConfigurationModelCreation(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<HostConfiguration>(buildAction =>
+            {
+                buildAction.HasKey(c => c.HostId);
 
+                buildAction
+                    .HasOne(c => c.Host)
+                    .WithOne(h => h.Configuration)
+                    .HasForeignKey<HostConfiguration>(x => x.HostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+        }
 
         private static void UserModelCreation(ModelBuilder modelBuilder)
         {

@@ -7,5 +7,7 @@
         public string Title { get; set; } = string.Empty;
 
         public User Creator { get; set; } = new User();
+
+        public HostConfiguration Configuration { get; set; } = new HostConfiguration();
     }
 }

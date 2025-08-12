@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace Infrastructure.GenericRepository
 {
@@ -27,8 +26,8 @@ namespace Infrastructure.GenericRepository
         Task<TEntity?> FindAsync(object[] keyValues, CancellationToken cs = default);
 
 
-        Task AddAsync(TEntity entity);
-        Task AddAsync(TEntity entity, CancellationToken cs = default);
+        Task<TEntity> AddAsync(TEntity entity);
+        Task<TEntity> AddAsync(TEntity entity, CancellationToken cs = default);
 
 
         Task AddRangeAsync(IEnumerable<TEntity> entities);
@@ -38,10 +37,16 @@ namespace Infrastructure.GenericRepository
         Task<int> SaveChangesAsync(CancellationToken cs = default);
         Task<int> SaveChangesAsync();
 
+
         IEnumerable<TEntity> Get(
+            Pagination? pagination = null,
             Expression<Func<TEntity, bool>>? filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-            string includeProperties = "");
-        
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null);
+
+        Task<IEnumerable<TEntity>> GetAsync(
+            Pagination? pagination = null,
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null);
+
     }
 }

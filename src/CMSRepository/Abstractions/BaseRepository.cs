@@ -6,6 +6,8 @@ namespace CMSRepository.Abstractions
 {
     public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
+        public const int MAXMIMUM_RETURN_COUNT = 100;
+
         protected readonly DbContext dbContext;
         protected readonly DbSet<TEntity> dbSet;
 
@@ -75,14 +77,18 @@ namespace CMSRepository.Abstractions
 
 
 
-        public virtual async Task AddAsync(TEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
-            await dbSet.AddAsync(entity);
+            var result = await dbSet.AddAsync(entity);
+
+            return result.Entity;
         }
 
-        public virtual async Task AddAsync(TEntity entity, CancellationToken cs = default)
+        public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cs = default)
         {
-            await dbSet.AddAsync(entity, cs);
+            var result = await dbSet.AddAsync(entity, cs);
+
+            return result.Entity; 
         }
 
 
@@ -120,52 +126,91 @@ namespace CMSRepository.Abstractions
 
 
 
-        protected static int ValidatePaginationAndAmendPageNumber(int pageNum, int pageSiz)
+        public virtual IEnumerable<TEntity> Get(
+            Pagination? pagination = null,
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null)
         {
-            if (pageSiz < 1)
-            {
-                throw new InvalidOperationException($"Page size can not be lesser than 1!, The passed page size: {pageSiz}");
-            }
+            IQueryable<TEntity> query = PreparingGetQuery(pagination, filter, orderBy);
 
-            if (pageNum < 0)
-            {
-                throw new InvalidOperationException($"Page number can not be lesser than 0!, The passed page number: {pageNum}");
-            } 
-            else if(pageNum == 0)
-            {
-                pageNum = 1;
-            }
-
-            return pageNum;
-
+            return query.ToList();
         }
 
-        public virtual IEnumerable<TEntity> Get(
+
+        public virtual async Task<IEnumerable<TEntity>> GetAsync(
+            Pagination? pagination = null,
             Expression<Func<TEntity, bool>>? filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-            string includeProperties = "")
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null)
+        {
+            IQueryable<TEntity> query = PreparingGetQuery(pagination, filter, orderBy);
+
+            return await query.ToListAsync();
+        }
+
+
+        private IQueryable<TEntity> PreparingGetQuery(
+            Pagination? pagination,
+            Expression<Func<TEntity, bool>>? filter,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy)
         {
             IQueryable<TEntity> query = dbSet;
+
 
             if (filter != null)
             {
                 query = query.Where(filter);
             }
 
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty);
-            }
-
             if (orderBy != null)
             {
-                return orderBy(query).ToList();
+                query = orderBy(query);
             }
-            else
+
+            if (pagination != null)
             {
-                return query.ToList();
+                pagination = ValidatePaginationAndAmendPageNumber(pagination);
+
+                var skippedEntriesCount = (pagination.Number - 1) * pagination.Size;
+
+                query = query.Skip(skippedEntriesCount).Take(pagination.Size);
             }
+
+            return query;
         }
+        
+
+
+        protected static int ValidatePaginationAndAmendPageNumber(int pageNum, int pageSiz)
+        {
+            return ValidatePaginationAndAmendPageNumber(new Pagination
+            {
+                Number = pageNum,
+                Size = pageSiz,
+            }).Number;
+
+        }
+
+        protected static Pagination ValidatePaginationAndAmendPageNumber(Pagination pagination)
+        {
+            if (pagination.Size < 1)
+            {
+                throw new InvalidOperationException($"Page size can not be lesser than 1!, The passed page size: {pagination.Size}");
+            }
+
+            if (pagination.Number < 0 || pagination.Number > MAXMIMUM_RETURN_COUNT)
+            {
+                throw new InvalidOperationException($"Page number can be equal or between {0} and {MAXMIMUM_RETURN_COUNT}, The passed page number: {pagination.Number}");
+            }
+           
+            if (pagination.Number == 0)
+            {
+                pagination.Number = 1;
+            }
+
+            return pagination;
+
+        }
+
+
     }
 }
