@@ -7,28 +7,37 @@ namespace CMSCore.FileManagement
     public class HostFileStructureGenerator : IHostGenerator
     {
         private readonly IFileStructureBuilder _structureGenerator;
-        private string _generatedPageFilesPath;
 
+
+        public HostFileStructureGenerator(IFileStructureBuilder structureBuilder) : 
+            this(structureBuilder, Directory.GetCurrentDirectory())
+        {
+            
+        }
 
         public HostFileStructureGenerator(
             IFileStructureBuilder structureBuilder,
             string generatedPageFilesPath)
         {
             _structureGenerator = structureBuilder;
-            _generatedPageFilesPath = generatedPageFilesPath;
+            GeneratedFilesPath = generatedPageFilesPath;
         }
 
 
 
+        public string GeneratedFilesPath { get; set; }
+
+        
+
         public IEnumerable<FileSystemInfo> GenerateHostAsFiles(Host host)
         {
-            var doesDirectoryExist = _structureGenerator.TrySetWorkingDirectoryToFirstOccurrenceFromRoot(_generatedPageFilesPath);
+            var doesDirectoryExist = _structureGenerator.TrySetWorkingDirectoryToFirstOccurrenceFromRoot(GeneratedFilesPath);
 
             if (!doesDirectoryExist)
             {
                 _structureGenerator
                     .SetWorkingDirectoryToRoot()
-                    .AddDirectoryAndChangeWorkingDirectory(_generatedPageFilesPath);
+                    .AddDirectoryAndChangeWorkingDirectory(GeneratedFilesPath);
             }
             foreach (var thePage in host.Pages)
             {
@@ -51,8 +60,6 @@ namespace CMSCore.FileManagement
         {
             return p.ContentProvider.GetContent();
         }
-
-
 
         private static string GetHostDirectory(Host host)
         {

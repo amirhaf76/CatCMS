@@ -8,10 +8,15 @@ namespace CMSCore.FileManagement
         private readonly IFileGenerator _fileGenerator;
 
 
+
         public HostFileGenerator(IFileGenerator fileGenerator)
         {
             _fileGenerator = fileGenerator;
         }
+
+
+
+        public string GeneratedFilesPath { get => _fileGenerator.GeneratedDirectory; set => _fileGenerator.GeneratedDirectory = value; }
 
 
 

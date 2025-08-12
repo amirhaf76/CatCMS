@@ -4,6 +4,8 @@ namespace CMSCore.Abstraction
 {
     public interface IFileGenerator
     {
+        string GeneratedDirectory { get; set;  }
+
         FileInfo CreateFile(PageFile p);
         FileInfo CreateFile(PageFile p, string directory);
 

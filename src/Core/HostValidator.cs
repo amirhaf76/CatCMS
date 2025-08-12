@@ -10,6 +10,18 @@ namespace CMSCore
 
 
         }
+
+        public void Validate(string path)
+        {
+            foreach (var invalidChar in Path.GetInvalidPathChars())
+            {
+                if (path.Contains(invalidChar))
+                {
+                    throw new InvalidPathCharException();
+                }
+
+            }
+        }
     }
 
 }

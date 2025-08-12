@@ -14,12 +14,24 @@ namespace CMSCore.FileManagement
             _validator = validator;
         }
 
+        public string GeneratedFilesPath
+        {
+            get => _generator.GeneratedFilesPath;
+            set
+            {
+                _validator.Validate(value);
+
+                _generator.GeneratedFilesPath = value;
+            }
+        }
+
         public IEnumerable<FileSystemInfo> GenerateHostAsFiles(Host host)
         {
             _validator.Validate(host);
 
             return _generator.GenerateHostAsFiles(host);
         }
+
         public IDictionary<Host, IEnumerable<FileSystemInfo>> GenerateHostsAsFiles(IEnumerable<Host> hosts)
         {
             var validatedHostsAndConfigs = hosts.Select(t =>

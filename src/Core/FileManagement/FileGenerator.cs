@@ -4,7 +4,7 @@ namespace CMSCore.FileManagement
 {
     public class FileGenerator : IFileGenerator
     {
-        public string GeneratedDirectory { get; private set; }
+        public string GeneratedDirectory { get; set; }
 
 
 

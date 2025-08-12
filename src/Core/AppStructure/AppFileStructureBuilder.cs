@@ -10,7 +10,6 @@ namespace CMSCore
         private readonly IFileSystem _fileSystem;
         private DirectoryStructure _workingDirectory;
 
-
         public AppFileStructureBuilder(string directoryName, IFileSystem fileSystem)
         {
             _rootDirectory = new DirectoryStructure(directoryName);
