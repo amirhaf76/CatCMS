@@ -11,10 +11,11 @@ namespace CMSApi.Abstraction.Services
 
         Task<CMSRepository.Models.Host> AddHostAsync(string title);
 
-        Task<CMSRepository.Models.Host> GetHostWithItsCreatorAsync(Guid theHostId);
-
-        Task<IEnumerable<CMSRepository.Models.Host>> GetHostsWithItsCreatorAsync(Pagination pagination);
+        Task<CMSRepository.Models.Host> GetHostAsync(Guid theHostId);
 
         Task<IEnumerable<FileSystemInfo>> GenerateHostAsync(Guid id);
+
+        Task PatchUpdateAsync(Guid hostId, IDictionary<string, object?> patch);
+
     }
 }

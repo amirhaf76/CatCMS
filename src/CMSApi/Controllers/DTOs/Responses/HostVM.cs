@@ -6,6 +6,9 @@
 
         public string Title { get; set; } = string.Empty;
 
-        public UserVM Creator { get; set; } = new UserVM();
+        public string GeneratedCodesDirectory { get; set; } = string.Empty;
+
+        public string DomainAddress { get; set; } = string.Empty;
+
     }
 }

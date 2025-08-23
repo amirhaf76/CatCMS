@@ -4,7 +4,8 @@ using CMSApi.Controllers.Extensions;
 using CMSApi.Services.Exceptions;
 using CMSCore.Abstraction;
 using CMSRepository.Abstractions;
-using Infrastructure.GenericRepository;
+using CMSRepository.Models;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace CMSApi.Services
@@ -13,18 +14,21 @@ namespace CMSApi.Services
     {
         private readonly IHostRepository _hostRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly Func<string, IHostGenerator> _hostGeneratorProvider;
+        private readonly IHostGenerator _hostGeneratorProvider;
+        private readonly IConfiguration _configuration;
 
 
 
         public CMSService(
             IHostRepository hostRepository,
             IHttpContextAccessor httpContextAccessor,
-            Func<string, IHostGenerator> hostGeneratorProvider)
+            IHostGenerator hostGeneratorProvider,
+            IConfiguration configuration)
         {
             _hostRepository = hostRepository;
             _httpContextAccessor = httpContextAccessor;
             _hostGeneratorProvider = hostGeneratorProvider;
+            _configuration = configuration;
         }
 
 
@@ -64,11 +68,11 @@ namespace CMSApi.Services
             await _hostRepository.SaveChangesAsync();
         }
 
-        public async Task<CMSRepository.Models.Host> GetHostWithItsCreatorAsync(Guid theHostId)
+        public async Task<CMSRepository.Models.Host> GetHostAsync(Guid theHostId)
         {
             var theCreatorId = GetUserIdFromHttpContext();
 
-            var theHost = await _hostRepository.GetHostWithItsCreatorAsync(theCreatorId, theHostId);
+            var theHost = await _hostRepository.GetHostAsync(theCreatorId, theHostId);
 
             if (theHost == null)
             {
@@ -82,18 +86,9 @@ namespace CMSApi.Services
         {
             var theCreatorId = GetUserIdFromHttpContext();
 
-            var theHosts = await _hostRepository.GetHostsWithItsCreatorAsync(theCreatorId, pagination.ToEntryFilter());
+            var theHosts = await _hostRepository.GetHostsAsync(theCreatorId, pagination.ToEntryFilter());
 
             return theHosts;
-        }
-
-        public async Task<IEnumerable<CMSRepository.Models.Host>> GetHostsWithItsCreatorAsync(Pagination pagination)
-        {
-            var theCreatorId = GetUserIdFromHttpContext();
-
-            var hosts = await _hostRepository.GetHostsWithItsCreatorAsync(theCreatorId, pagination);
-
-            return hosts;
         }
 
         public async Task<IEnumerable<FileSystemInfo>> GenerateHostAsync(Guid theHostId)
@@ -106,14 +101,38 @@ namespace CMSApi.Services
             {
                 throw new HostNotFoundException();
             }
+
+            var directory = "Hosts";
+            var projectFile = Path.Combine(GetProjectDirectory(), directory, $"host_{theHost.Title}_{theHost.Id}");
+
+            if (Directory.Exists(projectFile))
+            {
+                throw new HostExistenceException();
+            }
+            
             var hostCMSCore = theHost.ToCoreModel();
-
-            // Todo: Use host configuration loaded from database.
-            var generator = _hostGeneratorProvider.Invoke(".\\default\\");
-
-            var filesInformation = generator.GenerateHostAsFiles(hostCMSCore);
+            hostCMSCore.Configuration.GeneratedCodesDirectory = Path.Combine(GetProjectDirectory(), directory, $"host_{theHost.Title}_{theHost.Id}");
+            var filesInformation = await _hostGeneratorProvider.GenerateHostAsFilesAsync(hostCMSCore);
 
             return filesInformation;
+        }
+
+        private string GetProjectDirectory()
+        {
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
+        }
+
+        public async Task PatchUpdateAsync(Guid hostId, IDictionary<string, object?> patch)
+        {
+            int theCreatorId = GetUserIdFromHttpContext();
+
+            var hostEntity = new CMSRepository.Models.Host { Id = hostId };
+
+            hostEntity.Creator.Id = theCreatorId;
+
+            _hostRepository.ApplyPatch(hostEntity, patch);
+
+            await _hostRepository.SaveChangesAsync();
         }
 
 

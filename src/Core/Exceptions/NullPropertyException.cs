@@ -16,9 +16,5 @@ namespace CMSCore.Exceptions
         public NullPropertyException(string? message, Exception? innerException) : base(message, innerException)
         {
         }
-
-        protected NullPropertyException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

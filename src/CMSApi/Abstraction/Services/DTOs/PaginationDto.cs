@@ -2,7 +2,7 @@
 {
     public class PaginationDto
     {
-        public int PageNum { get; set; }
-        public int PageSiz { get; set; }
+        public int Number { get; set; }
+        public int Size { get; set; }
     }
 }

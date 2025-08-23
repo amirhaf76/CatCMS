@@ -68,7 +68,7 @@ namespace CMSCore
         {
             var theHost = _hosts.GetHostById(arg.HostId);
 
-            var thePage = theHost.Pages.FirstOrDefault(p => arg.HostId == p.Id);
+            var thePage = theHost.Pages.FirstOrDefault(p => arg.PageId == p.Id);
 
             if (thePage is null)
             {

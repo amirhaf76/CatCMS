@@ -11,6 +11,8 @@ namespace CMSCore.Generator
             _content = content;
         }
 
+        public bool DoesItNeedLoading => false;
+
         public string GetContent()
         {
             var strBuilder = new StringBuilder();
@@ -19,6 +21,10 @@ namespace CMSCore.Generator
 
             return strBuilder.ToString();
 
+        }
+
+        public void Load()
+        {
         }
     }
 }

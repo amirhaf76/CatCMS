@@ -48,5 +48,6 @@ namespace Infrastructure.GenericRepository
             Expression<Func<TEntity, bool>>? filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null);
 
+        void ApplyPatch(TEntity entity, IDictionary<string, object?> patch);
     }
 }

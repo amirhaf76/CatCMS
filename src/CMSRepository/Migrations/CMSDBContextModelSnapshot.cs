@@ -31,24 +31,6 @@ namespace CMSRepository.Migrations
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
-
-                    b.ToTable("Host");
-                });
-
-            modelBuilder.Entity("CMSRepository.Models.HostConfiguration", b =>
-                {
-                    b.Property<Guid>("HostId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DomainAddress")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -61,9 +43,17 @@ namespace CMSRepository.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(150)");
 
-                    b.HasKey("HostId");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(150)");
 
-                    b.ToTable("HostConfiguration");
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("Host");
                 });
 
             modelBuilder.Entity("CMSRepository.Models.User", b =>
@@ -105,23 +95,6 @@ namespace CMSRepository.Migrations
                         .IsRequired();
 
                     b.Navigation("Creator");
-                });
-
-            modelBuilder.Entity("CMSRepository.Models.HostConfiguration", b =>
-                {
-                    b.HasOne("CMSRepository.Models.Host", "Host")
-                        .WithOne("Configuration")
-                        .HasForeignKey("CMSRepository.Models.HostConfiguration", "HostId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Host");
-                });
-
-            modelBuilder.Entity("CMSRepository.Models.Host", b =>
-                {
-                    b.Navigation("Configuration")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("CMSRepository.Models.User", b =>

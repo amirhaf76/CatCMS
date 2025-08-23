@@ -1,13 +1,10 @@
-﻿namespace CMSRepository.Models
+﻿namespace CMSApi
 {
-    public class HostConfiguration
+    public class HostConfigurationVM
     {
-        public Guid HostId { get; set; }
-
-        public Host Host { get; set; }
-
         public string GeneratedCodesDirectory { get; set; } = string.Empty;
 
         public string DomainAddress { get; set; } = string.Empty;
+
     }
 }

@@ -17,97 +17,14 @@ namespace UnitTest
 {
     public class UnitTest1
     {
-        private ITestOutputHelper _testOutput;
+        private readonly ITestOutputHelper _testOutput;
 
         public UnitTest1(ITestOutputHelper testOutput)
         {
             _testOutput = testOutput;
         }
 
-        [Fact]
-        public void Build_SomeDirectoriesAndFiles_MustBeExist()
-        {
-            var structureDirectoryName = "MyApp1";
-            var theTestResultPath = Path.Combine(TestHelper.GetAbsoluteResultAddress(), structureDirectoryName);
-
-            var appStruct = new AppFileStructureBuilder(structureDirectoryName, new FileSystem());
-
-            appStruct
-                .AddDirectoryAndChangeWorkingDirectory("txtFolder")
-                .AddFile("hello.World.txt", "Hello World number 1")
-                .AddFile("hello.World.2.txt", "Hello World number 2")
-                .SetWorkingDirectoryToRoot()
-                .AddDirectory("directory_1")
-                .AddDirectory("directory_2")
-                .AddDirectory("directory_3")
-                .AddDirectoryAndChangeWorkingDirectory("directory_level_1")
-                .AddDirectoryAndChangeWorkingDirectory("directory_level_2")
-                .AddDirectoryAndChangeWorkingDirectory("directory_level_3")
-                .SetWorkingDirectoryToRoot();
-
-            // Action
-            _testOutput.WriteLine(appStruct.GetStructureView());
-
-            appStruct.Build().CreateStructure(TestHelper.GetAbsoluteResultAddress());
-
-
-            // Assertion
-            Directory.EnumerateFileSystemEntries(theTestResultPath).Should()
-                .Contain(x => x.Contains("txtFolder"))
-                .And.Contain(x => x.Contains("directory_1"))
-                .And.Contain(x => x.Contains("directory_2"))
-                .And.Contain(x => x.Contains("directory_3"))
-                .And.Contain(x => x.Contains("directory_level_1"));
-
-
-            Directory.EnumerateFileSystemEntries(Path.Combine(theTestResultPath, "txtFolder")).Should()
-                .Contain(x => x.Contains("hello.World.txt"))
-                .And.Contain(x => x.Contains("hello.World.2.txt"));
-
-
-            Directory.EnumerateFileSystemEntries(Path.Combine(theTestResultPath, "directory_level_1"))
-                .Should().Contain(x => x.Contains("directory_level_2"));
-
-
-            Directory.EnumerateFileSystemEntries(Path.Combine(theTestResultPath, "directory_level_1", "directory_level_2"))
-                .Should().Contain(x => x.Contains("directory_level_3"));
-
-            var results = TestHelper.GetTestResultFilesSystemEntryAndDelete();
-
-            foreach (var file in results)
-            {
-                _testOutput.WriteLine(file);
-            }
-        }
-
-        [Fact]
-        public void Copy_SomeDirectoriesAndFiles_MustBeExist()
-        {
-            var theStructure = new DirectoryStructure("Myapp_1");
-
-            var theStructures = new List<BaseStructure>
-            {
-                new DirectoryStructure("Directory_1"),
-                new DirectoryStructure("Directory_2"),
-                new FileStructure("File.txt", "Test content"),
-            };
-
-            theStructure.AddChildren(theStructures);
-
-            // Action
-            var copiedStructure = theStructure.Copy();
-
-            // Assertion
-            copiedStructure.Should()
-                .NotBeNull()
-                .And.BeOfType<DirectoryStructure>()
-                .And.NotBeSameAs(theStructure);
-
-            copiedStructure.As<DirectoryStructure>().ForEachChild(c =>
-            {
-                theStructures.Should().NotContain(c);
-            });
-        }
+        
 
         [Fact]
         public void AddFilesLike_SomeDirectoriesAndFiles_MustBeExist()
@@ -347,18 +264,20 @@ namespace UnitTest
             // From File
             var doc = new HtmlDocument();
             doc.Load("filePath");
+            _testOutput.WriteLine(doc.DocumentNode.ToString());
 
 
             // From String
             doc = new HtmlDocument();
             doc.LoadHtml("html");
-
+            _testOutput.WriteLine(doc.DocumentNode.ToString());
 
 
             // From Web
             var url = "http://html-agility-pack.net/";
             var web = new HtmlWeb();
             doc = web.Load(url);
+            _testOutput.WriteLine(doc.DocumentNode.ToString());
         }
 
         [Fact]
@@ -427,6 +346,8 @@ namespace UnitTest
                 Password = "123456",
                 Username = "amin"
             });
+
+            _testOutput.WriteLine(inventories.Result);
         }
 
         [Fact]
@@ -450,6 +371,19 @@ namespace UnitTest
             _testOutput.WriteLine(payload);
 
 
+        }
+
+        [Fact]
+        public void Test7()
+        {
+            var csHtml = "@page\r\n@model IndexModel\r\n@{\r\n    ViewData[\"Title\"] = \"Home\";\r\n}\r\n\r\n@*--HtmlPartStart*@\r\n<div class=\"section\">\r\n    <div class=\" block box\">\r\n        <h1 class=\"is-size-1\">Home</h1>\r\n    </div>\r\n\r\n</div>\r\n\r\n@*--HtmlPartEnd*@";
+            // string html = "<div class=\"section\">\r\n    <div class=\" block box\">\r\n        <h1 class=\"is-size-1\">Home</h1>\r\n    </div>\r\n\r\n</div>";
+            var doc = new HtmlDocument();
+            // var tag = "@*--HtmlPartStart*@";
+            // doc.LoadHtml(csHtml.Substring(csHtml.IndexOf(tag)+tag.Length));
+            doc.LoadHtml(csHtml);
+
+            _testOutput.WriteLine(doc.DocumentNode.WriteContentTo());
         }
     }
 }

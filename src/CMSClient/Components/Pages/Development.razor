@@ -1,8 +1,8 @@
-﻿@page "/development"
-@using CMSClient.Components.Logics
+﻿@using CMSClient.Components.Logics
 @using CMSClient.Services
 @inject UserStatePublisherService StatePublisher;
 @inject AuthenticationStateProvider AuthStateProvider;
+@attribute [Route(CMSRoutes.DEVELOPMENT)]
 
 <MudStack>
     <MudText>login</MudText>

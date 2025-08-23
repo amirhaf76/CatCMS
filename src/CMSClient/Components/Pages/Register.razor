@@ -1,5 +1,4 @@
-﻿@page "/register"
-@using System.Text.RegularExpressions;
+﻿@using System.Text.RegularExpressions;
 @using System.ComponentModel.DataAnnotations;
 @using CMSClient.Components.Logics
 @using CMSClient.Services
@@ -7,6 +6,7 @@
 @using Microsoft.AspNetCore.Authorization
 @inject UserStatePublisherService StatePublisher;
 @inject CustomAuthStateProvider AuthStateProvider;
+@attribute [Route(CMSRoutes.REGISTER)]
 @attribute [Authorize]
 
 <MudContainer MaxWidth="MaxWidth.Small">
@@ -45,9 +45,9 @@
             <MudPaper Class="pa-4 mt-4" Elevation="6">
                 <MudStack Spacing="3">
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(LoginAsync)">Login</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Default" DropShadow="false" OnClick="@(()=>form.Validate())">Validate</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(()=>form.ResetAsync())">Reset</MudButton>
-                    <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="@(()=>form.ResetValidation())">Reset Validation</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Default" DropShadow="false" OnClick="@(ValidateAsync)">Validate</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(RestAsync)">Reset</MudButton>
+                    <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="@(RestValidationAsync)">Reset Validation</MudButton>
                 </MudStack>
             </MudPaper>
         </MudItem>
@@ -69,17 +69,11 @@
     MudTextField<string>? pwField1;
     MudForm? form;
     LoginVM loginVM = new LoginVM();
-    string? message;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        AuthenticationStateChangedHandler v = delegate (Task<AuthenticationState> e)
-        {
-            message = "State is changed";
-        };
 
-        AuthStateProvider.AuthenticationStateChanged += v;
     }
 
     private Task LoginAsync()
@@ -115,6 +109,30 @@
         if (pwField1?.Value != arg)
             return "Passwords don't match";
         return string.Empty;
+    }
+
+    private async Task ValidateAsync()
+    {
+        if (form != null)
+        {
+            await form.Validate();
+        }
+    }
+
+    private async Task RestAsync()
+    {
+        if (form != null)
+        {
+            await form.ResetAsync();
+        }
+    }
+
+    private void RestValidationAsync()
+    {
+        if (form != null)
+        {
+            form.ResetValidation();
+        }
     }
 
 }

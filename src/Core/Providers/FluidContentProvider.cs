@@ -10,6 +10,8 @@ namespace CMSCore.Generator
         private string _source;
         private object _model;
 
+        public bool DoesItNeedLoading => false;
+
         public FluidContentProvider()
         {
             _parser = new FluidParser();
@@ -43,7 +45,9 @@ namespace CMSCore.Generator
             return template.Render(context);
         }
 
-
+        public void Load()
+        {
+        }
     }
 
 }

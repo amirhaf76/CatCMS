@@ -9,9 +9,20 @@ namespace CMSCore.Providers
 
 
 
+        public HtmlContentProvider(string path)
+        {
+            Path = path;
+        }
+
         public HtmlContentProvider()
         {
         }
+
+
+
+        public string Path { get; private set; } = string.Empty;
+
+        public bool DoesItNeedLoading => true;
 
 
 
@@ -19,11 +30,17 @@ namespace CMSCore.Providers
         {
             if (!IsPageContentLoadedFromFile())
             {
-                ThrowExceptionDueNotToLoadContent();
+                if (string.IsNullOrEmpty(Path))
+                {
+                    ThrowExceptionDueNotToLoadContent();
+                }
+
+                LoadPageContentFromFile(Path);
             }
 
             return _document?.DocumentNode.OuterHtml ?? string.Empty;
         }
+
 
         public bool IsPageContentLoadedFromFile()
         {
@@ -45,8 +62,11 @@ namespace CMSCore.Providers
             modifyHtmlDoc(_document!);
         }
 
+
         public void LoadPageContentFromFile(string path)
         {
+            Path = path;
+
             var doc = new HtmlDocument();
             // todo: path !!!!
             doc.DetectEncodingAndLoad(path);
@@ -54,11 +74,25 @@ namespace CMSCore.Providers
             _document = doc;
         }
 
+        public void LoadPageContent(string content)
+        {
+            var doc = new HtmlDocument();
+            // todo: path !!!!
+            doc.LoadHtml(content);
+
+            _document = doc;
+        }
+
+        public void Load()
+        {
+            LoadPageContentFromFile(Path);
+        }
 
 
         private static void ThrowExceptionDueNotToLoadContent()
         {
             throw new InvalidOperationException("The page content is not loaded or, for a new page, there is no content!");
         }
+
     }
 }

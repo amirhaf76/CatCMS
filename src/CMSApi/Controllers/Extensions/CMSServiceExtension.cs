@@ -10,8 +10,8 @@
             {
                 Id = host.Id,
                 Title = host.Title,
-                Creator = host.Creator.ToVM(),
-
+                GeneratedCodesDirectory = host.GeneratedCodesDirectory,
+                DomainAddress = host.DomainAddress,
             };
         }
 
@@ -35,5 +35,6 @@
                 _ => throw new NotImplementedException(),
             };
         }
+
     }
 }

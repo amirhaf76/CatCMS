@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider IsDarkMode=true/>
 @* <MudPopoverProvider /> *@
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -15,7 +15,7 @@
         </Authorized>
     </AuthorizeView>
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Medium">
+        <MudContainer MaxWidth="@MaxWidth.Large">
             @Body
         </MudContainer>
     </MudMainContent>

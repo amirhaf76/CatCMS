@@ -316,12 +316,17 @@ namespace UnitTest
         {
             // Arrangement
             //      Builder
-            var theCmsBuilder = new CMSBuilder().DefaultConfig();
+            var theCmsBuilder = new CMSBuilder();
+            var theCmsDirector = new CMSDirector(theCmsBuilder);
+
+            theCmsDirector.Prepare();
+
             var theCms = theCmsBuilder.Build();
 
             //      Designing Part
             var theHost = theCms.CreateAndAddHost();
             var thePage = theCms.CreateAndAddPage(theHost.Id);
+            
 
             await theCms.UpdatePageContentAsync(new PageUpdateDto
             {

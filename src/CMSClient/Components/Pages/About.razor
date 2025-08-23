@@ -1,7 +1,8 @@
 ﻿@page "/about"
 
-
-<div><span class="loader"></span></div>
+<div class="d-flex justify-md-center">
+    <MudText Typo="@Typo.h2">About Page</MudText>
+</div>
 
 @code {
     private DateOnly _date = DateOnly.FromDateTime(DateTime.Today);

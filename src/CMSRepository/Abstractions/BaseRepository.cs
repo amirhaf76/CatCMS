@@ -88,7 +88,7 @@ namespace CMSRepository.Abstractions
         {
             var result = await dbSet.AddAsync(entity, cs);
 
-            return result.Entity; 
+            return result.Entity;
         }
 
 
@@ -147,6 +147,16 @@ namespace CMSRepository.Abstractions
             return await query.ToListAsync();
         }
 
+        // What does happen if the entity must be added to repository?
+        public virtual void ApplyPatch(TEntity entity, IDictionary<string, object?> patch)
+        {
+            var dbEntityEntry = dbContext.Attach(entity);
+
+            dbEntityEntry.CurrentValues.SetValues(patch);
+        }
+
+
+
 
         private IQueryable<TEntity> PreparingGetQuery(
             Pagination? pagination,
@@ -177,7 +187,7 @@ namespace CMSRepository.Abstractions
 
             return query;
         }
-        
+
 
 
         protected static int ValidatePaginationAndAmendPageNumber(int pageNum, int pageSiz)
@@ -201,7 +211,7 @@ namespace CMSRepository.Abstractions
             {
                 throw new InvalidOperationException($"Page number can be equal or between {0} and {MAXMIMUM_RETURN_COUNT}, The passed page number: {pagination.Number}");
             }
-           
+
             if (pagination.Number == 0)
             {
                 pagination.Number = 1;

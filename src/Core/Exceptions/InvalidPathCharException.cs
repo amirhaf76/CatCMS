@@ -16,9 +16,5 @@ namespace CMSCore
         public InvalidPathCharException(string? message, Exception? innerException) : base(message, innerException)
         {
         }
-
-        protected InvalidPathCharException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

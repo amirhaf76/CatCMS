@@ -12,6 +12,6 @@ namespace CMSCore.Abstraction.Models
 
         public Guid Id { get; set; }
 
-        public IPageContentProvider ContentProvider { get; set; }
+        public IPageContentProvider ContentProvider { get; set; } = new DefaultPageContentProvider();
     }
 }
