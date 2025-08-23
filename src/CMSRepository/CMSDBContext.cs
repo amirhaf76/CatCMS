@@ -7,10 +7,8 @@ namespace CMSRepository
     {
         public CMSDBContext(DbContextOptions<CMSDBContext> options) : base(options)
         {
-
+            
         }
-
-
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
@@ -18,6 +16,7 @@ namespace CMSRepository
                 .Properties<string>()
                 .AreUnicode()
                 .HaveMaxLength(150);
+
         }
 
 
@@ -27,21 +26,6 @@ namespace CMSRepository
 
             UserModelCreation(modelBuilder);
 
-            HostConfigurationModelCreation(modelBuilder);
-        }
-
-        private void HostConfigurationModelCreation(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<HostConfiguration>(buildAction =>
-            {
-                buildAction.HasKey(c => c.HostId);
-
-                buildAction
-                    .HasOne(c => c.Host)
-                    .WithOne(h => h.Configuration)
-                    .HasForeignKey<HostConfiguration>(x => x.HostId)
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
         }
 
         private static void UserModelCreation(ModelBuilder modelBuilder)
