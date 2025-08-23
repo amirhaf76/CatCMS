@@ -41,8 +41,8 @@ namespace CMSApi.Controllers.Extensions
         {
             return new Pagination
             {
-                Number = dto.PageNum,
-                Size = dto.PageSiz,
+                Number = dto.Number,
+                Size = dto.Size,
             };
         }
 
@@ -52,7 +52,7 @@ namespace CMSApi.Controllers.Extensions
             return new CMSCore.Abstraction.Models.Host
             {
                 Id = host.Id,
-                Title = host.Title,
+                Title = host.Title, 
             };
         }
 

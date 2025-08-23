@@ -6,13 +6,12 @@ using CMSCore.Abstraction;
 using CMSCore.AppStructure.Abstraction;
 using CMSCore.FileManagement;
 using CMSCore.Providers;
-using CMSRepository;
 using CMSRepository.Abstractions;
 using CMSRepository.Repositories;
+using Infrastructure.DotNetCLI;
 using Infrastructure.JWTService;
 using Infrastructure.JWTService.Abstractions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace CMSApi
 {
@@ -29,9 +28,15 @@ namespace CMSApi
             RegisterSecurityServices(builder);
 
             RegisterMiscellaneousServices(builder);
+
+            RegisterDotNetCliServices(builder);
         }
 
-        
+        private void RegisterDotNetCliServices(ContainerBuilder builder)
+        {
+            builder.RegisterType<DotnetCli>().As<IDotnetCli>();
+        }
+
         private static void RegisterCMSCoreServices(ContainerBuilder builder)
         {
             builder.RegisterType<CMSBuilder>().As<ICMSBuilder>();
@@ -48,14 +53,26 @@ namespace CMSApi
 
             builder.RegisterType<CMSHostRepository>().As<IHostStorage>();
 
-            builder.RegisterType<HostFileStructureGenerator>().As<IHostGenerator>();
+            builder.Register(c =>
+            {
+                var dotnetCli = c.Resolve<IDotnetCli>();
+
+                var genDto = new DotnetHostGenDto
+                {
+                    Nuget = "CMS.Utility.Templates",
+                    Template = "cms-host-template",
+                    Version = "9.0"
+                };
+
+                return new DotnetHostGenerator(dotnetCli, genDto);
+            }).As<IHostGenerator>();
             builder.RegisterType<HtmlContentProvider>().As<IPageContentProvider>();
             builder.RegisterType<CMSHostRepository>().As<IHostStorage>();
 
             builder.RegisterType<HostFactory>().As<IHostFactory>();
             builder.RegisterType<PageFactory>().As<IPageFactory>();
 
-            
+
         }
 
         private static void RegisterMiscellaneousServices(ContainerBuilder builder)
@@ -72,7 +89,6 @@ namespace CMSApi
 
         private static void RegisterDataBaseServices(ContainerBuilder builder)
         {
-            builder.RegisterType<CMSDBContext>().As<DbContext>().SingleInstance();
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
             builder.RegisterType<HostRepository>().As<IHostRepository>().InstancePerLifetimeScope();
         }
