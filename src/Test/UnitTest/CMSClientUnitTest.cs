@@ -1,6 +1,6 @@
 ﻿using CMSClient.Services;
 using CMSClient.Services.Abstraction;
-using Infrastructure.GeneratedAPIs.CMSAPI;
+using CMSHelper.GeneratedAPIs.CMSAPI;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit.Abstractions;

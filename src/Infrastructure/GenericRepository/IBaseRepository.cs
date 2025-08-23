@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Infrastructure.GenericRepository
+namespace CMSHelper.GenericRepository
 {
 
     public interface IBaseRepository<TEntity> where TEntity : class

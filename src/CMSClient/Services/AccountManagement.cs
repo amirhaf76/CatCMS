@@ -2,7 +2,7 @@
 using CMSClient.Services.Abstraction.DTOs;
 using CMSClient.Services.Exceptions;
 using CMSClient.Services.Extensions;
-using Infrastructure.GeneratedAPIs.CMSAPI;
+using CMSHelper.GeneratedAPIs.CMSAPI;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;

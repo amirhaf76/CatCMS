@@ -2,7 +2,7 @@
 using CMSApi.Controllers.DTOs.Requests;
 using CMSApi.Controllers.DTOs.Responses;
 using CMSCore.Abstraction.Models;
-using Infrastructure.GenericRepository;
+using CMSHelper.GenericRepository;
 
 namespace CMSApi.Controllers.Extensions
 {

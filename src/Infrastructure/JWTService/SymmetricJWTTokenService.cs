@@ -1,9 +1,9 @@
-﻿using Infrastructure.JWTService.Abstractions;
+﻿using CMSHelper.JWTService.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Infrastructure.JWTService
+namespace CMSHelper.JWTService
 {
     public class SymmetricJWTTokenService : IJWTTokenService
     {

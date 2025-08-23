@@ -10,7 +10,7 @@ using Moq;
 using System.Text;
 using UnitTest.Helpers;
 using Xunit.Abstractions;
-using GeneratedApi = Infrastructure.GeneratedAPIs.CMSAPI;
+using GeneratedApi = CMSHelper.GeneratedAPIs.CMSAPI;
 
 
 namespace UnitTest

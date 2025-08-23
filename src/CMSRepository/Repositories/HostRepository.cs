@@ -1,6 +1,6 @@
 ﻿using CMSRepository.Abstractions;
 using CMSRepository.Models;
-using Infrastructure.GenericRepository;
+using CMSHelper.GenericRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq;

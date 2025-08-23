@@ -9,8 +9,8 @@ using CMSCore.Providers;
 using CMSRepository;
 using CMSRepository.Abstractions;
 using CMSRepository.Repositories;
-using Infrastructure.JWTService;
-using Infrastructure.JWTService.Abstractions;
+using CMSHelper.JWTService;
+using CMSHelper.JWTService.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

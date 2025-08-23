@@ -1,6 +1,6 @@
 ﻿using CMSApi.Abstraction.Services;
 using CMSApi.Controllers.Extensions;
-using Infrastructure.GenericRepository;
+using CMSHelper.GenericRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,10 +1,10 @@
-﻿using Infrastructure.JWTService.Abstractions;
+﻿using CMSHelper.JWTService.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace Infrastructure.JWTService
+namespace CMSHelper.JWTService
 {
     public class AsymmetricJWTTokenService : IJWTTokenService
     {

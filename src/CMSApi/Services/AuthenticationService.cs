@@ -5,7 +5,7 @@ using CMSApi.Exceptions;
 using CMSApi.Services.Exceptions;
 using CMSRepository.Abstractions;
 using CMSRepository.Models;
-using Infrastructure.JWTService.Abstractions;
+using CMSHelper.JWTService.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 

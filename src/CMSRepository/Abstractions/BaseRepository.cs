@@ -1,4 +1,4 @@
-﻿using Infrastructure.GenericRepository;
+﻿using CMSHelper.GenericRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 

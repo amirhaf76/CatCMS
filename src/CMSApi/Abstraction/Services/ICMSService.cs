@@ -1,5 +1,5 @@
 ﻿using CMSApi.Abstraction.Services.DTOs;
-using Infrastructure.GenericRepository;
+using CMSHelper.GenericRepository;
 
 namespace CMSApi.Abstraction.Services
 {

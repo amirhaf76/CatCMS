@@ -4,7 +4,7 @@ using CMSApi.Controllers.Extensions;
 using CMSApi.Services.Exceptions;
 using CMSCore.Abstraction;
 using CMSRepository.Abstractions;
-using Infrastructure.GenericRepository;
+using CMSHelper.GenericRepository;
 using System.Security.Claims;
 
 namespace CMSApi.Services

@@ -1,7 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
-namespace Infrastructure.JWTService.Abstractions
+namespace CMSHelper.JWTService.Abstractions
 {
     public interface IJWTTokenService
     {

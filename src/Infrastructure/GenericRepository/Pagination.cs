@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.GenericRepository
+﻿namespace CMSHelper.GenericRepository
 {
     public class Pagination
     {
