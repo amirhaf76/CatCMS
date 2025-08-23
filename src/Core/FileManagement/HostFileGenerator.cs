@@ -16,10 +16,6 @@ namespace CMSCore.FileManagement
 
 
 
-        public string GeneratedFilesPath { get => _fileGenerator.GeneratedDirectory; set => _fileGenerator.GeneratedDirectory = value; }
-
-
-
         public IEnumerable<FileSystemInfo> GenerateHostAsFiles(Host host)
         {
             var pageFiles = GeneratePageCodes(GetHostPages(host));
@@ -53,6 +49,11 @@ namespace CMSCore.FileManagement
 
         private static string GetPageContent(Page page)
         {
+            if (page.ContentProvider.DoesItNeedLoading)
+            {
+                page.ContentProvider.Load();
+            }
+
             return page.ContentProvider.GetContent();
         }
 
@@ -66,5 +67,9 @@ namespace CMSCore.FileManagement
             return host.Configuration.GeneratedCodesDirectory;
         }
 
+        public Task<IEnumerable<FileSystemInfo>> GenerateHostAsFilesAsync(Host host)
+        {
+            return Task.FromResult(GenerateHostAsFiles(host));
+        }
     }
 }

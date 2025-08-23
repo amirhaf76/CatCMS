@@ -16,9 +16,5 @@ namespace CMSCore.Exceptions
         public PageNotFoundException(string? message, Exception? innerException) : base(message, innerException)
         {
         }
-
-        protected PageNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

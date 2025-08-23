@@ -16,9 +16,5 @@ namespace CMSCore.Exceptions
         public UnqualifiedPathException(string? message, Exception? innerException) : base(message, innerException)
         {
         }
-
-        protected UnqualifiedPathException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

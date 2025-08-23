@@ -9,44 +9,33 @@ namespace CMSCore.FileManagement
         private readonly IFileStructureBuilder _structureGenerator;
 
 
-        public HostFileStructureGenerator(IFileStructureBuilder structureBuilder) : 
-            this(structureBuilder, Directory.GetCurrentDirectory())
-        {
-            
-        }
-
-        public HostFileStructureGenerator(
-            IFileStructureBuilder structureBuilder,
-            string generatedPageFilesPath)
+        public HostFileStructureGenerator(IFileStructureBuilder structureBuilder) 
         {
             _structureGenerator = structureBuilder;
-            GeneratedFilesPath = generatedPageFilesPath;
         }
 
 
-
-        public string GeneratedFilesPath { get; set; }
-
-        
 
         public IEnumerable<FileSystemInfo> GenerateHostAsFiles(Host host)
         {
-            var doesDirectoryExist = _structureGenerator.TrySetWorkingDirectoryToFirstOccurrenceFromRoot(GeneratedFilesPath);
+            var _generatedCodesDirectory = GetHostDirectory(host);
+
+            var doesDirectoryExist = _structureGenerator.TrySetWorkingDirectoryToFirstOccurrenceFromRoot(_generatedCodesDirectory);
 
             if (!doesDirectoryExist)
             {
                 _structureGenerator
                     .SetWorkingDirectoryToRoot()
-                    .AddDirectoryAndChangeWorkingDirectory(GeneratedFilesPath);
+                    .AddDirectoryAndChangeWorkingDirectory(_generatedCodesDirectory);
             }
             foreach (var thePage in host.Pages)
             {
                 _structureGenerator.AddFile(thePage.Name, GetPageContent(thePage));
             }
 
-            var fileSystemInfoes = _structureGenerator.Build().CreateStructure(GetHostDirectory(host));
+            var fileSystemInformation = _structureGenerator.Build().CreateStructure(GetHostDirectory(host));
 
-            return fileSystemInfoes;
+            return fileSystemInformation;
         }
 
         public IDictionary<Host, IEnumerable<FileSystemInfo>> GenerateHostsAsFiles(IEnumerable<Host> hosts)
@@ -58,6 +47,11 @@ namespace CMSCore.FileManagement
 
         private static string GetPageContent(Page p)
         {
+            if (p.ContentProvider.DoesItNeedLoading)
+            {
+                p.ContentProvider.Load();
+            }
+
             return p.ContentProvider.GetContent();
         }
 
@@ -66,5 +60,9 @@ namespace CMSCore.FileManagement
             return host.Configuration.GeneratedCodesDirectory;
         }
 
+        public Task<IEnumerable<FileSystemInfo>> GenerateHostAsFilesAsync(Host host)
+        {
+            return Task.FromResult(GenerateHostAsFiles(host));
+        }
     }
 }

@@ -94,7 +94,7 @@ namespace CMSCore
         {
             var newStructure = new DirectoryStructure(Name);
 
-            var newChilderen = _children.Select(c =>
+            var newChildren = _children.Select(c =>
             {
                 var copyInstance = c.Copy();
 
@@ -108,7 +108,7 @@ namespace CMSCore
                 return copyInstance;
             }).ToList();
 
-            return newStructure.AddChildren(newChilderen); ;
+            return newStructure.AddChildren(newChildren); ;
         }
 
     }

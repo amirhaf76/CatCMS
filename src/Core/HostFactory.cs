@@ -9,6 +9,7 @@ namespace CMSCore
         {
             var host = new Host()
             {
+                Id = Guid.NewGuid(),
                 Title = "Default Host",
                 Configuration = new HostConfiguration
                 {

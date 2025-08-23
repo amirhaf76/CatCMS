@@ -16,9 +16,5 @@ namespace CMSCore.Exceptions
         public ValidationOfNullException(string? message, Exception? innerException) : base(message, innerException)
         {
         }
-
-        protected ValidationOfNullException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

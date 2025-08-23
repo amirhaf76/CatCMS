@@ -7,6 +7,8 @@ namespace CMSCore.Providers
     {
         public List<ICMSComponent> Components { get; set; } = new List<ICMSComponent>();
 
+        public bool DoesItNeedLoading => false;
+
         public List<ICMSComponent> GetComponents()
         {
             return Components;
@@ -15,6 +17,10 @@ namespace CMSCore.Providers
         public string GetContent()
         {
             throw new NotImplementedException();
+        }
+
+        public void Load()
+        {
         }
     }
 }

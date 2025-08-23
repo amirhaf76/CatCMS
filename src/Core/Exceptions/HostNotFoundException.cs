@@ -17,8 +17,6 @@ namespace CMSCore.Exceptions
         {
         }
 
-        protected HostNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+       
     }
 }

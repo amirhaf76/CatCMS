@@ -16,9 +16,5 @@ namespace CMSCore
         public FileSystemStructureNotFoundException(string? message, Exception? innerException) : base(message, innerException)
         {
         }
-
-        protected FileSystemStructureNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }
