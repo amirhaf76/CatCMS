@@ -1,16 +1,28 @@
-﻿using Infrastructure.JWTService.Abstractions;
+﻿using Infrastructure.JWTProviders.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
-namespace Infrastructure.JWTService
+namespace Infrastructure.JWTProviders
 {
-    public class SymmetricJWTTokenService : IJWTTokenService
+    public class AsymmetricJWTTokenProvider : IJWTTokenProvider
     {
+        private readonly RSA _rsa;
+
+        public AsymmetricJWTTokenProvider(RSA rsa)
+        {
+            _rsa = rsa;
+        }
+
         public string GenerateToken(string privateKey, string issuer, string audience, IEnumerable<Claim> claims)
         {
-            var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(privateKey));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var key = Convert.FromBase64String(privateKey);
+
+            _rsa.ImportRSAPrivateKey(key, out _);
+
+            var securityKey = new RsaSecurityKey(_rsa);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -37,7 +49,9 @@ namespace Infrastructure.JWTService
         {
             var key = Convert.FromBase64String(publicKey);
 
-            var securityKey = new SymmetricSecurityKey(key);
+            _rsa.ImportRSAPublicKey(key, out _);
+
+            var securityKey = new RsaSecurityKey(_rsa);
 
             var tokenValidationParameter = new TokenValidationParameters
             {

@@ -1,9 +1,8 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
-namespace Infrastructure.JWTService.Abstractions
+namespace Infrastructure.JWTProviders.Abstractions
 {
-    public interface IJWTTokenService
+    public interface IJWTTokenProvider
     {
         string GenerateToken(string privateKey, string issuer, string audience, IEnumerable<Claim> claims);
 

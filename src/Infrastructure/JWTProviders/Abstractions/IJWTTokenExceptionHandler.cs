@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Infrastructure.JWTService.Abstractions
+namespace Infrastructure.JWTProviders.Abstractions
 {
     public interface IJWTTokenExceptionHandler
     {

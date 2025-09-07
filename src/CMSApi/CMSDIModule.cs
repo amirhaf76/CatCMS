@@ -9,8 +9,8 @@ using CMSCore.Providers;
 using CMSRepository.Abstractions;
 using CMSRepository.Repositories;
 using Infrastructure.DotNetCLI;
-using Infrastructure.JWTService;
-using Infrastructure.JWTService.Abstractions;
+using Infrastructure.JWTProviders;
+using Infrastructure.JWTProviders.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
 namespace CMSApi
@@ -84,7 +84,7 @@ namespace CMSApi
         private static void RegisterSecurityServices(ContainerBuilder builder)
         {
             builder.RegisterGeneric(typeof(PasswordHasher<>)).As(typeof(IPasswordHasher<>)).InstancePerLifetimeScope();
-            builder.RegisterType<SymmetricJWTTokenService>().As<IJWTTokenService>().InstancePerLifetimeScope();
+            builder.RegisterType<SymmetricJWTTokenProvider>().As<IJWTTokenProvider>().InstancePerLifetimeScope();
         }
 
         private static void RegisterDataBaseServices(ContainerBuilder builder)

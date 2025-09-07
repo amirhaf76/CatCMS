@@ -27,7 +27,6 @@ namespace CMSApi.Controllers
         }
 
 
-
         [HttpPost]
         public async Task<ActionResult<HostVM>> CreateHostAsync([FromBody] HostCreationRequest request)
         {

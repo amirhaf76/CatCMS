@@ -1,6 +1,6 @@
 ﻿namespace CMSApi.DTOs
 {
-    public class JWTConfig
+    public class JwtOptions
     {
         public string Issuer { get; set; } = string.Empty;
 

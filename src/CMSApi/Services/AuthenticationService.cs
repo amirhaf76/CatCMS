@@ -5,8 +5,9 @@ using CMSApi.Exceptions;
 using CMSApi.Services.Exceptions;
 using CMSRepository.Abstractions;
 using CMSRepository.Models;
-using Infrastructure.JWTService.Abstractions;
+using Infrastructure.JWTProviders.Abstractions;
 using Microsoft.AspNetCore.Identity;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace CMSApi.Services
@@ -17,14 +18,14 @@ namespace CMSApi.Services
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
-        private readonly IJWTTokenService _jwtTokenService;
+        private readonly IJWTTokenProvider _jwtTokenService;
 
 
         public AuthenticationService(ILogger<AuthenticationService> logger,
                                      IConfiguration configuration,
                                      IUserRepository userAccountRepository,
                                      IPasswordHasher<User> passwordHasher,
-                                     IJWTTokenService jwtTokenService)
+                                     IJWTTokenProvider jwtTokenService)
         {
             _logger = logger;
             _configuration = configuration;
@@ -66,7 +67,7 @@ namespace CMSApi.Services
 
             var jwtTokenConfig = _configuration
                 .GetSection(AppSettingsSections.JWT)
-                .Get<JWTConfig>();
+                .Get<JwtOptions>();
 
             if (jwtTokenConfig is null)
             {
@@ -80,8 +81,8 @@ namespace CMSApi.Services
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, theUser.Username),
-                new Claim(ClaimTypes.NameIdentifier, theUser.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Name, theUser.Username),
+                new Claim(JwtRegisteredClaimNames.NameId, theUser.Id.ToString()),
                 new Claim(CustomizedUserClaimTypes.STATUS, theUser.Status.ToString()),
             };
 

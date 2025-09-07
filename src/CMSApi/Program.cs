@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -64,10 +65,16 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Preparing Configs.
-var connectionString = builder.Configuration.GetConnectionString($"CatCMSDB")
-    ?? throw new InvalidOperationException($"Connection string 'CatCMSDB' not found.");
 
-builder.Services.AddDbContext<CMSDBContext>(opt => opt.UseSqlServer(connectionString));
+
+builder.Services.AddDbContext<CMSDBContext>(opt => 
+{
+    var connectionString = builder.Configuration.GetConnectionString($"CatCMSDB")
+        ?? throw new InvalidOperationException($"Connection string 'CatCMSDB' not found.");
+
+    opt.UseSqlServer(connectionString);
+
+}).AddScoped<DbContext, CMSDBContext>();
 
 
 var logger = new LoggerConfiguration()
@@ -76,7 +83,7 @@ var logger = new LoggerConfiguration()
 
 // Adding Logger Service.
 builder.Host.UseSerilog(logger);
-
+builder.Services.AddProblemDetails(); // *****
 // Injecting Dependency.
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
@@ -94,8 +101,13 @@ builder.Services.AddCors(options =>
                    .AllowAnyHeader()
                    .AllowAnyMethod();
         });
-}); 
+});
 // Setting Authentication.
+//builder.Services.AddAuthorization(option =>
+//{
+  
+//    option.AddPolicy("my policy", x => x.ass);
+//});
 builder.Services
     .AddAuthentication()
     .AddJwtBearer(jwtOptions =>
@@ -115,7 +127,7 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(key)),
         };
     });
-
+builder.Services.AddCMSConfiguration();
 
 
 var app = builder.Build();
@@ -130,6 +142,7 @@ if (app.Environment.IsDevelopment())
         // options.RoutePrefix = "onepart";
     });
 }
+
 
 app.UseExceptionHandler("/error");
 
