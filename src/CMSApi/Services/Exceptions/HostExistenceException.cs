@@ -1,5 +1,4 @@
-﻿
-namespace CMSApi.Services
+﻿namespace CMSApi.Services.Exceptions
 {
     [Serializable]
     internal class HostExistenceException : Exception

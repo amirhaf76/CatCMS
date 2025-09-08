@@ -4,8 +4,13 @@ namespace CMSCore.Abstraction
 {
     public interface ICMS
     {
-        
+
         IHostStorage Repository { get; }
+
+        IHostFactory HostFactory { get; }
+        IHostGenerator HostGenerator { get; }
+        IPageFactory PageFactory { get; }
+
 
 
         Host CreateAndAddHost();

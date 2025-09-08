@@ -13,6 +13,9 @@ namespace CMSCore
         private readonly IPageFactory _pageFactory;
 
         public IHostStorage Repository => _hosts;
+        public IHostFactory HostFactory => _hostFactory;
+        public IHostGenerator HostGenerator => _hostGenerator;
+        public IPageFactory PageFactory => _pageFactory;
 
         public CMS(IHostStorage hosts, IHostGenerator generator, IHostFactory hostFactory, IPageFactory pageFactory)
         {
