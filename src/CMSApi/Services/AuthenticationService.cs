@@ -1,12 +1,12 @@
 ﻿using CMSApi.Abstraction.Services;
 using CMSApi.Abstraction.Services.DTOs;
 using CMSApi.DTOs;
-using CMSApi.Exceptions;
 using CMSApi.Services.Exceptions;
 using CMSRepository.Abstractions;
 using CMSRepository.Models;
 using Infrastructure.JWTProviders.Abstractions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -15,33 +15,32 @@ namespace CMSApi.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly ILogger<AuthenticationService> _logger;
-        private readonly IConfiguration _configuration;
+        private readonly IOptions<JwtOptions> _jwtOptions;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IJWTTokenProvider _jwtTokenService;
 
 
         public AuthenticationService(ILogger<AuthenticationService> logger,
-                                     IConfiguration configuration,
                                      IUserRepository userAccountRepository,
                                      IPasswordHasher<User> passwordHasher,
-                                     IJWTTokenProvider jwtTokenService)
+                                     IJWTTokenProvider jwtTokenService,
+                                     IOptions<JwtOptions> options)
         {
             _logger = logger;
-            _configuration = configuration;
             _userRepository = userAccountRepository;
             _passwordHasher = passwordHasher;
             _jwtTokenService = jwtTokenService;
+            _jwtOptions = options;
         }
 
         public Task<string> GetRefreshToken(TokenDto dto)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(); 
         }
 
         public async Task<string> GetTokenAsync(TokenDto user)
         {
-
             var theUser = await _userRepository.GetUserAsync(user.Username);
 
             if (theUser is null)
@@ -65,19 +64,7 @@ namespace CMSApi.Services
                 await _userRepository.SaveChangesAsync();
             }
 
-            var jwtTokenConfig = _configuration
-                .GetSection(AppSettingsSections.JWT)
-                .Get<JwtOptions>();
-
-            if (jwtTokenConfig is null)
-            {
-                throw new JWTConfigException($"There is no section like {AppSettingsSections.JWT}");
-            }
-
-            if (string.IsNullOrWhiteSpace(jwtTokenConfig.Key))
-            {
-                throw new JWTConfigException($"Key is null or whitespace: {jwtTokenConfig.Key}");
-            }
+            var jwtTokenConfig = _jwtOptions.Value;
 
             var claims = new List<Claim>
             {

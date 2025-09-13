@@ -1,45 +1,41 @@
-﻿using CMSApi.Abstraction.Services;
-using CMSApi.Abstraction.Services.DTOs;
-using CMSApi.Controllers.Extensions;
-using CMSApi.Services.Exceptions;
-using CMSCore.Abstraction;
-using CMSRepository.Abstractions;
+﻿using CMS.Application.Abstraction.Services;
+using CMS.Application.Services.Exceptions;
+using CMS.Domain.Entities;
+using CMS.Domain.Repository;
+using SharedKernel;
 using System.Reflection;
 
-namespace CMSApi.Services
+namespace CMS.Application.Services
 {
     public class CMSService : ICMSService
     {
         private readonly IHostRepository _hostRepository;
         private readonly IUserProvider _userProvider;
         private readonly IHostGenerator _hostGeneratorProvider;
-        private readonly ILogger<CMSService> _logger;
 
 
 
         public CMSService(
             IHostRepository hostRepository,
             IHostGenerator hostGeneratorProvider,
-            IUserProvider userProvider,
-            ILogger<CMSService> logger)
+            IUserProvider userProvider)
         {
             _hostRepository = hostRepository;
             _hostGeneratorProvider = hostGeneratorProvider;
-            _logger = logger;
             _userProvider = userProvider;
         }
 
 
 
-        public async Task<CMSRepository.Models.Host> AddHostAsync(string title)
+        public async Task<Host> AddHostAsync(string title)
         {
 
             int theCreatorId = _userProvider.UserId;
 
-            var newHost = new CMSRepository.Models.Host()
+            var newHost = new Host()
             {
                 Title = title,
-                Creator = new CMSRepository.Models.User
+                Creator = new User
                 {
                     Id = theCreatorId,
                 },
@@ -66,7 +62,7 @@ namespace CMSApi.Services
             await _hostRepository.SaveChangesAsync();
         }
 
-        public async Task<CMSRepository.Models.Host> GetHostAsync(Guid theHostId)
+        public async Task<Host> GetHostAsync(Guid theHostId)
         {
             var theCreatorId = _userProvider.UserId;
 
@@ -80,11 +76,11 @@ namespace CMSApi.Services
             return theHost;
         }
 
-        public async Task<IEnumerable<CMSRepository.Models.Host>> GetHostsAsync(PaginationDto pagination)
+        public async Task<IEnumerable<Host>> GetHostsAsync(Pagination pagination)
         {
             var theCreatorId = _userProvider.UserId;
 
-            var theHosts = await _hostRepository.GetHostsAsync(theCreatorId, pagination.ToEntryFilter());
+            var theHosts = await _hostRepository.GetHostsAsync(theCreatorId, pagination);
 
             return theHosts;
         }
@@ -108,8 +104,8 @@ namespace CMSApi.Services
                 throw new HostExistenceException();
             }
 
-            var hostCMSCore = theHost.ToCoreModel();
-            hostCMSCore.Configuration.GeneratedCodesDirectory = Path.Combine(GetProjectDirectory(), directory, $"host_{theHost.Title}_{theHost.Id}");
+            var hostCMSCore = theHost;
+            hostCMSCore.GeneratedCodesDirectory = Path.Combine(GetProjectDirectory(), directory, $"host_{theHost.Title}_{theHost.Id}");
             var filesInformation = await _hostGeneratorProvider.GenerateHostAsFilesAsync(hostCMSCore);
 
             return filesInformation;
@@ -124,7 +120,7 @@ namespace CMSApi.Services
         {
             int theCreatorId = _userProvider.UserId;
 
-            var hostEntity = new CMSRepository.Models.Host { Id = hostId };
+            var hostEntity = new Host { Id = hostId };
 
             hostEntity.Creator.Id = theCreatorId;
 
@@ -133,6 +129,5 @@ namespace CMSApi.Services
             await _hostRepository.SaveChangesAsync();
         }
     }
-
 
 }

@@ -1,14 +1,13 @@
-﻿using CMSApi.Abstraction.Services;
-using CMSApi.Abstraction.Services.DTOs;
-using CMSApi.Controllers.Extensions;
-using Infrastructure.GeneratedAPIs.CMSAPI;
+﻿using CMS.Application.Abstraction.Services;
+using CMS.Presentation.Controllers.DTOs.Requests;
+using CMS.Presentation.Controllers.DTOs.Responses;
+using CMS.Presentation.Controllers.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using SharedKernel;
 
-namespace CMSApi.Controllers
+namespace CMS.Presentation.Controllers
 {
     [ApiController]
     [Route("/[controller]")]
@@ -54,7 +53,7 @@ namespace CMSApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<HostVM>>> GetHostsAsync([FromQuery] int pageSize, [FromQuery] int pageNum)
         {
-            var hosts = await _cmsService.GetHostsAsync(new PaginationDto
+            var hosts = await _cmsService.GetHostsAsync(new Pagination
             {
                 Number = pageNum,
                 Size = pageSize,
@@ -64,15 +63,15 @@ namespace CMSApi.Controllers
         }
 
         [HttpPatch("{hostId:Guid}")]
-        public async Task<ActionResult> UpdateHostAsync(Guid hostId, [FromBody] JsonPatchRequest<PropertyPatch> body)
+        public async Task<ActionResult> UpdateHostAsync(Guid hostId, [FromBody] JsonPatchRequest<PropertyPatchRequest> body)
         {
-            var properties = typeof(PropertyPatch).GetProperties();
+            var properties = typeof(PropertyPatchRequest).GetProperties();
 
             var patches = properties
                 .IntersectBy(body.PatchedProperties, p => p.Name)
                 .ToDictionary(p => p.Name, p => p.GetValue(body.Data));
 
-             //var patches = body.ToDictionary(x => x.Name, x => (object?)x.Number.GetString());
+            //var patches = body.ToDictionary(x => x.Name, x => (object?)x.Number.GetString());
 
             await _cmsService.PatchUpdateAsync(hostId, patches);
 
@@ -80,13 +79,13 @@ namespace CMSApi.Controllers
         }
 
 
-    
+
 
         [HttpPost("{id:Guid}/Generate")]
         public async Task<ActionResult> GenerateHostAsync(Guid id)
         {
-            var filesInformation = await _cmsService.GenerateHostAsync(id);
-            
+            await _cmsService.GenerateHostAsync(id);
+
             return Created();
         }
     }

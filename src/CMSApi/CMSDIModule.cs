@@ -79,6 +79,7 @@ namespace CMSApi
         {
             builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
             builder.RegisterType<CMSService>().As<ICMSService>().InstancePerLifetimeScope();
+            builder.RegisterType<UserProvider>().As<IUserProvider>().InstancePerLifetimeScope();
         }
 
         private static void RegisterSecurityServices(ContainerBuilder builder)

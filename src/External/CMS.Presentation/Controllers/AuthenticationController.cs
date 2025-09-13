@@ -1,14 +1,15 @@
-﻿using CMSApi.Abstraction.Services;
-using CMSApi.Controllers.DTOs.Requests;
-using CMSApi.Controllers.DTOs.Responses;
-using CMSApi.Controllers.Extensions;
+﻿using CMS.Application.Abstraction.Services;
+using CMS.Presentation.Controllers.DTOs.Requests.Controllers.DTOs.Requests;
+using CMS.Presentation.Controllers.DTOs.Responses.Controllers.DTOs.Responses;
+using CMS.Presentation.Controllers.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
-namespace CMSApi.Controllers
+namespace CMS.Presentation.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[version]/[controller]")]
     [AllowAnonymous]
     public class AuthenticationController : ControllerBase
     {
