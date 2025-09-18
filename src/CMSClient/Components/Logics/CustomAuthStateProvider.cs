@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace CMSClient.Components.Logics
+namespace CMS.Client.Components.Logics
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {

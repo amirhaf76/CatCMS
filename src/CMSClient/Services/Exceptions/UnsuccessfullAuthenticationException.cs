@@ -1,4 +1,4 @@
-﻿namespace CMSClient.Services.Exceptions
+﻿namespace CMS.Client.Services.Exceptions
 {
     [Serializable]
     internal class UnsuccessfullAuthenticationException : Exception

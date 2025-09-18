@@ -1,8 +1,8 @@
-﻿using CMSClient.Services.Abstraction;
-using CMSClient.Services.Abstraction.DTOs;
+﻿using CMS.Client.Services.Abstraction;
+using CMS.Client.Services.Abstraction.DTOs;
 using System.Security.Claims;
 
-namespace CMSClient.Services
+namespace CMS.Client.Services
 {
     public class TestAccountManagement : IAccountManagement
     {

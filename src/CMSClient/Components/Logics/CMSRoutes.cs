@@ -1,4 +1,4 @@
-﻿namespace CMSClient.Components.Logics
+﻿namespace CMS.Client.Components.Logics
 {
     public static class CMSRoutes
     {

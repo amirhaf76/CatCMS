@@ -5,12 +5,13 @@ using CMS.Application.Behaviors.DTOs;
 using CMS.Application.Services.Exceptions;
 using CMS.Domain.Entities;
 using CMS.Domain.Repository;
+using Microsoft.Extensions.Options;
 
 namespace CMS.Application.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly JwtOptions _jwtOptions;
+        private readonly IOptions<JwtOptions> _jwtOptions;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJWTTokenProvider _jwtTokenService;
@@ -21,7 +22,7 @@ namespace CMS.Application.Services
                                      IPasswordHasher passwordHasher,
                                      IJWTTokenProvider jwtTokenService,
                                      IClaimProvider claimProvider,
-                                     JwtOptions options)
+                                     IOptions<JwtOptions> options)
         {
             _userRepository = userAccountRepository;
             _passwordHasher = passwordHasher;
@@ -63,9 +64,9 @@ namespace CMS.Application.Services
             var claims = _claimProvider.GetClaims();
 
             var token = _jwtTokenService.GenerateToken(
-                _jwtOptions.Key,
-                _jwtOptions.Issuer,
-                _jwtOptions.Audience,
+                _jwtOptions.Value.Key,
+                _jwtOptions.Value.Issuer,
+                _jwtOptions.Value.Audience,
                 claims);
 
             return token;

@@ -1,7 +1,7 @@
-﻿using CMSClient.Services.Abstraction.DTOs;
+﻿using CMS.Client.Services.Abstraction.DTOs;
 using System.Security.Claims;
 
-namespace CMSClient.Services.Abstraction
+namespace CMS.Client.Services.Abstraction
 {
     public interface IAccountManagement
     {

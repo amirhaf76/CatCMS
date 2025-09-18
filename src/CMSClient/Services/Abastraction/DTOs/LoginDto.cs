@@ -1,4 +1,4 @@
-﻿namespace CMSClient.Services.Abstraction.DTOs
+﻿namespace CMS.Client.Services.Abstraction.DTOs
 {
     public class LoginDto
     {

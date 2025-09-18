@@ -1,4 +1,4 @@
-﻿namespace CMSApi.Exceptions
+﻿namespace CMS.WebApi.Exceptions
 {
     [Serializable]
     internal class JWTConfigException : Exception

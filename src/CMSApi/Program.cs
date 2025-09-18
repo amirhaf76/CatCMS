@@ -1,7 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using CMSApi;
-using CMSRepository;
+using CMS.Persistence;
+using CMS.Presentation;
+using CMS.WebApi;
+using CMS.WebApi.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -11,7 +13,7 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddCMSPresentationEndPoints();
 builder.Services.AddHttpContextAccessor();
 
 
@@ -68,7 +70,7 @@ builder.Services.AddSwaggerGen(options =>
 // Preparing Configs.
 
 
-builder.Services.AddDbContext<CMSDBContext>(opt => 
+builder.Services.AddDbContext<CMSDBContext>(opt =>
 {
     var connectionString = builder.Configuration.GetConnectionString($"CatCMSDB")
         ?? throw new InvalidOperationException($"Connection string 'CatCMSDB' not found.");
@@ -106,7 +108,7 @@ builder.Services.AddCors(options =>
 // Setting Authentication.
 //builder.Services.AddAuthorization(option =>
 //{
-  
+
 //    option.AddPolicy("my policy", x => x.ass);
 //});
 builder.Services

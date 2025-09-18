@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.DotNetCLI
+﻿using CMS.Application.Abstraction.Services;
+
+namespace Infrastructure.DotNetCLI
 {
     public class DotnetCli : BaseDotnetCli, IDotnetCli
     {

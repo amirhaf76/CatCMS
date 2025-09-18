@@ -1,9 +1,9 @@
-﻿using CMSClient.Services.Abstraction;
-using CMSClient.Services.DTOs;
-using CMSClient.Services.Extensions;
-using CMSClient.Components.Logics;
+﻿using CMS.Client.Services.Abstraction;
+using CMS.Client.Services.DTOs;
+using CMS.Client.Services.Extensions;
+using CMS.Client.Components.Logics;
 
-namespace CMSClient.Services
+namespace CMS.Client.Services
 {
 
     public class UserStatePublisherService

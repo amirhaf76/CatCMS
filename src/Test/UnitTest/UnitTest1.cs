@@ -1,6 +1,3 @@
-using CMSCore;
-using CMSCore.AppStructure.Abstraction;
-using CMSCore.AppStructure.Extensions;
 using CMSCore.Component;
 using CMSRepository.Models;
 using CMSRepository.Repositories;
@@ -8,7 +5,6 @@ using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Text;
-using UnitTest.Helpers;
 using Xunit.Abstractions;
 using GeneratedApi = Infrastructure.GeneratedAPIs.CMSAPI;
 
@@ -24,97 +20,6 @@ namespace UnitTest
             _testOutput = testOutput;
         }
 
-        
-
-        [Fact]
-        public void AddFilesLike_SomeDirectoriesAndFiles_MustBeExist()
-        {
-            var appStruct = new AppFileStructureBuilder("Myapp_2", new FileSystem());
-            var path = @"D:\Programing\Work_space\C#\CMS\src\SampleHost";
-
-            appStruct
-                .AddDirectoryAndChangeWorkingDirectory("Properties")
-                .AddFilesLike(Path.Combine(path, "Properties"))
-                .SetWorkingDirectoryToRoot()
-                .AddDirectoryAndChangeWorkingDirectory("wwwroot")
-                .AddFilesLike(Path.Combine(path, "wwwroot"))
-                .SetWorkingDirectoryToRoot()
-                .AddDirectoryAndChangeWorkingDirectory("Pages")
-                .AddFilesLike(Path.Combine(path, "Pages"))
-                .SetWorkingDirectoryToRoot()
-                .AddFilesLike(path);
-
-            _testOutput.WriteLine(appStruct.GetStructureView());
-
-            appStruct.Build().CreateStructure(Directory.GetCurrentDirectory());
-
-            var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_2");
-            Directory.Delete(targetDirctory, true);
-            _testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
-        }
-
-        [Fact]
-        public void AddFilesLike_SomeDirectoriesAndFiles_MustBeExist_v2()
-        {
-            var appStruct = new AppFileStructureBuilder("Myapp_2", new FileSystem());
-            var path = @".\Test_3";
-
-            Directory.CreateDirectory(".\\Test_3\\Directory_1");
-            Directory.CreateDirectory(".\\Test_3\\Directory_2");
-            Directory.CreateDirectory(".\\Test_3\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2");
-
-            File.Create(".\\Test_3\\File_1").Close();
-            File.Create(".\\Test_3\\File_2").Close();
-            File.Create(".\\Test_3\\Directory_1\\File_3").Close();
-            File.Create(".\\Test_3\\Directory_1\\File_4").Close();
-            File.Create(".\\Test_3\\Directory_3_lv0\\File_5").Close();
-            File.Create(".\\Test_3\\Directory_3_lv0\\File_6").Close();
-            File.Create(".\\Test_3\\Directory_3_lv0\\Directory_3_lv1\\File_7").Close();
-            File.Create(".\\Test_3\\Directory_3_lv0\\Directory_3_lv1\\File_8").Close();
-            File.Create(".\\Test_3\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2\\File_9").Close();
-            File.Create(".\\Test_3\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2\\File_10").Close();
-
-            appStruct.AddDirectoriesAndTheirFiles(path, 4);
-
-            _testOutput.WriteLine(appStruct.GetStructureView());
-
-            appStruct.Build().CreateStructure(Directory.GetCurrentDirectory());
-
-            // Assertion
-            var option = new EnumerationOptions
-            {
-                MaxRecursionDepth = 10,
-                RecurseSubdirectories = true
-            };
-
-            var systemEntities = Directory.EnumerateFileSystemEntries(".\\Myapp_2", "*", option);
-
-            systemEntities.Should()
-                .HaveCount(15)
-                .And.Contain(".\\Myapp_2\\File_1")
-                .And.Contain(".\\Myapp_2\\File_2")
-                .And.Contain(".\\Myapp_2\\Directory_1")
-                .And.Contain(".\\Myapp_2\\Directory_2")
-                .And.Contain(".\\Myapp_2\\Directory_1\\File_3")
-                .And.Contain(".\\Myapp_2\\Directory_1\\File_4")
-                .And.Contain(".\\Myapp_2\\Directory_3_lv0")
-                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\File_5")
-                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\File_6")
-                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1")
-                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1\\File_7")
-                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1\\File_8")
-                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2")
-                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2\\File_9")
-                .And.Contain(".\\Myapp_2\\Directory_3_lv0\\Directory_3_lv1\\Directory_3_lv2\\File_10");
-
-            var targetDirctory = Path.Combine(Directory.GetCurrentDirectory(), "Myapp_2");
-            Directory.Delete(targetDirctory, true);
-            _testOutput.WriteLine($"\"{targetDirctory}\" directory is removed.");
-
-            var secondTargetDirctory = path;
-            Directory.Delete(secondTargetDirctory, true);
-            _testOutput.WriteLine($"\"{secondTargetDirctory}\" directory is removed.");
-        }
 
         [Fact]
         public void TestScenario3()
@@ -358,7 +263,7 @@ namespace UnitTest
             _testOutput.WriteLine(payload);
 
             var base64Payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(payload), Base64FormattingOptions.None);
-           
+
             _testOutput.WriteLine(base64Payload);
 
             payload = Encoding.UTF8.GetString(Convert.FromBase64String(base64Payload));
@@ -389,7 +294,7 @@ namespace UnitTest
         [Fact]
         public void Test8()
         {
-            
+
 
 
         }

@@ -1,7 +1,7 @@
-﻿using CMSClient.Services.Abstraction.DTOs;
-using CMSClient.Services.DTOs;
+﻿using CMS.Client.Services.Abstraction.DTOs;
+using CMS.Client.Services.DTOs;
 
-namespace CMSClient.Services.Extensions
+namespace CMS.Client.Services.Extensions
 {
     public static class CMSViewModelsExtension
     {

@@ -1,4 +1,4 @@
-﻿namespace CMSClient.Services.DTOs
+﻿namespace CMS.Client.Services.DTOs
 {
     public class LoginVM
     {

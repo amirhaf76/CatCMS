@@ -1,5 +1,6 @@
 ﻿using CMS.Application.Abstraction.Services;
 using CMS.Application.Services;
+using CMSCore.FileManagement;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CMS.Application
@@ -10,7 +11,8 @@ namespace CMS.Application
         {
             services
                 .AddScoped<ICMSService, CMSService>()
-                .AddScoped<IAuthenticationService, AuthenticationService>();
+                .AddScoped<IAuthenticationService, AuthenticationService>()
+                .AddScoped<IHostGenerator, DotnetHostGenerator>();
 
             return services;
         }

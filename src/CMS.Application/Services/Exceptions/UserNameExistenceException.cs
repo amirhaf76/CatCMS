@@ -1,7 +1,7 @@
 ﻿namespace CMS.Application.Services.Exceptions
 {
     [Serializable]
-    internal class UserNameExistenceException : Exception
+    public class UserNameExistenceException : Exception
     {
         public UserNameExistenceException()
         {

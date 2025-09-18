@@ -1,27 +1,21 @@
 ﻿using Autofac;
-using CMSApi.Abstraction.Services;
-using CMSApi.Services;
-using CMSCore;
-using CMSCore.Abstraction;
-using CMSCore.AppStructure.Abstraction;
-using CMSCore.FileManagement;
-using CMSCore.Providers;
-using CMSRepository.Abstractions;
-using CMSRepository.Repositories;
+using CMS.Application.Abstraction.Services;
+using CMS.Application.Services;
+using CMS.Domain.Repository;
+using CMS.Persistence.Repositories;
+using CMS.WebApi.Authentication;
 using Infrastructure.DotNetCLI;
 using Infrastructure.JWTProviders;
 using Infrastructure.JWTProviders.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace CMSApi
+namespace CMS.WebApi
 {
     public class CMSDIModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-
-            RegisterCMSCoreServices(builder);
 
             RegisterDataBaseServices(builder);
 
@@ -37,43 +31,6 @@ namespace CMSApi
             builder.RegisterType<DotnetCli>().As<IDotnetCli>();
         }
 
-        private static void RegisterCMSCoreServices(ContainerBuilder builder)
-        {
-            builder.RegisterType<CMSBuilder>().As<ICMSBuilder>();
-            builder.RegisterType<CMSDirector>().As<ICMSDirector>();
-
-            builder.RegisterType<FileSystem>().As<IFileSystem>();
-            builder.Register<AppFileStructureBuilder>(c =>
-            {
-                var fileSystem = c.Resolve<IFileSystem>();
-
-                return new AppFileStructureBuilder("Default.Structure", fileSystem);
-
-            }).As<IFileStructureBuilder>();
-
-            builder.RegisterType<CMSHostRepository>().As<IHostStorage>();
-
-            builder.Register(c =>
-            {
-                var dotnetCli = c.Resolve<IDotnetCli>();
-
-                var genDto = new DotnetHostGenDto
-                {
-                    Nuget = "CMS.Utility.Templates",
-                    Template = "cms-host-template",
-                    Version = "9.0"
-                };
-
-                return new DotnetHostGenerator(dotnetCli, genDto);
-            }).As<IHostGenerator>();
-            builder.RegisterType<HtmlContentProvider>().As<IPageContentProvider>();
-            builder.RegisterType<CMSHostRepository>().As<IHostStorage>();
-
-            builder.RegisterType<HostFactory>().As<IHostFactory>();
-            builder.RegisterType<PageFactory>().As<IPageFactory>();
-
-
-        }
 
         private static void RegisterMiscellaneousServices(ContainerBuilder builder)
         {

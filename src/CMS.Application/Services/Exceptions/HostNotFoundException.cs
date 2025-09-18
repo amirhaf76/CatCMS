@@ -1,7 +1,7 @@
 ﻿namespace CMS.Application.Services.Exceptions
 {
     [Serializable]
-    internal class HostNotFoundException : Exception
+    public class HostNotFoundException : Exception
     {
         public HostNotFoundException()
         {

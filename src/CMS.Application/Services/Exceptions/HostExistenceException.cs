@@ -1,7 +1,7 @@
 ﻿namespace CMS.Application.Services.Exceptions
 {
     [Serializable]
-    internal class HostExistenceException : Exception
+    public class HostExistenceException : Exception
     {
         public HostExistenceException()
         {

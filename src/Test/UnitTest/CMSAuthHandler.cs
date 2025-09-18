@@ -1,4 +1,4 @@
-﻿using CMSApi;
+﻿using CMSApi.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 

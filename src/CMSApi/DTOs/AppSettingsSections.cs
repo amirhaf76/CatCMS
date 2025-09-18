@@ -1,4 +1,4 @@
-﻿namespace CMSApi.DTOs
+﻿namespace CMS.WebApi.DTOs
 {
     public static class AppSettingsSections
     {

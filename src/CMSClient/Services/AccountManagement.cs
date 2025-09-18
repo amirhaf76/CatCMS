@@ -1,13 +1,13 @@
-﻿using CMSClient.Services.Abstraction;
-using CMSClient.Services.Abstraction.DTOs;
-using CMSClient.Services.Exceptions;
-using CMSClient.Services.Extensions;
+﻿using CMS.Client.Services.Abstraction;
+using CMS.Client.Services.Abstraction.DTOs;
+using CMS.Client.Services.Exceptions;
+using CMS.Client.Services.Extensions;
 using Infrastructure.GeneratedAPIs.CMSAPI;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 
-namespace CMSClient.Services
+namespace CMS.Client.Services
 {
     public class AccountManagement : IAccountManagement
     {
