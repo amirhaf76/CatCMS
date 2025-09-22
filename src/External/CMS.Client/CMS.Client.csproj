@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\CMS.Infrastructure.csproj" />
+    <ProjectReference Include="..\CMS.Infrastructure\CMS.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
