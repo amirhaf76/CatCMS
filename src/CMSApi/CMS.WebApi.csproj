@@ -25,7 +25,7 @@
     <ProjectReference Include="..\CMS.Application\CMS.Application.csproj" />
     <ProjectReference Include="..\External\CMS.Persistence\CMS.Persistence.csproj" />
     <ProjectReference Include="..\External\CMS.Presentation\CMS.Presentation.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\CMS.Infrastructure.csproj" />
   </ItemGroup>
 
 

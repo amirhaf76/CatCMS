@@ -1,9 +1,8 @@
-﻿using CMSApi.Abstraction.Services;
-using CMSApi.Authentication;
-using CMSApi.Services;
-using CMSCore.Abstraction;
-using CMSRepository.Abstractions;
-using CMSRepository.Models;
+﻿using CMS.Application.Abstraction.Services;
+using CMS.Application.Services;
+using CMS.Domain.Entities;
+using CMS.Domain.Repository;
+using CMS.WebApi.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -18,7 +17,7 @@ namespace UnitTest
     public class WebApiTest
     {
         private readonly ILogger<WebApiTest> _testLogger;
-        private readonly ILoggerFactory _testLoggerFactory;
+        private readonly LoggerFactory _testLoggerFactory;
 
         public WebApiTest(ITestOutputHelper testOutput)
         {
@@ -91,10 +90,9 @@ namespace UnitTest
                 .Returns(Task.FromResult((Host?)fakeHost));
 
 
-            ICMSService cmsService = new CMSService(stubHostRepository.Object,
-                                                    stubHostGenerator.Object,
-                                                    stubUserProvider.Object,
-                                                    logger: loger);
+            var cmsService = new CMSService(stubHostRepository.Object,
+                                            stubHostGenerator.Object,
+                                            stubUserProvider.Object);
 
             var responsedHost = await cmsService.GetHostAsync(fakeHost.Id);
 
@@ -102,7 +100,7 @@ namespace UnitTest
         }
 
         [Fact]
-        public async Task Test3()
+        public void Test3()
         {
             var name = "amir";
             var family = "firouzkouhi";
@@ -115,7 +113,7 @@ namespace UnitTest
             var stubHttpContextAccessor = new Mock<IHttpContextAccessor>();
             var loger = _testLoggerFactory.CreateLogger<CMSService>();
             var stubHttpContext = new Mock<HttpContext>();
-            Host theHost = new Host
+            Host theHost = new()
             {
                 Id = Guid.NewGuid(),
                 Creator = new User

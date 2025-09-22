@@ -1,7 +1,7 @@
 ﻿
-namespace Infrastructure.DotNetCLI
+namespace CMS.Infrastructure.DotNetCLI
 {
-    internal static class DotnetCliNewListFlag
+    internal static class DotnetCliNewListFlags
     {
         public const string NEW_LIST_TYPE = "--type";
         public const string NEW_LIST_AUTHOR = "--author";

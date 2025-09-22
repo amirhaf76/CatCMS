@@ -1,12 +1,12 @@
 ﻿using CMS.Application.Abstraction.Services;
 
-namespace Infrastructure.DotNetCLI
+namespace CMS.Infrastructure.DotNetCLI
 {
     public class DotnetCli : BaseDotnetCli, IDotnetCli
     {
         public async Task CreateTemplateAsync(string templateName, string targetName, string locationOutput)
         {
-            var commandAndArguments = $"{DotnetCliCommand.NEW} {templateName} -o \"{locationOutput}\"  -n {targetName}";
+            var commandAndArguments = $"{DotnetCliCommands.NEW} {templateName} -o \"{locationOutput}\"  -n {targetName}";
 
             var result = await RunDotnetCommandAsync(commandAndArguments);
 
@@ -18,7 +18,7 @@ namespace Infrastructure.DotNetCLI
 
         public async Task PublishAsync(string templateName, string locationOutput)
         {
-            var commandAndArguments = $"{DotnetCliCommand.PUBLISH} {templateName} -o {locationOutput}";
+            var commandAndArguments = $"{DotnetCliCommands.PUBLISH} {templateName} -o {locationOutput}";
 
             var result = await RunDotnetCommandAsync(commandAndArguments);
 
@@ -30,7 +30,7 @@ namespace Infrastructure.DotNetCLI
 
         public async Task InstallTemplateNugetAsync(string nugetName)
         {
-            var commandAndArguments = $"{DotnetCliCommand.NEW} install {nugetName}";
+            var commandAndArguments = $"{DotnetCliCommands.NEW} install {nugetName}";
 
             var result = await RunDotnetCommandAsync(commandAndArguments);
 
@@ -42,13 +42,13 @@ namespace Infrastructure.DotNetCLI
 
         public async Task<bool> IsDotNetInstalledAsync(string version)
         {
-            var commandAndArguments = $"{DotnetCliFlag.LIST_SDKS}";
+            var commandAndArguments = $"{DotnetCliFlags.LIST_SDKS}";
 
             var result = await RunDotnetCommandAsync(commandAndArguments);
 
             if (!string.IsNullOrEmpty(result.Error))
             {
-                throw new Exception($"there is problem for dotnet sdks!!, command \"{commandAndArguments}\" Error: \"{result.Error}\"");
+                throw new Exception($"there is problem for dotnet SDKs !!, command \"{commandAndArguments}\" Error: \"{result.Error}\"");
             }
 
             return result.Output.Contains(version);
@@ -56,13 +56,13 @@ namespace Infrastructure.DotNetCLI
 
         public async Task<bool> IsTemplateInstalledAsync(string templateName)
         {
-            var commandAndArguments = $"{DotnetCliCommand.NEW_LIST} {templateName}";
+            var commandAndArguments = $"{DotnetCliCommands.NEW_LIST} {templateName}";
 
             var result = await RunDotnetCommandAsync(commandAndArguments);
 
             if (!string.IsNullOrEmpty(result.Error))
             {
-                throw new Exception($"there is problem for dotnet sdks!!, command \"{commandAndArguments}\" Error: \"{result.Error}\"");
+                throw new Exception($"there is problem for dotnet SDKs !!, command \"{commandAndArguments}\" Error: \"{result.Error}\"");
             }
 
             return result.Output.Contains(templateName);

@@ -1,15 +1,16 @@
-using CMSCore.Abstraction.Models;
 using CMSCore.FileManagement;
-using Infrastructure.DotNetCLI;
+using CMS.Infrastructure.DotNetCLI;
 using UnitTest.Helpers;
 using Xunit.Abstractions;
+using CMS.Application.Services;
+using CMS.Domain.Entities;
 
 namespace UnitTest;
 
 
 public class CMSCoreScenarios
 {
-    private ITestOutputHelper _testOutput;
+    private readonly ITestOutputHelper _testOutput;
 
     public CMSCoreScenarios(ITestOutputHelper testOutput)
     {
@@ -36,7 +37,7 @@ public class CMSCoreScenarios
             GeneratedCodesDirectory = path,
 
         };
-        var files = await generator.GenerateHostAsFilesAsync(host);
+        await generator.GenerateHostAsFilesAsync(host);
     }
 
 }

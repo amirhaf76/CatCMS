@@ -2,7 +2,7 @@ using CMS.Client.Components;
 using CMS.Client.Components.Logics;
 using CMS.Client.Services;
 using CMS.Client.Services.Abstraction;
-using Infrastructure.GeneratedAPIs.CMSAPI;
+using CMS.Infrastructure.GeneratedAPIs.CMSAPI;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

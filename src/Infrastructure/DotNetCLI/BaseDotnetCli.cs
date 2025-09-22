@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Infrastructure.DotNetCLI
+namespace CMS.Infrastructure.DotNetCLI
 {
     public class BaseDotnetCli
     {
@@ -12,9 +12,10 @@ namespace Infrastructure.DotNetCLI
         protected static async Task<DotnetCliResult> RunDotnetCommandAsync(string commandAndArguments, CancellationToken cs)
         {
             var result = new DotnetCliResult();
-            var process = new Process();
-
-            process.StartInfo = CreateProcessStartInfo(commandAndArguments);
+            var process = new Process
+            {
+                StartInfo = CreateProcessStartInfo(commandAndArguments)
+            };
 
             process.Start();
 

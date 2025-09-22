@@ -1,6 +1,7 @@
-﻿using CMSClient.Services;
-using CMSClient.Services.Abstraction;
-using Infrastructure.GeneratedAPIs.CMSAPI;
+﻿using CMS.Client.Services;
+using CMS.Client.Services.Abstraction;
+using CMS.Client.Services.Abstraction.DTOs;
+using CMS.Infrastructure.GeneratedAPIs.CMSAPI;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit.Abstractions;
@@ -9,7 +10,7 @@ namespace UnitTest
 {
     public class CMSClientScenarios
     {
-        private ITestOutputHelper _testOutput;
+        private readonly ITestOutputHelper _testOutput;
 
         public CMSClientScenarios(ITestOutputHelper testOutput)
         {
@@ -43,7 +44,7 @@ namespace UnitTest
             var headers = new Dictionary<string, IEnumerable<string>>();
             var stubSwaggerResponse = new SwaggerResponse<string>(200, headers, jwtString);
             var stubLogger = new Mock<ILogger<AccountManagement>>();
-            var mockLoginDto = new CMSClient.Services.Abstraction.DTOs.LoginDto()
+            var mockLoginDto = new LoginDto()
             {
                 Username = mockUsername,
                 Password = mockPassword,
@@ -53,7 +54,7 @@ namespace UnitTest
                 .Setup(c => c.PostLoginAsync(It.IsAny<LoginRequest>()))
                 .Returns(Task.FromResult(stubSwaggerResponse));
 
-            IAccountManagement management = new AccountManagement(mockClient.Object, stubLogger.Object);
+            var management = new AccountManagement(mockClient.Object, stubLogger.Object);
 
             // Action
             var result = await management.LoginAsync(mockLoginDto);

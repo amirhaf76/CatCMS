@@ -10,7 +10,7 @@
         <h1 class="is-size-1">Home</h1>
 
         @{
-            foreach (var name in Model.Names)
+            foreach (var name in Model.Names ?? [])
             {
                 <div class="card">
                     <div class="card-image">

@@ -1,61 +1,84 @@
-﻿using Infrastructure.GenericRepository;
+﻿using SharedKernel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
-namespace Infrastructure
+namespace CMS.Infrastructure
 {
     public class BaseFakeRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
-        private readonly List<TEntity> _entities;
+        private readonly Dictionary<object[], TEntity> _entities;
+        private readonly Func<TEntity, object[]> _getKey;
 
-        public BaseFakeRepository() : this([])
+        private int _tracker;
+
+        public BaseFakeRepository(Func<TEntity, object[]> getKey) : this([], getKey)
         {
-
         }
 
-        public BaseFakeRepository(List<TEntity> entities)
+        public BaseFakeRepository(Dictionary<object[], TEntity> entities, Func<TEntity, object[]> getKey)
         {
-            _entities = entities;
+            _entities = new Dictionary<object[], TEntity>(entities, new BaseFakeIEqualityComparer());
+            _getKey = getKey;
         }
 
         public void Add(TEntity entity)
         {
-            _entities.Add(entity);
+            AddAndChangeTracker(entity);
+        }
+
+        private void AddAndChangeTracker(TEntity entity)
+        {
+            _entities.Add(_getKey(entity), entity);
+
+            _tracker++;
         }
 
         public Task<TEntity> AddAsync(TEntity entity)
         {
-            _entities.Add(entity);
+            AddAndChangeTracker(entity);
 
             return Task.FromResult(entity);
         }
 
         public Task<TEntity> AddAsync(TEntity entity, CancellationToken cs = default)
         {
-            _entities.Add(entity);
+            AddAndChangeTracker(entity);
 
             return Task.FromResult(entity);
         }
 
         public void AddRange(params TEntity[] entities)
         {
-            _entities.AddRange(entities);
+            foreach (var entity in entities)
+            {
+                AddAndChangeTracker(entity);
+            }
         }
 
         public void AddRange(IEnumerable<TEntity> entities)
         {
-            _entities.AddRange(entities);
+            foreach (var entity in entities)
+            {
+                AddAndChangeTracker(entity);
+            }
         }
 
         public Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
-            _entities.AddRange(entities);
+            foreach (var entity in entities)
+            {
+                AddAndChangeTracker(entity);
+            }
 
             return Task.CompletedTask;
         }
 
         public Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cs = default)
         {
-            _entities.AddRange(entities);
+            foreach (var entity in entities)
+            {
+                AddAndChangeTracker(entity);
+            }
 
             return Task.CompletedTask;
         }
@@ -67,17 +90,17 @@ namespace Infrastructure
 
         public TEntity? Find(params object[] keyValues)
         {
-            throw new NotImplementedException();
+            return _entities.GetValueOrDefault(keyValues);
         }
 
         public Task<TEntity?> FindAsync(params object[] keyValues)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_entities.GetValueOrDefault(keyValues));
         }
 
         public Task<TEntity?> FindAsync(object[] keyValues, CancellationToken cs = default)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_entities.GetValueOrDefault(keyValues));
         }
 
         public IEnumerable<TEntity> Get(Pagination? pagination = null, Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null)
@@ -92,42 +115,103 @@ namespace Infrastructure
 
         public void Remove(TEntity entity)
         {
-            throw new NotImplementedException();
+            RemoveAndChangeTracker(entity);
+        }
+
+        private void RemoveAndChangeTracker(TEntity entity)
+        {
+            _entities.Remove(_getKey(entity));
+
+            _tracker++;
         }
 
         public void RemoveRange(params TEntity[] entities)
         {
-            throw new NotImplementedException();
+            foreach (var entity in entities)
+            {
+                RemoveAndChangeTracker(entity);
+            }
         }
 
         public void RemoveRange(IEnumerable<TEntity> entities)
         {
-            throw new NotImplementedException();
+            foreach (var entity in entities)
+            {
+                RemoveAndChangeTracker(entity);
+            }
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cs = default)
         {
-            throw new NotImplementedException();
+            int currentTracker = _tracker;
+
+            _tracker = 0;
+
+            return Task.FromResult(currentTracker);
         }
 
         public Task<int> SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            int currentTracker = _tracker;
+
+            _tracker = 0;
+
+            return Task.FromResult(currentTracker);
         }
 
         public void Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            UpdateAndChangeTracker(entity);
+        }
+
+        private void UpdateAndChangeTracker(TEntity entity)
+        {
+            var theKey = _getKey(entity);
+
+            if (_entities.ContainsKey(theKey))
+            {
+                _entities[theKey] = entity;
+
+                _tracker++;
+            }
         }
 
         public void UpdateRange(params TEntity[] entities)
         {
-            throw new NotImplementedException();
+            foreach (var entity in entities)
+            {
+                UpdateAndChangeTracker(entity);
+            }
         }
 
         public void UpdateRange(IEnumerable<TEntity> entities)
         {
-            throw new NotImplementedException();
+            foreach (var entity in entities)
+            {
+                UpdateAndChangeTracker(entity);
+            }
+        }
+
+        private class BaseFakeIEqualityComparer : IEqualityComparer<object[]>
+        {
+            public bool Equals(object[]? x, object[]? y)
+            {
+                if (x == null || y == null) return false;
+
+                if (x.Length != y.Length) return false;
+
+                for (int index = 0; index < y.Length; ++index)
+                {
+                    if (x[index] != y[index]) return false;
+                }
+
+                return true;
+            }
+
+            public int GetHashCode([DisallowNull] object[] obj)
+            {
+                return HashCode.Combine(obj);
+            }
         }
     }
 }

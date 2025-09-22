@@ -9,5 +9,7 @@
         Task InstallTemplateNugetAsync(string nugetName);
 
         Task CreateTemplateAsync(string templateName, string targetName, string locationOutput);
+
+        Task PublishAsync(string templateName, string locationOutput);
     }
 }

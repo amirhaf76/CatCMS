@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleHost", "SampleHost\Sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.WebApi", "CMSApi\CMS.WebApi.csproj", "{CFEC6E06-AC5A-4723-B4CA-55F245BDD976}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{0D5CB91E-3B86-464F-A82E-284A6DCBBEF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.Infrastructure", "Infrastructure\CMS.Infrastructure.csproj", "{0D5CB91E-3B86-464F-A82E-284A6DCBBEF8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGenerator", "ApiGenerator", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject

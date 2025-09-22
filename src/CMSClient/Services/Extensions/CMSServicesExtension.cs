@@ -1,5 +1,5 @@
 ﻿using CMS.Client.Services.Abstraction.DTOs;
-using Infrastructure.GeneratedAPIs.CMSAPI;
+using CMS.Infrastructure.GeneratedAPIs.CMSAPI;
 
 namespace CMS.Client.Services.Extensions
 {

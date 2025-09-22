@@ -1,12 +1,12 @@
 ﻿using Autofac;
 using CMS.Application.Abstraction.Services;
+using CMS.Application.Behaviors;
 using CMS.Application.Services;
 using CMS.Domain.Repository;
 using CMS.Persistence.Repositories;
 using CMS.WebApi.Authentication;
-using Infrastructure.DotNetCLI;
-using Infrastructure.JWTProviders;
-using Infrastructure.JWTProviders.Abstractions;
+using CMS.Infrastructure.DotNetCLI;
+using CMS.Infrastructure.JWTProviders;
 using Microsoft.AspNetCore.Identity;
 
 namespace CMS.WebApi
@@ -26,7 +26,7 @@ namespace CMS.WebApi
             RegisterDotNetCliServices(builder);
         }
 
-        private void RegisterDotNetCliServices(ContainerBuilder builder)
+        private static void RegisterDotNetCliServices(ContainerBuilder builder)
         {
             builder.RegisterType<DotnetCli>().As<IDotnetCli>();
         }

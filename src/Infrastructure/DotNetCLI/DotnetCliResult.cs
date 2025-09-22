@@ -1,6 +1,6 @@
 ﻿
 
-namespace Infrastructure.DotNetCLI
+namespace CMS.Infrastructure.DotNetCLI
 {
     public class DotnetCliResult
     {
