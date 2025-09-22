@@ -1,0 +1,31 @@
+﻿@using CMS.Client.Components.Logics
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@inject NavigationManager NavigationManager
+@inject IWebAssemblyHostEnvironment HostEnvironment 
+@attribute [Route(CMSRoutes.HOME), Route(CMSRoutes.INDEX)]
+
+
+<AuthorizeView>
+    <Authorized>
+        <PageTitle>Home</PageTitle>
+
+        <MudText Typo="Typo.h1">Hello, world!</MudText>
+        <MudText Typo="Typo.body1"> Welcome to your new app.</MudText>
+
+    </Authorized>
+    <NotAuthorized>
+        @if(HostEnvironment.IsDevelopment()) 
+        {
+            <MudStack Row=false>
+                <MudText Align="Align.Center" Typo="Typo.h1">Unauthorized</MudText>
+                <MudButton Href="./login" StartIcon="@Icons.Material.Filled.Login" Color="Color.Primary">Login Page</MudButton>
+                <MudButton Href="./development" StartIcon="@Icons.Material.Filled.DeveloperMode" Color="Color.Tertiary">Development</MudButton>
+            </MudStack>
+        }
+        else
+        {
+            <MudText Typo="Typo.body1">Navigating to ...</MudText>
+            NavigationManager.NavigateTo(CMSRoutes.LOGIN);
+        }
+    </NotAuthorized>
+</AuthorizeView>

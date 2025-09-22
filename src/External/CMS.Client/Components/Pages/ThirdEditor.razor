@@ -1,0 +1,13 @@
+﻿@using CMS.Client.Components.Logics
+@attribute [Route(CMSRoutes.EDITOR)]
+
+<MudPaper Class="ma-4" Elevation="6">
+    <HTMLContentEditor @bind-Content=@content></HTMLContentEditor>
+</MudPaper>
+<MudPaper Class="pa-4 mud-height-full" Elevation="6">
+    <MudText Color="@Color.Error">@content</MudText>
+</MudPaper>
+
+@code {
+    private string content = "<p>Hello world</p>";
+}

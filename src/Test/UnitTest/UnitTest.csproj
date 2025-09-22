@@ -25,10 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CMSClient\CMSClient.csproj" />
-    <ProjectReference Include="..\..\CMSRepository\CMSRepository.csproj" />
-    <ProjectReference Include="..\..\Core\CMSCore.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\..\External\CMS.Client\CMS.Client.csproj" />
+    <ProjectReference Include="..\..\External\CMS.Infrastructure\CMS.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\External\CMS.Persistence\CMS.Persistence.csproj" />
+    <ProjectReference Include="..\..\External\CMS.Presentation\CMS.Presentation.csproj" />
+    <ProjectReference Include="..\..\External\CMS.WebApi\CMS.WebApi.csproj" />
+    <ProjectReference Include="..\..\SampleHost\SampleHost.csproj" />
   </ItemGroup>
 
   <ItemGroup>

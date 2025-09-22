@@ -1,0 +1,70 @@
+﻿@using CMS.Client.Components.Logics
+@using CMS.Client.Services
+@inject UserStatePublisherService StatePublisher;
+@inject AuthenticationStateProvider AuthStateProvider;
+@attribute [Route(CMSRoutes.DEVELOPMENT)]
+
+<MudStack>
+    <MudText>login</MudText>
+    <MudText>@("Message: " + authMessage)</MudText>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(LoginAsync)">Login</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(GetClaimsPrincipalData)">GetClaims</MudButton>
+    <MudSpacer />
+    <AuthorizeView>
+        <Authorized>
+            <MudText>
+                Authorized
+            </MudText>
+        </Authorized>
+        <NotAuthorized>
+            <MudText>
+                Not Authorized
+            </MudText>
+        </NotAuthorized>
+    </AuthorizeView>
+
+</MudStack>
+
+
+@code {
+
+    private string authMessage = "The user is NOT authenticated.";
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user?.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                authMessage = $"{user.Identity.Name} is authenticated.";
+            }
+        }
+    }
+
+    private async Task LoginAsync()
+    {
+        await StatePublisher.LoginAsync(new Services.DTOs.LoginVM());
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            authMessage = $"{user.Identity.Name} is authenticated.";
+
+        }
+        else
+        {
+            authMessage = "The user is NOT authenticated.";
+        }
+    }
+}
