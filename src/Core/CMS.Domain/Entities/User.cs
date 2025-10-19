@@ -5,7 +5,11 @@ namespace CMS.Domain.Entities
 {
     public class User : Entity
     {
+
+
         public int Id { get; set; }
+
+        public Email Email { get; set; } = Email.Empty;
 
         public string Username { get; set; } = string.Empty;
 

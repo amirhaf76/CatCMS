@@ -1,5 +1,5 @@
-﻿using CMS.Domain.Repository;
-using CMS.Domain.ValueObjects;
+﻿using CMS.Domain.Entities;
+using CMS.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace CMS.Persistence.Repositories

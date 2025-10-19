@@ -1,4 +1,4 @@
-﻿using CMS.Domain.ValueObjects;
+﻿using CMS.Domain.Entities;
 using SharedKernel;
 
 namespace CMS.Domain.Repository
