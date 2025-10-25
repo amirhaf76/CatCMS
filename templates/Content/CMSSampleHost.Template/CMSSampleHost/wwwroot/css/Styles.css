@@ -1,0 +1,25 @@
+﻿/* styles.css - minimal customizations for CMS */
+body {
+    font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+.hero {
+    background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f');
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+
+.hero-overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 5rem 1.5rem;
+}
+
+footer {
+    background-color: #f5f5f5;
+    padding: 2rem 1.5rem;
+}
+
+.card + .card {
+    margin-top: 1.5rem;
+}

@@ -1,0 +1,26 @@
+﻿@page "{id:int}"
+@model PostModel
+@{
+    ViewData["Title"] = Model.Post?.Title ?? "Post";
+}
+<section class="section">
+    <div class="container">
+        @if (Model.Post == null)
+        {
+            <h1 class="title">Post not found</h1>
+            <a asp-page="/Posts" class="button is-light mt-3">← Back to Posts</a>
+        }
+        else
+        {
+            <h1 class="title">@Model.Post.Title</h1>
+            <p class="subtitle">@Model.Post.Date — by Admin</p>
+            <figure class="image is-16by9 mb-4">
+                <img src="@Model.Post.ImageUrl" alt="@Model.Post.Title" />
+            </figure>
+            <div class="content">
+                @Model.Post.Content
+            </div>
+            <a asp-page="/Posts" class="button is-light mt-4">← Back to Posts</a>
+        }
+    </div>
+</section>

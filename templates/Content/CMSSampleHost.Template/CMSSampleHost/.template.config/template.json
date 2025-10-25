@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Amir.haf76",
+  "classifications": [
+    "template",
+    "cms-templates"
+  ],
+  "name": "CMS Sample Host",
+  "description": "A generated host that is used by CMS.",
+  "precedence": "0",
+  "identity": "CMS.Utility.Templates.CMSSampleHost",
+  "shortName": "cmssamplehost",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "CMSSampleHost",
+  "preferNameDirectory": true
+}

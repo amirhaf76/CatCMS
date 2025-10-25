@@ -1,0 +1,40 @@
+﻿@page
+@model ContactModel
+@{
+    ViewData["Title"] = "Contact";
+}
+<section class="section">
+    <div class="container" style="max-width: 700px;">
+        <h1 class="title">Contact Us</h1>
+
+        @if (Model.MessageSent)
+        {
+            <div class="notification is-primary">Thanks — your message has been received (mock).</div>
+        }
+
+        <form method="post">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" name="Name" value="@Model.Name" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Email</label>
+                <div class="control">
+                    <input class="input" name="Email" type="email" value="@Model.Email" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Message</label>
+                <div class="control">
+                    <textarea class="textarea" name="Message">@Model.Message</textarea>
+                </div>
+            </div>
+
+            <button class="button is-link" type="submit">Send Message</button>
+        </form>
+    </div>
+</section>
