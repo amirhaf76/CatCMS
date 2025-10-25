@@ -1,0 +1,41 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+<section class="hero is-medium">
+    <div class="hero-overlay">
+        <div class="container has-text-centered">
+            <h1 class="title is-1">Welcome to MyCMS</h1>
+            <h2 class="subtitle is-4">Manage your content with ease and flexibility</h2>
+            <a asp-page="/Signup" class="button is-link is-medium">Get Started</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="title is-3 has-text-centered">Latest Posts</h2>
+        <div class="container columns is-multiline is-2">
+            @foreach (var post in Model.LatestPosts)
+            {
+                <div class="column is-one-third">
+                    <div class="card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="@post.ImageUrl" alt="@post.Title" />
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <p class="title is-4">@post.Title</p>
+                            <p class="subtitle is-6">@post.Date</p>
+                            <div class="content">@post.Excerpt</div>
+                            <a asp-page="/Post" asp-route-id="@post.Id" class="button is-link is-light mt-3">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                
+            }
+        </div>
+    </div>
+</section>

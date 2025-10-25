@@ -1,0 +1,34 @@
+﻿@page
+@model SignupModel
+@{
+    ViewData["Title"] = "Sign Up";
+}
+<section class="section">
+    <div class="container" style="max-width: 420px;">
+        <h1 class="title has-text-centered">Sign Up</h1>
+
+        @if (Model.Registered)
+        {
+            <div class="notification is-primary">Account created (mock) — you can now log in.</div>
+        }
+
+        <form method="post">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control"><input class="input" name="Name" /></div>
+            </div>
+            <div class="field">
+                <label class="label">Email</label>
+                <div class="control"><input class="input" name="Email" type="email" /></div>
+            </div>
+            <div class="field">
+                <label class="label">Password</label>
+                <div class="control"><input class="input" name="Password" type="password" /></div>
+            </div>
+            <div class="field has-text-centered">
+                <button class="button is-link" type="submit">Create Account</button>
+            </div>
+        </form>
+        <p class="has-text-centered">Already have an account? <a asp-page="/Login">Login</a></p>
+    </div>
+</section>
