@@ -29,6 +29,12 @@ namespace CMS.Persistence.ModelConfigurations
                 .HasMany(u => u.Hosts)
                 .WithOne(h => h.Creator)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(u => u.Permissions)
+                .WithMany()
+                .UsingEntity("UserPermissions");
+                
         }
     }
 }

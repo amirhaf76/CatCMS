@@ -5,8 +5,6 @@ namespace CMS.Domain.Entities
 {
     public class User : Entity
     {
-
-
         public int Id { get; set; }
 
         public Email Email { get; set; } = Email.Empty;
@@ -18,5 +16,7 @@ namespace CMS.Domain.Entities
         public UserStatus Status { get; set; }
 
         public ICollection<Host> Hosts { get; set; } = new HashSet<Host>();
+
+        public ICollection<Permission> Permissions { get; set; } = new HashSet<Permission>();
     }
 }

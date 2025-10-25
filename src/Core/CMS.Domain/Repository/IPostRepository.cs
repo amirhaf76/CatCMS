@@ -3,7 +3,8 @@ using SharedKernel;
 
 namespace CMS.Domain.Repository
 {
-    public interface IUserPermissionRepository : IBaseRepository<Permission>
+    public interface IPostRepository : IBaseRepository<Post>
     {
+
     }
 }
