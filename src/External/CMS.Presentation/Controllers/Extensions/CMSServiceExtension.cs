@@ -27,6 +27,7 @@ namespace CMS.Presentation.Controllers.Extensions
                 Username = user.Username,
                 Password = user.Password,
                 Status = user.Status.ToVM(),
+                Email = user.Email.Address,
             };
         }
 

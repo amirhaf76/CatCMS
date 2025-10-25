@@ -3,7 +3,7 @@ using SharedKernel;
 
 namespace CMS.Domain.Repository
 {
-    public interface IRoleRepository : IBaseRepository<Role>
+    public interface IPermissionRepository : IBaseRepository<Permission>
     {
     }
 }

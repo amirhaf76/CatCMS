@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CMS.Persistence.Repositories
 {
-    public class RoleRepository : BaseRepository<Role>, IRoleRepository
+    public class PermissionRepository : BaseRepository<Permission>, IPermissionRepository
     {
-        public RoleRepository(DbContext dbContext) : base(dbContext)
+        public PermissionRepository(DbContext dbContext) : base(dbContext)
         {
         }
     }
