@@ -21,7 +21,7 @@ namespace UnitTest
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthRequirement requirement)
         {
-            //const string INFO_MESSAGE = "Success constext of requirement @{0} is @{1}";
+            //const string INFO_MESSAGE = "Success context of requirement @{0} is @{1}";
 
             if (HasRequirement(context, requirement))
             {

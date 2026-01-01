@@ -1,7 +1,11 @@
+using CMS.Infrastructure.GeneratedAPIs.CMSAPI;
 using CMS.Persistence.Models;
 using CMS.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Net;
+using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using Xunit.Abstractions;
 using GeneratedApi = CMS.Infrastructure.GeneratedAPIs.CMSAPI;
@@ -61,13 +65,16 @@ namespace UnitTest
         public void PlayGround()
         {
             // AddDirectory("D:\\Books and PDFs", 1); // 1
-            var path = "c:\\ii\\fsd\\fsd\\fdgdf\\f\\dsfsaaa\\fds";
+            var path = "c:\\ii\\fsd\\fsd\\fdgdf\\f\\dsfsaaa\\fds\\";
             _testOutput.WriteLine(Path.GetPathRoot(path)?.ToString() ?? "<>");
             _testOutput.WriteLine(Path.IsPathRooted(path).ToString());
             _testOutput.WriteLine(Path.TrimEndingDirectorySeparator(path));
             _testOutput.WriteLine(Path.GetFileName(path));
             _testOutput.WriteLine(Path.GetDirectoryName(path));
             _testOutput.WriteLine(Path.GetDirectoryName(Path.GetDirectoryName(path)));
+            _testOutput.WriteLine(Path.IsPathFullyQualified(path).ToString());
+            _testOutput.WriteLine(Path.EndsInDirectorySeparator(path).ToString());
+            _testOutput.WriteLine(string.Join(' ', Path.GetInvalidFileNameChars()));
 
             //foreach (var item in path.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
             //{
@@ -187,6 +194,33 @@ namespace UnitTest
             _testOutput.WriteLine(payload);
 
 
+        }
+
+
+        [Fact]
+        public void Test7()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+
+            foreach (var address in host.AddressList)
+            {
+                _testOutput.WriteLine(address.AddressFamily.ToString());
+                _testOutput.WriteLine(address.ToString());
+                _testOutput.WriteLine(IPAddress.IsLoopback(address).ToString());
+                
+            }
+
+            _testOutput.WriteLine(host.HostName);
+
+            foreach (var alias in host.Aliases)
+            {
+                _testOutput.WriteLine(alias);
+            }
+        }
+
+        [Fact]
+        public void Test8()
+        {
         }
     }
 }

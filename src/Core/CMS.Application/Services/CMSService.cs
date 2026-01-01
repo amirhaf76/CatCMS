@@ -2,6 +2,7 @@
 using CMS.Application.Services.Exceptions;
 using CMS.Domain.Entities;
 using CMS.Domain.Repository;
+using CMS.Domain.ValueObjects;
 using SharedKernel;
 using System.Reflection;
 
@@ -29,17 +30,9 @@ namespace CMS.Application.Services
 
         public async Task<Host> AddHostAsync(string title)
         {
+            UserId theCreatorId = _userProvider.UserIdV2;
 
-            int theCreatorId = _userProvider.UserId;
-
-            var newHost = new Host()
-            {
-                Title = title,
-                Creator = new User
-                {
-                    Id = theCreatorId,
-                },
-            };
+            var newHost = Host.Create(theCreatorId, title);
 
             var createdHost = await _hostRepository.AddAsync(newHost);
 
@@ -51,9 +44,9 @@ namespace CMS.Application.Services
 
         public async Task RemoveHostAsync(Guid theHostId)
         {
-            var theCreatorId = _userProvider.UserId;
+            UserId theCreatorId = _userProvider.UserIdV2;
 
-            var theHosts = await _hostRepository.GetAsync(filter: host => host.Id == theHostId && host.Creator.Id == theCreatorId);
+            var theHosts = await _hostRepository.GetAsync(filter: host => host.Id == theHostId && host.OwnerId == theCreatorId);
 
             var theHost = theHosts?.FirstOrDefault() ?? throw new HostNotFoundException();
 
@@ -64,7 +57,7 @@ namespace CMS.Application.Services
 
         public async Task<Host> GetHostAsync(Guid theHostId)
         {
-            var theCreatorId = _userProvider.UserId;
+            UserId theCreatorId = _userProvider.UserIdV2;
 
             var theHost = await _hostRepository.GetHostAsync(theCreatorId, theHostId);
 
@@ -78,7 +71,7 @@ namespace CMS.Application.Services
 
         public async Task<IEnumerable<Host>> GetHostsAsync(Pagination pagination)
         {
-            var theCreatorId = _userProvider.UserId;
+            UserId theCreatorId = _userProvider.UserIdV2;
 
             var theHosts = await _hostRepository.GetHostsAsync(theCreatorId, pagination);
 
@@ -87,7 +80,7 @@ namespace CMS.Application.Services
 
         public async Task<IEnumerable<FileSystemInfo>> GenerateHostAsync(Guid theHostId)
         {
-            var theCreatorId = _userProvider.UserId;
+            UserId theCreatorId = _userProvider.UserIdV2;
 
             var theHost = await _hostRepository.GetHostAsync(theCreatorId, theHostId);
 
@@ -118,13 +111,11 @@ namespace CMS.Application.Services
 
         public async Task PatchUpdateAsync(Guid hostId, IDictionary<string, object?> patch)
         {
-            int theCreatorId = _userProvider.UserId;
+            UserId theCreatorId = _userProvider.UserIdV2;
 
-            var hostEntity = new Host { Id = hostId };
+            var theHost = Host.Create(HostId.Create(hostId), theCreatorId);
 
-            hostEntity.Creator.Id = theCreatorId;
-
-            _hostRepository.ApplyPatch(hostEntity, patch);
+            _hostRepository.ApplyPatch(theHost, patch);
 
             await _hostRepository.SaveChangesAsync();
         }

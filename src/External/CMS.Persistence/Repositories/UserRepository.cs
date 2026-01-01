@@ -15,7 +15,7 @@ namespace CMS.Persistence.Repositories
             return await dbSet
                 .AsNoTracking()
                 .Include(user => user.Hosts)
-                .FirstOrDefaultAsync(user => user.Id == id);
+                .FirstOrDefaultAsync(user => user.UserId.Value == id);
         }
 
         public async Task<User?> GetUserAsync(string username)

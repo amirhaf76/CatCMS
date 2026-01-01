@@ -16,7 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddCMSPresentationEndPoints();
 builder.Services.AddHttpContextAccessor();
 
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -105,12 +104,12 @@ builder.Services.AddCors(options =>
                    .AllowAnyMethod();
         });
 });
-// Setting Authentication.
-//builder.Services.AddAuthorization(option =>
-//{
 
-//    option.AddPolicy("my policy", x => x.ass);
-//});
+builder.Services.AddAuthorizationCore(options =>
+{
+    
+});
+
 builder.Services
     .AddAuthentication()
     .AddJwtBearer(jwtOptions =>
@@ -130,8 +129,8 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(key)),
         };
     });
-builder.Services.AddCMSConfiguration();
 
+builder.Services.AddCMSConfiguration();
 
 var app = builder.Build();
 

@@ -1,5 +1,6 @@
 ﻿using CMS.Application.Abstraction.Services;
 using CMS.Application.Services.Exceptions;
+using CMS.Domain.ValueObjects;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -14,15 +15,17 @@ namespace CMS.WebApi.Authentication
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public int UserId => GetUserIdFromHttpContext();
+        public int UserId => GetUserIdFromHttpContext().Value;
 
-        private int GetUserIdFromHttpContext()
+        public UserId UserIdV2 => GetUserIdFromHttpContext();
+
+        private UserId GetUserIdFromHttpContext()
         {
             var id = GetClaimsPrincipalFromHttpContext()?.FindFirst(JwtRegisteredClaimNames.NameId)?.Value;
 
             if (int.TryParse(id, out int result))
             {
-                return result;
+                return Domain.ValueObjects.UserId.Create(result);
             }
 
             throw new UserNotFoundException();

@@ -9,7 +9,11 @@ namespace CMS.Persistence.ModelConfigurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(u => u.Id);
+            builder.HasKey(u => u.UserId);
+
+            builder
+                .Property(u => u.UserId)
+                .HasConversion(id => id.Value, id => UserId.Create(id));
 
             builder
                 .HasIndex(u => u.Email)
@@ -17,7 +21,7 @@ namespace CMS.Persistence.ModelConfigurations
 
             builder
                 .Property(u => u.Email)
-                .HasConversion(u => u.Address, address => Email.CreateEmail(address))
+                .HasConversion(u => u.Address, address => Email.Create(address))
                 .HasMaxLength(150);
 
             builder
@@ -27,7 +31,7 @@ namespace CMS.Persistence.ModelConfigurations
 
             builder
                 .HasMany(u => u.Hosts)
-                .WithOne(h => h.Creator)
+                .WithOne(h => h.Owner)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder

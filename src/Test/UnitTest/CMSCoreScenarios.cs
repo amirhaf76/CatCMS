@@ -4,6 +4,7 @@ using UnitTest.Helpers;
 using Xunit.Abstractions;
 using CMS.Application.Services;
 using CMS.Domain.Entities;
+using CMS.Domain.ValueObjects;
 
 namespace UnitTest;
 
@@ -31,12 +32,10 @@ public class CMSCoreScenarios
             Version = "9.0"
         });
         var path = Path.Combine(TestHelper.GetAbsoluteResultAddress(), "test.host");
-        var host = new Host()
-        {
-            Title = "test.host",
-            GeneratedCodesDirectory = path,
+        var host = Host.Create(UserId.Empty, "test.host");
 
-        };
+        host.UpdateGeneratedCodesDirectory(path);
+
         await generator.GenerateHostAsFilesAsync(host);
     }
 

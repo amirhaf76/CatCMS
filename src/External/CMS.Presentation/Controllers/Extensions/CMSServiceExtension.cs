@@ -23,7 +23,7 @@ namespace CMS.Presentation.Controllers.Extensions
         {
             return new UserVM
             {
-                Id = user.Id,
+                Id = user.UserId.Value,
                 Username = user.Username,
                 Password = user.Password,
                 Status = user.Status.ToVM(),

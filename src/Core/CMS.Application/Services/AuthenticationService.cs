@@ -5,6 +5,7 @@ using CMS.Application.Behaviors.DTOs;
 using CMS.Application.Services.Exceptions;
 using CMS.Domain.Entities;
 using CMS.Domain.Repository;
+using CMS.Domain.ValueObjects;
 using Microsoft.Extensions.Options;
 
 namespace CMS.Application.Services
@@ -54,7 +55,7 @@ namespace CMS.Application.Services
 
             if (verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
             {
-                theUser.Password = _passwordHasher.HashPassword(user.Password);
+                theUser.UpdatePassword(_passwordHasher.HashPassword(user.Password));
 
                 _userRepository.Update(theUser);
 
@@ -81,12 +82,9 @@ namespace CMS.Application.Services
                 throw new UserNameExistenceException();
             }
 
-            var newUser = new User()
-            {
-                Username = dto.Username,
-            };
+            var password = _passwordHasher.HashPassword(dto.Password);
 
-            newUser.Password = _passwordHasher.HashPassword(dto.Password);
+            var newUser = User.Create(UserId.Empty, Email.Empty, dto.Username, password, UserStatus.Active);
 
             await _userRepository.AddAsync(newUser);
 
@@ -94,7 +92,7 @@ namespace CMS.Application.Services
 
             return new RegisterResult
             {
-                Id = newUser.Id,
+                Id = newUser.UserId.Value,
                 Username = newUser.Username,
                 Password = newUser.Password,
                 Status = newUser.Status,

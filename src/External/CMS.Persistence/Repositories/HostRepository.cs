@@ -28,7 +28,7 @@ namespace CMS.Persistence.Repositories
 
             var query = dbSet
                 .AsNoTracking()
-                .Where(h => h.Creator.Id == theCreatorId)
+                .Where(h => h.OwnerId.Value == theCreatorId)
                 .Skip(skippedHostCount)
                 .Take(pagination.Size);
 
@@ -39,11 +39,9 @@ namespace CMS.Persistence.Repositories
 
         public async Task<Host?> GetHostAsync(int theCreatorId, Guid theHostId)
         {
-            var host = new Host();
-
             return await dbSet
                 .AsNoTracking()
-                .Where(h => h.Id == theHostId && h.Creator.Id == theCreatorId)
+                .Where(h => h.Id == theHostId && h.OwnerId.Value == theCreatorId)
                 .FirstOrDefaultAsync();
         }
 

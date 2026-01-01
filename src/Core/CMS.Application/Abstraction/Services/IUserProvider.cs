@@ -1,4 +1,6 @@
-﻿namespace CMS.Application.Abstraction.Services
+﻿using CMS.Domain.ValueObjects;
+
+namespace CMS.Application.Abstraction.Services
 {
     public interface IUserProvider
     {
@@ -7,6 +9,7 @@
         /// </summary>
         /// <exception cref="UserNotFoundException">If user id is not found, it will throw exception</exception>
         int UserId { get; }
+        UserId UserIdV2 { get; }
     }
 
 

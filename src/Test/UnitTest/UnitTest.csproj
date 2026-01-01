@@ -30,7 +30,6 @@
     <ProjectReference Include="..\..\External\CMS.Persistence\CMS.Persistence.csproj" />
     <ProjectReference Include="..\..\External\CMS.Presentation\CMS.Presentation.csproj" />
     <ProjectReference Include="..\..\External\CMS.WebApi\CMS.WebApi.csproj" />
-    <ProjectReference Include="..\..\SampleHost\SampleHost.csproj" />
   </ItemGroup>
 
   <ItemGroup>

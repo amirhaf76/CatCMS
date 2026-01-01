@@ -2,6 +2,8 @@
 using CMS.Application.Services;
 using CMS.Domain.Entities;
 using CMS.Domain.Repository;
+using CMS.Domain.ValueObjects;
+using CMS.Presentation.Controllers.DTOs.Requests;
 using CMS.WebApi.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace UnitTest
@@ -23,7 +26,7 @@ namespace UnitTest
         {
             _testLoggerFactory = new LoggerFactory();
 
-            _testLoggerFactory.AddProvider(new TestLoggerProvider(testOutput));
+            _testLoggerFactory.AddProvider(new TestLoggerProvider(testOutput, LogLevel.Debug));
 
             _testLogger = _testLoggerFactory.CreateLogger<WebApiTest>();
         }
@@ -69,24 +72,20 @@ namespace UnitTest
             var stubUserProvider = new Mock<IUserProvider>();
             var stubHostGenerator = new Mock<IHostGenerator>();
 
-            var fakeUser = new User
-            {
-                Id = 1,
-                Username = "user_1"
-            };
-
+            var fakeUser = User.Create(UserId.Create(1), Email.Create(string.Empty), "user_1", string.Empty, UserStatus.Active);
+            
             var fakeHost = new Host
             {
                 Id = Guid.NewGuid(),
-                Creator = fakeUser
             };
+            fakeHost.UpdateOwner(fakeUser);
 
             stubUserProvider
-                .Setup(x => x.UserId)
-                .Returns(fakeUser.Id);
+                .Setup(x => x.UserIdV2)
+                .Returns(fakeUser.UserId);
 
             stubHostRepository
-                .Setup(h => h.GetHostAsync(fakeUser.Id, fakeHost.Id))
+                .Setup(h => h.GetHostAsync(fakeUser.UserId.Value, fakeHost.Id))
                 .Returns(Task.FromResult((Host?)fakeHost));
 
 
@@ -108,25 +107,45 @@ namespace UnitTest
             _testLogger.LogInformation("hello {name}, {family}", name, family);
         }
 
+        [Fact]
+        public void Test4()
+        {
+            var str = JsonSerializer.Serialize(new { Name = "Jack" }, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
+
+            using (_testLogger.BeginScope(new { ScopeName = "MyScope" }))
+            {
+                _testLogger.LogDebug(message: str);
+
+            }
+
+            using (_testLogger.BeginScope(str))
+            {
+                _testLogger.LogDebug(message: "fdsfasdfadsf");
+
+            }
+        }
+
         private void FutureTest()
         {
             var stubHttpContextAccessor = new Mock<IHttpContextAccessor>();
             var loger = _testLoggerFactory.CreateLogger<CMSService>();
             var stubHttpContext = new Mock<HttpContext>();
+
+            var theUser = User.Create(UserId.Create(1), Email.Create(string.Empty), "user_1", string.Empty, UserStatus.Active);
             Host theHost = new()
             {
                 Id = Guid.NewGuid(),
-                Creator = new User
-                {
-                    Id = 1,
-                    Username = "user_1"
-                }
             };
+
+            theHost.UpdateOwner(theUser);
 
             var fakeClaimsIdentity = new ClaimsIdentity(
             [
-                new Claim(JwtRegisteredClaimNames.NameId, theHost.Creator.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Name, theHost.Creator.Username),
+                new Claim(JwtRegisteredClaimNames.NameId, theHost.OwnerId.Value.ToString()),
+                new Claim(JwtRegisteredClaimNames.Name, theHost.Owner.Username),
             ], nameof(Test2));
 
             var fakeClaimsPrincipal = new ClaimsPrincipal(fakeClaimsIdentity);
@@ -139,63 +158,6 @@ namespace UnitTest
                 .Setup(h => h.HttpContext)
                 .Returns(stubHttpContext.Object);
 
-        }
-    }
-
-    public class TestLoggerProvider : ILoggerProvider
-    {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-
-        public TestLoggerProvider(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-
-        ILogger ILoggerProvider.CreateLogger(string categoryName)
-        {
-            return new TestLogger(_testOutputHelper);
-        }
-    }
-
-    public class TestLogger : ILogger
-    {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public TestLogger(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        public IDisposable? BeginScope<TState>(TState state) where TState : notnull
-        {
-            return null;
-        }
-
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            return true;
-        }
-
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
-        {
-            if (IsEnabled(logLevel))
-            {
-                var eventStr = eventId.Id != 0 ? $"[{eventId.Id}]" : string.Empty;
-                var logMessage = formatter.Invoke(state, exception);
-
-                _testOutputHelper.WriteLine("[{0}]{1}: {2}", logLevel, eventStr, logMessage);
-
-                if (exception != null)
-                {
-                    _testOutputHelper.WriteLine("Exception:\n{\n} // End of Exception", exception);
-                }
-            }
         }
     }
 }

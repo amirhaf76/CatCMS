@@ -1,4 +1,5 @@
-﻿using CMS.Application.Abstraction.Services;
+﻿using Asp.Versioning;
+using CMS.Application.Abstraction.Services;
 using CMS.Presentation.Controllers.DTOs.Requests;
 using CMS.Presentation.Controllers.DTOs.Responses;
 using CMS.Presentation.Controllers.Extensions;
@@ -10,6 +11,7 @@ using SharedKernel;
 namespace CMS.Presentation.Controllers
 {
     [ApiController]
+    [ApiVersion("v1")]
     [Route("/[controller]")]
     [Authorize]
     public class HostsController : Controller

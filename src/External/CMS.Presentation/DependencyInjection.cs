@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Asp.Versioning;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace CMS.Presentation
 {
@@ -8,6 +10,17 @@ namespace CMS.Presentation
         {
             builder.AddApplicationPart(typeof(DependencyInjection).Assembly);
 
+            IServiceCollection sc = null;
+
+            sc.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1);
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ApiVersionReader = ApiVersionReader.Combine(
+                    new UrlSegmentApiVersionReader(),
+                    new HeaderApiVersionReader("X-Api-Version"));
+            });
             return builder;
         }
     }

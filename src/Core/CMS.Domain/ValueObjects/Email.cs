@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CMS.Domain.ValueObjects
+﻿namespace CMS.Domain.ValueObjects
 {
     public record Email
     {
@@ -19,9 +12,9 @@ namespace CMS.Domain.ValueObjects
 
 
 
-        public static Email Empty { get; } = CreateEmail(string.Empty);
+        public static Email Empty { get; } = Create(string.Empty);
 
-        public static Email CreateEmail(string address)
+        public static Email Create(string address)
         {
             return new Email(address);
         }

@@ -47,6 +47,15 @@ namespace CMS.WebApi
 
         private static void RegisterDataBaseServices(ContainerBuilder builder)
         {
+            var assembly = typeof(CMSDIModule).Assembly;
+
+            builder
+                .RegisterAssemblyTypes(assembly)
+                .Where(x => !x.IsInterface && !x.IsAbstract && typeof(BaseRepository<>).IsAssignableFrom(x))
+                .AsImplementedInterfaces()
+                .AsSelf()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
             builder.RegisterType<HostRepository>().As<IHostRepository>().InstancePerLifetimeScope();
         }

@@ -34,16 +34,7 @@ namespace CMS.Presentation.Controllers.Extensions
                 Password = result.Password,
                 Status = result.Status,
             };
-        }
-
-        public static Host ToCoreModel(this Host host)
-        {
-            return new Host
-            {
-                Id = host.Id,
-                Title = host.Title,
-            };
-        }
+        
 
     }
 }
